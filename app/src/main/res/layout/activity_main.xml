@@ -12,5 +12,5 @@
         android:text="전서영"
         android:textColor="#B41EDC"
         android:layout_gravity="center"/>
-
+    
 </LinearLayout>
