@@ -10,8 +10,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-fun main() {
-    println("Hello, this is LSJ")
-    println("SORRY")
-    println("hello, world")
-}
