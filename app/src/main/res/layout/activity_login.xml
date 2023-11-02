@@ -25,7 +25,7 @@
         android:layout_height="125dp"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        app:srcCompat="@drawable/mainCat" />
+        app:srcCompat="@drawable/cat" />
 
     <TextView
         android:id="@+id/titleText"
@@ -84,20 +84,6 @@
             android:layout_marginBottom="35dp"
             android:backgroundTint="#F4D34A"
             android:text="Login" />
-
-        <Button
-            android:id="@+id/googleLoginButton"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="35dp"
-            android:backgroundTint="#EAEAEB"
-            android:drawableLeft="@drawable/googleLogo"
-            android:paddingLeft="10dp"
-            android:text="Google Login"
-            android:textColor="#656872" />
 
 
     </LinearLayout>
