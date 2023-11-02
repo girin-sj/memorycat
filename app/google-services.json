@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804342007455",
+    "project_id": "memorycat-c8f7d",
+    "storage_bucket": "memorycat-c8f7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804342007455:android:f41d4892b7bef270a0c4aa",
+        "android_client_info": {
+          "package_name": "com.example.memorycat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxmHL63nqDadryvFnsb2aM1NSQVPOmu0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
