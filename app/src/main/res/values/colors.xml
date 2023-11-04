@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="graydark">#656872</color>
+    <color name="graylight">#D2D2D2</color>
+    <color name="yellow">#F4D34A</color>
+    <color name="mainblack">#382E2E</color>
+    <color name="peowpink">#E99C7C</color>
+    <color name="backwhite">#F6F6F6</color>
 </resources>
