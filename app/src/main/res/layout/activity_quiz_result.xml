@@ -31,12 +31,13 @@
         android:layout_marginTop="50dp"
         android:src="@drawable/quizresult"/>
     <Button
+        android:id="@+id/quizNextButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:backgroundTint="@color/yellow"
-        android:text="다음 단계 공부하기"
+        android:text="오답 노트 확인하기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
     <Button
@@ -45,7 +46,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:backgroundTint="@color/graylight"
-        android:text="오답 노트 확인하기"
+        android:text="메인으로 돌아가기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
 </LinearLayout>

@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="확인용"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" /> //추가
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
@@ -15,14 +24,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/cat"></ImageView>
-        </RelativeLayout>
-    </androidx.appcompat.widget.Toolbar>
-
     <LinearLayout
         android:id="@+id/toolbar_division"
         android:layout_width="match_parent"

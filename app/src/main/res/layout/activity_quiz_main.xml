@@ -23,6 +23,7 @@
                 android:layout_marginRight="10dp"
                 android:src="@drawable/voice"/>
             <TextView
+                android:id="@+id/quizWord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Cat"
@@ -38,16 +39,26 @@
             android:textSize="25sp"
             android:textColor="@color/mainblack"/>
         <EditText
+            android:id="@+id/quizAnswer"
             android:layout_width="320dp"
             android:layout_height="60dp"
             android:layout_marginTop="15dp"
             android:text="답을 입력하세요"
             android:textColor="@color/graylight"/>
+        <TextView
+            android:id="@+id/quizNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/graydark"
+            android:text="1/10"/>
         <Button
+            android:id="@+id/quizPassButton"
             android:layout_width="320dp"
             android:layout_height="50dp"
-            android:layout_marginTop="30dp"
             android:backgroundTint="@color/yellow"
+            android:layout_marginTop="5dp"
             android:text="다음 문제로"
             android:textColor="@color/mainblack"
             android:textSize="18sp"/>

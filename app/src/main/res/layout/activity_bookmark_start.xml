@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="120dp"
-    tools:context=".QuizStartActivity">
+    android:paddingTop="100dp"
+    tools:context=".BookmarkStartActivity">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="나의 실력 확인"
+        android:text="오늘도 고생하셨어요!"
         android:textSize="12sp"
         android:textColor="@color/graydark"/>
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="6dp"
-        android:text="GOLD 단어 테스트를\n시작할게요"
+        android:text="북마크 한 단어들을\n만나볼게요"
         android:textStyle="bold"
         android:textSize="25sp"
         android:textColor="@color/mainblack"/>
@@ -29,24 +29,32 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:src="@drawable/quizstart"/>
+        android:src="@drawable/bookmarkstart"/>
     <Button
-        android:id="@+id/quizStartButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="@color/yellow"
-        android:text="테스트 시작하기"
+        android:text="단어만 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
     <Button
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:backgroundTint="@color/graylight"
-        android:text="단어 다시 외우기"
+        android:text="뜻만 보기"
+        android:textColor="@color/mainblack"
+        android:textSize="20sp"/>
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:backgroundTint="@color/yellow"
+        android:text="단어랑 뜻 모두 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
 </LinearLayout>
