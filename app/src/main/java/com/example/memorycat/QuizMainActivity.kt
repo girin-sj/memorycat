@@ -15,12 +15,13 @@ class QuizMainActivity : AppCompatActivity() {
         val intent = Intent(this, QuizResultActivity::class.java)
 
         binding.quizPassButton.setOnClickListener{
+            counter++
+            binding.quizNumber.text = "$counter/10"
             if (counter==10){
-                startActivity(intent)
+                binding.quizPassButton.text = "결과 확인하기"
             }
-            else {
-                counter++
-                binding.quizNumber.text = "$counter/10"
+            else if(counter>10){
+                startActivity(intent)
             }
         }
     }

@@ -13,6 +13,9 @@ class QuizNoteActivity : AppCompatActivity() {
         val binding = ActivityQuizNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val datas = mutableListOf<String>()
+        for(i in 1..10){
+            datas.add("Item $i")
+        }
 
         binding.noterecycler.layoutManager = LinearLayoutManager(this)
         binding.noterecycler.adapter = MyAdapter(datas)

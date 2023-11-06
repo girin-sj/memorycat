@@ -40,6 +40,8 @@
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/noterecycler"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="100dp"
