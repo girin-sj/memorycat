@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="100dp"
+    android:gravity="center_horizontal"
+    tools:context=".WrongWordStudyActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="틀렸던 단어들 재학습"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/mainblack"/>
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="75dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="02"
+            android:layout_marginBottom="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/mainblack"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="240sp"
+                android:layout_height="wrap_content"
+                android:text="Small"
+                android:textStyle="bold"
+                android:textSize="45sp"
+                android:textColor="@color/mainblack"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="62dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/voice" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="62dp"
+                android:layout_marginRight="1dp"
+                android:src="@drawable/peow" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="1. 형용사 귀여운"
+            android:textSize="20sp"
+            android:textColor="@color/mainblack"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text=" "
+            android:textSize="20sp"
+            android:textColor="@color/mainblack"/>
+        <Button
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="110dp"
+            android:backgroundTint="@color/yellow"
+            android:text="다음 단어로"
+            android:textColor="@color/mainblack"
+            android:textSize="18sp"/>
+        <Button
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/graylight"
+            android:text="이전 단어로"
+            android:textColor="@color/mainblack"
+            android:textSize="18sp"/>
+    </LinearLayout>
+</LinearLayout>
