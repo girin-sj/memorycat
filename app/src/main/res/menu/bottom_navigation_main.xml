@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_memory"
+        android:icon="@drawable/memory_icon"
+        android:enabled="true"
+        android:title="memory" ></item>
+    <item
+        android:id="@+id/action_quiz"
+        android:icon="@drawable/test_icon"
+        android:enabled="true"
+        android:title="quiz" ></item>
+    <item
+        android:id="@+id/action_bookmark"
+        android:icon="@drawable/bookmark_icon"
+        android:enabled="true"
+        android:title="bookmark" ></item>
+    <item
+        android:id="@+id/action_mypage"
+        android:icon="@drawable/mypage_icon"
+        android:enabled="true"
+        android:title="mypage" ></item>
+</menu>
