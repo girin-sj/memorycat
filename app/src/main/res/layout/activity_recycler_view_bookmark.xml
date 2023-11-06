@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RecyclerViewActivity">
+    android:gravity="center_horizontal"
+    tools:context=".RecyclerViewActivityBookmark">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,14 +15,15 @@
         android:text="북마크"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textColor="@color/mainblack"/>/>
+        android:textColor="@color/mainblack"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:paddingTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        tools:listitem="@layout/item_bookmark"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
