@@ -2,26 +2,20 @@ package com.example.memorycat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.databinding.ActivityMainBinding
+import com.example.memorycat.databinding.ActivityQuizNoteBinding
 
 class QuizNoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        val binding = ActivityQuizNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val datas = mutableListOf<String>()
-        for(i in 1..10){
-            datas.add("Item $i")
-        }
 
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = MyAdapter(datas)
-        binding.recyclerView.addItemDecoration(
-            MyDecoration(this)
-        )
+        binding.noterecycler.layoutManager = LinearLayoutManager(this)
+        binding.noterecycler.adapter = MyAdapter(datas)
+        binding.noterecycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
 }
