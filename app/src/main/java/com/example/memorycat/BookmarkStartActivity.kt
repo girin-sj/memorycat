@@ -3,13 +3,9 @@ package com.example.memorycat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
-    //lateinit var binding : ActivityMainBinding
-
+class BookmarkStartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_bookmark_start)
     }
-
 }
