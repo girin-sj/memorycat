@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".QuizStartActivity"/>
+        <activity android:name=".QuizMainActivity"/>
+        <activity android:name=".QuizResultActivity"/>
+        <activity android:name=".QuizNoteActivity"/>
     </application>
 
 </manifest>
