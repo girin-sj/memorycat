@@ -48,7 +48,9 @@
         android:text="뜻만 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
+
     <Button
+        android:id="@+id/WordMeanButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -56,5 +58,5 @@
         android:backgroundTint="@color/yellow"
         android:text="단어랑 뜻 모두 보기"
         android:textColor="@color/mainblack"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 </LinearLayout>
