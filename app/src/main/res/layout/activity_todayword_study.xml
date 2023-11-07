@@ -68,21 +68,25 @@
             android:text="2. 명사 고양잇과 동물"
             android:textSize="20sp"
             android:textColor="@color/mainblack"/>
+
         <Button
+            android:id="@+id/studyNextButton"
             android:layout_width="320dp"
             android:layout_height="50dp"
             android:layout_marginTop="110dp"
             android:backgroundTint="@color/yellow"
             android:text="다음 단어로"
             android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
+
         <Button
+            android:id="@+id/studyBeforeButton"
             android:layout_width="320dp"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/graylight"
             android:text="이전 단어로"
             android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </LinearLayout>
 </LinearLayout>

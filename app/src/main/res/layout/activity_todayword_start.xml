@@ -30,7 +30,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:src="@drawable/todaywordstart"/>
+
     <Button
+        android:id="@+id/studyStartButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -38,8 +40,10 @@
         android:backgroundTint="@color/yellow"
         android:text="학습 시작하기"
         android:textColor="@color/mainblack"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
+
     <Button
+        android:id="@+id/studyReStartButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
@@ -47,5 +51,5 @@
         android:backgroundTint="@color/graylight"
         android:text="오답 재학습하기"
         android:textColor="@color/mainblack"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 </LinearLayout>

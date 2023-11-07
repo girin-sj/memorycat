@@ -1,9 +1,8 @@
 package com.example.memorycat
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.memorycat.databinding.ActivityQuizMainBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.memorycat.databinding.ActivityQuizStartBinding
 
 class QuizStartActivity : AppCompatActivity() {
