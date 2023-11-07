@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-class RecyclerViewActivityBookmark : AppCompatActivity() {
+class BookmarkMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recycler_view_bookmark)
+        setContentView(R.layout.activity_bookmark_main)
 
         //북마크한 내용들 가져와서 여기서 보여줘야 함
         val wordList = mutableListOf<Word>()
