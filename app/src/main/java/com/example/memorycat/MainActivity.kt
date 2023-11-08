@@ -26,6 +26,11 @@ class MainActivity : AppCompatActivity() {
                         supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                         return true
                     }
+                    R.id.action_quiz -> {
+                        var detailViewFragment = QuizStartFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
+                        return true
+                    }
                 }
                 return false
             }

@@ -19,7 +19,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/cat"></ImageView>
+                android:src="@drawable/cat">
+
+            </ImageView>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
     <LinearLayout
@@ -28,13 +30,17 @@
         android:layout_height="1dp"
         android:layout_below="@+id/top_toolbar"
         android:background="@color/graydark"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/nav_division"></FrameLayout>
+        android:layout_above="@+id/nav_division">
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/nav_division"
@@ -42,7 +48,9 @@
         android:layout_height="1dp"
         android:layout_above="@+id/bottom_navigation"
         android:background="@color/graydark"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -50,6 +58,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="-1dp"
-        app:menu="@menu/bottom_navigation_main"></com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:menu="@menu/bottom_navigation_main">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </RelativeLayout>
