@@ -16,7 +16,7 @@
         android:background="#382E2E"
         android:textColor="#FAFAF8"
         android:textSize="23dp"
-        android:text="Login"
+        android:text="SignUp"
         android:textStyle="bold" />
 
     <ImageView
@@ -24,7 +24,7 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         app:srcCompat="@drawable/cat" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="45dp"
         android:text="암기할고양"
         android:textColor="#000000"
         android:textSize="25dp"
@@ -46,7 +46,6 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
         <TextView
-            android:id="@+id/emailText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -61,10 +60,9 @@
             android:background="#EAEAEB"
             android:textColorHint="#656872"
             android:hint="Enter Email Address"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="20dp"
             />
         <TextView
-            android:id="@+id/passwordText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -79,7 +77,23 @@
             android:background="#EAEAEB"
             android:textColorHint="#656872"
             android:hint="Enter Password"
-            android:layout_marginBottom="60dp"/>
+            android:layout_marginBottom="20dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Confirm Password"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:layout_marginBottom="5dp"/>
+        <EditText
+            android:id="@+id/passwordInput_verification"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#EAEAEB"
+            android:textColorHint="#656872"
+            android:hint="Enter Password Again"
+            android:layout_marginBottom="35dp"/>
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
