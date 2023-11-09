@@ -1,9 +1,8 @@
 package com.example.memorycat
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import navigation.DetailViewFragment
@@ -28,6 +27,16 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.action_quiz -> {
                         var detailViewFragment = QuizStartFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
+                        return true
+                    }
+                    R.id.action_memory -> {
+                        var detailViewFragment = TodayWordStartFragment()
+                        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
+                        return true
+                    }
+                    R.id.action_bookmark -> {
+                        var detailViewFragment = BookmarkStartFragment()
                         supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                         return true
                     }
