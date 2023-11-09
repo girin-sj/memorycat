@@ -6,17 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.memorycat.databinding.ActivityQuizStartBinding
+import com.example.memorycat.databinding.FragmentQuizStartBinding
 
 class QuizStartFragment : Fragment() {
-    private var _binding: ActivityQuizStartBinding? = null
+    private var _binding: FragmentQuizStartBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = ActivityQuizStartBinding.inflate(inflater, container, false)
+        _binding = FragmentQuizStartBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -28,5 +28,4 @@ class QuizStartFragment : Fragment() {
             startActivity(intent)
         }
     }
-
 }
