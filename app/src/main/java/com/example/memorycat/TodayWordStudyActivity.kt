@@ -3,7 +3,6 @@ package com.example.memorycat
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.memorycat.databinding.ActivityQuizMainBinding
 
 class TodayWordStudyActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
