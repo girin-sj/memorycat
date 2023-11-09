@@ -24,6 +24,9 @@
         <activity android:name=".QuizMainActivity"/>
         <activity android:name=".QuizResultActivity"/>
         <activity android:name=".QuizNoteActivity"/>
+        <activity android:name=".TodayWordStartActivity"/>
+        <activity android:name=".TodayWordStudyActivity"/>
+        <activity android:name=".BookmarkStartActivity"/>
     </application>
 
 </manifest>
