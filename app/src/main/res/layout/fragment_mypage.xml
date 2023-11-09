@@ -20,7 +20,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:src="@drawable/account_image">
+            android:src="@drawable/account_image"
+            android:layout_marginTop="-20dp">
         </de.hdodenhof.circleimageview.CircleImageView>
 
         <TextView
