@@ -50,7 +50,8 @@
                 android:layout_width="30dp"
                 android:layout_height="62dp"
                 android:layout_marginRight="1dp"
-                android:src="@drawable/peow" />
+                android:src="@drawable/peow"
+                app:tint="@color/graydark" />
 
         </LinearLayout>
 

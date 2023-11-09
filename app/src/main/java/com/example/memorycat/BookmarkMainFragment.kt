@@ -5,20 +5,17 @@ package com.example.memorycat
 //윗줄로 해당 아이템으로 리사이클러뷰 볼 수 있음.
 //tools 속성은 xml에서만 보일 뿐, 실제 앱 동작 상에서 영향 끼치지 않음.
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-class BookmarkMainActivity : AppCompatActivity() {
+class BookmarkMainFragment : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bookmark_main)
