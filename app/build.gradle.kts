@@ -57,4 +57,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
+    implementation("androidx.multidex:multidex:2.0.1")
 }

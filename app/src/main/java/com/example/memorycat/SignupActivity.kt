@@ -1,4 +1,50 @@
 package com.example.memorycat
 
-class SignupActivity {
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.Toast
+import com.example.memorycat.databinding.ActivitySignUpBinding
+import com.google.android.gms.tasks.Task
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+
+class SignUpActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val binding = ActivitySignUpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.signUpButton.setOnClickListener {
+            val email: String = binding.emailInput.text.toString()
+            val password: String = binding.passwordInput.text.toString()
+            MyAuth.auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    binding.emailInput.text.clear()
+                    binding.passwordInput.text.clear()
+                    if (task.isSuccessful) {
+                        MyAuth.auth.currentUser?.sendEmailVerification()
+                            ?.addOnCompleteListener { sendTask ->
+                                if (sendTask.isSuccessful) {
+                                    Toast.makeText(
+                                        baseContext,
+                                        "회원가입에 성공하였습니다." +
+                                                "전송된 메일을 확인해 주세요.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    val intent = Intent(this, LoginActivity::class.java)
+                                    startActivity(intent)
+                                } else {
+                                    Toast.makeText(baseContext, "회원가입 실패", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                    }
+                    else {
+                        Toast.makeText(baseContext, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    }
 }
