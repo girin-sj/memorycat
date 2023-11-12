@@ -13,7 +13,7 @@ class BookmarkStartActivity : AppCompatActivity() {
         val binding = ActivityBookmarkStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val intent = Intent(this, BookmarkMainActivity::class.java)
-        binding.WordMeanButton.setOnClickListener{startActivity(intent)}
+        //val intent = Intent(this, BookmarkMainActivity::class.java)
+        //binding.WordMeanButton.setOnClickListener{startActivity(intent)}
     }
 }
