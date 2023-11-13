@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.memorycat.databinding.FragmentQuizMainBinding
 
-class BookmarkMainFragment : AppCompatActivity() {
+class BookmarkMainActivity : AppCompatActivity() {
     private var _binding: FragmentQuizMainBinding? = null
     private val binding get() = _binding!!
 
