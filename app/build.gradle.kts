@@ -50,13 +50,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics-ktx")
-    // Add the dependencies for any other desired Firebase products
-    // https://firebase.google.com/docs/android/setup#available-libraries
     implementation("com.google.firebase:firebase-auth-ktx:22.2.0")
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
 }
