@@ -9,12 +9,14 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val firestore = FirebaseFirestore.getInstance()
 
         binding.signUpButton.setOnClickListener {
             val email: String = binding.emailInput.text.toString()
@@ -33,6 +35,27 @@ class SignUpActivity : AppCompatActivity() {
                                                 "전송된 메일을 확인해 주세요.",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    val userDB = firestore.collection("userDB").document(email)
+                                    userDB.set(
+                                        hashMapOf(
+                                            "birth" to "",
+                                            "bookmarkDB" to hashMapOf<String, Any>(),
+                                            "email" to email,
+                                            "goal" to "",
+                                            "headerImage" to "",
+                                            "level" to "bronze",
+                                            "nickname" to "",
+                                            "password" to password,
+                                            "profileImage" to ""
+                                        )
+                                    ).addOnSuccessListener {
+                                        val quizDB = userDB.collection("quizDB")
+                                        val levels =
+                                            listOf("bronze", "silver", "gold", "platinum", "master")
+                                        for (level in levels) {
+                                            quizDB.document(level).set(hashMapOf<String, Any>())
+                                        }
+                                    }
                                     val intent = Intent(this, LoginActivity::class.java)
                                     startActivity(intent)
                                 } else {
