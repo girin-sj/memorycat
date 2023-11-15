@@ -14,14 +14,15 @@ android:background="@drawable/rec_background">
     android:layout_height="wrap_content"
     android:layout_marginLeft="15dp"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/nthWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textStyle="bold"
+        android:text="Cat"
         android:textSize="30sp"
-        android:text="Cat"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/nthMean"
@@ -29,9 +30,9 @@ android:background="@drawable/rec_background">
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_weight="1"
-        android:textSize="14sp"
+        android:text="1. 명사 고양이\n2. 명사 고양잇과 동물"
         android:textColor="@color/graydark"
-        android:text="1. 명사 고양이\n2. 명사 고양잇과 동물" />
+        android:textSize="14sp" />
 </LinearLayout>
 <LinearLayout
     android:layout_width="wrap_content"
@@ -44,7 +45,7 @@ android:background="@drawable/rec_background">
         android:layout_height="30dp"
         android:src="@drawable/voice"/>
     <ImageView
-        android:id="@+id/bookamrkBookmark"
+        android:id="@+id/BookmarkPeow"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@drawable/peow"/>
