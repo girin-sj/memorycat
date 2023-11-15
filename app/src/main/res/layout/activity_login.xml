@@ -80,6 +80,7 @@
             android:textColorHint="#656872"
             android:hint="비밀번호를 입력하세요"
             android:layout_marginBottom="50dp"/>
+
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
@@ -88,7 +89,8 @@
             android:layout_marginRight="50dp"
             android:backgroundTint="#F4D34A"
             android:text="로그인"
-            android:textColor="@color/mainblack"/>
+            android:textColor="@color/mainblack" />
+
         <Button
             android:id="@+id/signUpPageButton"
             android:layout_width="match_parent"
