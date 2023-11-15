@@ -42,10 +42,11 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/voice"/>
+
         <ImageView
             android:id="@+id/noteBookmark"
             android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/peow"/>
+            android:layout_height="match_parent"
+            android:src="@drawable/peow" />
     </LinearLayout>
 </LinearLayout>

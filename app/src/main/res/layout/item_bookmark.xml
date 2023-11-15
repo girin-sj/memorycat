@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/item_root"
-android:layout_width="350dp"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:layout_gravity="center_horizontal"
-android:layout_marginBottom="15dp"
-android:padding="16dp"
-android:background="@drawable/rec_background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_root"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="15dp"
+    android:padding="16dp"
+    android:background="@drawable/rec_background">
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -16,7 +16,7 @@ android:background="@drawable/rec_background">
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/nthWord"
+        android:id="@+id/word_data1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -25,7 +25,7 @@ android:background="@drawable/rec_background">
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/nthMean"
+        android:id="@+id/mean_data1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -48,6 +48,7 @@ android:background="@drawable/rec_background">
         android:id="@+id/BookmarkPeow"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/peow"/>
+        android:src="@drawable/peow"
+        app:tint="@color/peowpink"/>
 </LinearLayout>
 </LinearLayout>

@@ -8,6 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.databinding.FragmentBookmarkMainBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
+//fetchBookmarkedWords 함수는 Firestore에서 북마크된 단어 목록을 가져오는 역할
+// 가져온 데이터를 bookmarkedWords 리스트에 저장하고,
+// 이 리스트를 BookmarkAdapter에 전달하여 RecyclerView에 표시
+
+//"word"라는 필드로 예시를 들었으니, 실제 Firestore에 저장된 데이터의 구조에 따라 필드 이름을 수정하자
 
 class BookmarkMainFragment : Fragment() {
     private var _binding: FragmentBookmarkMainBinding? = null
@@ -22,13 +30,42 @@ class BookmarkMainFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val datas = mutableListOf<String>()
-        for (i in 1..10){
-            datas.add("Item $i")
+        val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            fetchBookmarkedWords(uid)
         }
+    }
+
+    private fun fetchBookmarkedWords(uid: String) {
+        val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+        val userBookmarkDB = firestore.collection("userDB").document(uid)
+            .collection("bookmarkDB")
+
+        userBookmarkDB
+            .whereEqualTo("isBookmarked", true)
+            .get()
+            .addOnSuccessListener { documents ->
+                val bookmarkedWords = mutableListOf<String>()
+                for (document in documents) {
+                    val word = document.getString("word")
+                    word?.let {
+                        bookmarkedWords.add(it)
+                    }
+                }
+                setupRecyclerView(bookmarkedWords)
+            }
+            .addOnFailureListener { exception ->
+                // Handle errors
+            }
+    }
+
+    private fun setupRecyclerView(bookmarkedWords: MutableList<String>) {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = MyAdapter(datas)
-        binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+        binding.recyclerView.adapter = BookmarkAdapter(bookmarkedWords)
+        binding.recyclerView.addItemDecoration(
+            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        )
     }
 
     override fun onDestroyView() {
@@ -36,8 +73,3 @@ class BookmarkMainFragment : Fragment() {
         _binding = null
     }
 }
-
-// 리사이클러뷰에 어답터 장착
-//recyclerView.adapter = RecyclerViewAdapter(wordList, LayoutInflater.from(this))
-// 리사이클러뷰에 레이아웃 매니저 설정
-//recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
