@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="단어를 모두 맞혔어요!"
+        android:text="오답이 있어요"
         android:textSize="12sp"
         android:textColor="@color/graydark"/>
     <TextView
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="6dp"
-        android:text="GOLD 레벨 통과!"
+        android:text="다시 공부해봐요"
         android:textStyle="bold"
         android:textSize="25sp"
         android:textColor="@color/mainblack"/>
@@ -30,23 +30,23 @@
         android:layout_marginTop="50dp"
         android:src="@drawable/quizresult"/>
     <Button
-        android:id="@+id/quizNextButton"
+        android:id="@+id/quizNoteButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:backgroundTint="@color/yellow"
-        android:text="다음 레벨로 넘어가기"
+        android:text="오답노트 확인하기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
     <Button
-        android:id="@+id/quizAgainButton"
+        android:id="@+id/goTodaywordButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:backgroundTint="@color/graylight"
-        android:text="테스트 다시 보기"
+        android:text="단어장으로 돌아가기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
 </LinearLayout>

@@ -54,12 +54,21 @@
             android:text="1/10"
             android:textColor="@color/graydark" />
         <Button
-            android:id="@+id/quizPassButton"
+            android:id="@+id/quizNextButton"
             android:layout_width="320dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/yellow"
             android:layout_marginTop="5dp"
             android:text="다음 문제로"
+            android:textColor="@color/mainblack"
+            android:textSize="18sp"/>
+        <Button
+            android:id="@+id/quizPassButton"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/graylight"
+            android:layout_marginTop="5dp"
+            android:text="결과 확인하기"
             android:textColor="@color/mainblack"
             android:textSize="18sp"/>
     </LinearLayout>
