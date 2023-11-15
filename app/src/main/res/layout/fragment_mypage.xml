@@ -23,7 +23,15 @@
             android:src="@drawable/account_image"
             android:layout_marginTop="-20dp">
         </de.hdodenhof.circleimageview.CircleImageView>
-
+        <Button
+            android:id="@+id/button_imageUpload"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="사진 업로드하기"
+            android:backgroundTint="@color/peowpink">
+        </Button>
         <TextView
             android:id="@+id/account_user_name"
             android:layout_width="match_parent"
@@ -38,7 +46,7 @@
             android:id="@+id/account_user_birth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:textAlignment="center"
             android:text="B. 2003. 01. 02"
@@ -49,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:textAlignment="center"
             android:text="토익 900점 이상"
             android:textSize="24sp">

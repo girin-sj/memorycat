@@ -25,10 +25,10 @@ class BookmarkStartFragment : Fragment() {
 
         //프레그먼트끼리의 화면이동으로 변경해야 함. replace 사용하자
         //이미 bookmarkMainActivity는 삭제해서, bookmark start -> main 화면 전환부터 시작하자.
-        binding.WordMeanButton.setOnClickListener {
+        /*binding.WordMeanButton.setOnClickListener {
             val intent = Intent(activity, BookmarkMainFragment::class.java)
             startActivity(intent)
-        }
+        }*/
     }
 
 }
