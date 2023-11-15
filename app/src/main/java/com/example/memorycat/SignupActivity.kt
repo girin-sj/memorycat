@@ -35,7 +35,8 @@ class SignUpActivity : AppCompatActivity() {
                                                 "전송된 메일을 확인해 주세요.",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    val userDB = firestore.collection("userDB").document(email)
+                                    val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+                                    val userDB = firestore.collection("userDB").document(uid!!)
                                     userDB.set(
                                         hashMapOf(
                                             "birth" to "",
