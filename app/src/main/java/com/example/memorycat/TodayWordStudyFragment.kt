@@ -60,7 +60,7 @@ class TodayWordStudyFragment : Fragment() {
             } else {
                 counter--
                 binding.TodayWordNumber.text = "$counter/10"
-                binding.studyBeforeButton.text = "다음 단어로"
+                binding.studyBeforeButton.text = "이전 단어로"
             }
         }
 
