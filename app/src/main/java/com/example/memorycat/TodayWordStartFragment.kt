@@ -1,6 +1,6 @@
 package com.example.memorycat
 
-import android.content.Intent
+//import android.os.Bundle
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,9 +25,17 @@ class TodayWordStartFragment : Fragment() {
 
         //이동할 프레그먼트 화면 만들고, replace 해당 화면으로 이동시키자. 그러면 manifest에서 activity 자워도 화면 이동 가능함.
         //프레그먼트끼리 이동 확인됐을떄 마지막으로 activity 화면 제거하자.
+
+        //오늘의 영단어 시작하기
         binding.studyStartButton.setOnClickListener {
-            val intent = Intent(activity, TodayWordStudyActivity::class.java)
-            startActivity(intent)
+            //val intent = Intent(activity, TodayWordStudyActivity::class.java)
+            //startActivity(intent)
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.main_content, TodayWordStudyFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
         }
+
+        //틀렸던 단어들 재학습하기는 우선 pass
     }
 }

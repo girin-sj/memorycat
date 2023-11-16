@@ -44,14 +44,15 @@
             android:layout_marginTop="15dp"
             android:text="답을 입력하세요"
             android:textColor="@color/graylight"/>
+
         <TextView
             android:id="@+id/quizNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
-            android:textColor="@color/graydark"
-            android:text="1/10"/>
+            android:text="1/10"
+            android:textColor="@color/graydark" />
         <Button
             android:id="@+id/quizNextButton"
             android:layout_width="320dp"

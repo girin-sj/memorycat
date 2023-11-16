@@ -14,11 +14,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorycat.databinding.FragmentQuizMainBinding
 
-class BookmarkMainFragment : AppCompatActivity() {
+class BookmarkMainActivity : AppCompatActivity() {
+    private var _binding: FragmentQuizMainBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bookmark_main)
+        setContentView(R.layout.fragment_bookmark_main)
 
         //북마크한 내용들 가져와서 여기서 보여줘야 함
         val wordList = mutableListOf<Word>()
