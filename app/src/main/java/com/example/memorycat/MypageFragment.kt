@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.example.memorycat.databinding.FragmentMypageBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
@@ -22,9 +23,6 @@ import java.util.Date
 class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
-    private lateinit var firestore: FirebaseFirestore
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_MEDIA_IMAGES), 101)
@@ -34,11 +32,26 @@ class MypageFragment : Fragment() {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        firestore = FirebaseFirestore.getInstance()
-
+        val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        val uid : String? = FirebaseAuth.getInstance().currentUser?.uid
+        val userDB = firestore.collection("userDB").document(uid!!)
+        userDB.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val level = document.getString("level")
+                    binding.userLevel.text =  "Lv. ${level?.toUpperCase()}"
+                }
+                else {
+                    Log.d("MypageFragment", "Document does not exist")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("MypageFragment", "Error getting document: $exception")
+            }
         binding.buttonImageUpload.setOnClickListener {
             openGalleryForImage()
         }
