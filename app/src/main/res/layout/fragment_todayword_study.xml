@@ -36,19 +36,19 @@
 
             <TextView
                 android:id="@+id/TodayWord"
-                android:layout_width="240sp"
+                android:layout_width="220sp"
                 android:layout_height="wrap_content"
                 android:text="Cat"
                 android:textStyle="bold"
                 android:textSize="45sp"
                 android:textColor="@color/mainblack"/>
-            <ImageView
+            <ImageButton
                 android:layout_width="30dp"
                 android:layout_height="62dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/voice" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/todaywordBookmark"
                 android:layout_width="30dp"
                 android:layout_height="62dp"

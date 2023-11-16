@@ -18,16 +18,10 @@ class BookmarkStartFragment : Fragment() {
         _binding = FragmentBookmarkStartBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*binding.WordMeanButton.setOnClickListener {
-            val intent = Intent(activity, BookmarkMainFragment::class.java)
-        binding.WordMeanButton.setOnClickListener {
-            val intent = Intent(activity, BookmarkMainActivity::class.java)
-            startActivity(intent)
-        }*/
         //fragment간 이동
         binding.WordMeanButton.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
