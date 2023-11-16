@@ -16,11 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <ImageView
-                android:layout_width="30dp"
+            <ImageButton
+                android:id="@+id/voiceButton"
+                android:layout_width="50dp"
                 android:layout_height="62dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/voice"/>
+                android:src="@drawable/voice"
+                android:contentDescription="voice" />
             <TextView
                 android:id="@+id/quizWord"
                 android:layout_width="match_parent"
