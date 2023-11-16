@@ -77,7 +77,7 @@
                 android:id="@+id/user_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lv."
+                android:text="level"
                 android:textSize="24sp">
             </TextView>
         </LinearLayout>
