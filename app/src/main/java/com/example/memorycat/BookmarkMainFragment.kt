@@ -29,13 +29,13 @@ class BookmarkMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
-        val BookmarkDatas = mutableListOf<String>()
+        val bookmarkDatas = mutableListOf<String>()
         for (i in 1..10){
-            BookmarkDatas.add("Item $i")
+            bookmarkDatas.add("Item $i")
         }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = BookmarkAdapter(BookmarkDatas)
+        binding.recyclerView.adapter = BookmarkAdapter(bookmarkDatas)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
