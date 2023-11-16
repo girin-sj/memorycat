@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="Cat"
                 android:textStyle="bold"
-                android:textSize="45sp"
+                android:textSize="37sp"
                 android:textColor="@color/mainblack"/>
             <ImageButton
                 android:layout_width="30dp"
