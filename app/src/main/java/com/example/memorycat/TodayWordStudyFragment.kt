@@ -111,19 +111,16 @@ class TodayWordStudyFragment : Fragment() {
                                         binding.TodayWord.text = randomFieldName
 
                                         // 뜻 가져오기 -> 이게 아직 안됨.
-                                        val meaningsField = fieldMap[randomFieldName] as? List<String>
+                                        val meaningsArray = fieldMap[randomFieldName] as? List<String>
 
-                                        if (meaningsField != null && meaningsField.isNotEmpty()) {
+                                        if (meaningsArray != null && meaningsArray.isNotEmpty()) {
                                             // 단어를 북마크DB에 추가 또는 토글
                                             toggleBookmarkStatus(randomFieldName)
 
                                             // 뜻을 각각의 변수에 바인딩
-                                            binding.TodayWordMean1.text = meaningsField.getOrNull(0) ?: ""
-                                            binding.TodayWordMean2.text = meaningsField.getOrNull(1) ?: ""
-                                            binding.TodayWordMean3.text = meaningsField.getOrNull(2) ?: ""
-
-                                            // 단어를 북마크DB에 추가 또는 토글
-                                            toggleBookmarkStatus(randomFieldName)
+                                            binding.TodayWordMean1.text = meaningsArray.getOrNull(0) ?: ""
+                                            binding.TodayWordMean2.text = meaningsArray.getOrNull(1) ?: ""
+                                            binding.TodayWordMean3.text = meaningsArray.getOrNull(2) ?: ""
 
                                         }
                                     }
@@ -143,7 +140,7 @@ class TodayWordStudyFragment : Fragment() {
     //firestore에서 해당 user의 bookmarkDB에 접근
     //버튼 눌릴때 false는 true로, true는 false로 바뀜
     //firestore에서 해당 user의 bookmarkDB에 접근
-//버튼 눌릴때 false는 true로, true는 false로 바뀜
+    //버튼 눌릴때 false는 true로, true는 false로 바뀜
     private fun toggleBookmarkStatus(word: String) {
         val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
