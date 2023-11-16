@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.databinding.FragmentBookmarkMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 //fetchBookmarkedWords 함수는 Firestore에서 북마크된 단어 목록을 가져오는 역할
 // 가져온 데이터를 bookmarkedWords 리스트에 저장하고,
@@ -31,15 +30,21 @@ class BookmarkMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+        val BookmarkDatas = mutableListOf<String>()
 
-        if (uid != null) {
-            fetchBookmarkedWords(uid)
-        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = BookmarkAdapter(BookmarkDatas)
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
+        //if (uid != null) {
+        //    fetchBookmarkedWords(uid)
+        //}
+
+
+    /*
     private fun fetchBookmarkedWords(uid: String) {
         val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-
         val userBookmarkDB = firestore.collection("userDB").document(uid)
             .collection("bookmarkDB")
 
@@ -68,6 +73,8 @@ class BookmarkMainFragment : Fragment() {
             DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         )
     }
+
+     */
 
     override fun onDestroyView() {
         super.onDestroyView()
