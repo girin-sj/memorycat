@@ -32,7 +32,7 @@ class TodayWordStudyFragment : Fragment() {
 
         //다음 단어
         binding.studyNextButton.setOnClickListener {
-            if (counter < 10) {
+            if (counter <= 9) {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 fetchRandomTodayWord()
@@ -101,28 +101,26 @@ class TodayWordStudyFragment : Fragment() {
                             if (dictionaryDocument != null) {
                                 val fieldMap = dictionaryDocument.data
                                 if (fieldMap != null) {
-                                    //단어
-                                    val fieldNames =
-                                        fieldMap.keys.toList() // Map 형식의 단어 data field의 key
+                                    // 단어와 뜻 가져오기
+                                    val fieldNames = fieldMap.keys.toList() // Map 형식의 단어 data field의 key
                                     val availableFieldNames = fieldNames - usedFieldNames // 중복 방지
 
                                     if (availableFieldNames.isNotEmpty()) {
-                                        val randomFieldName =
-                                            availableFieldNames.random() // 단어 랜덤 추출
+                                        val randomFieldName = availableFieldNames.random() // 단어 랜덤 추출
                                         usedFieldNames.add(randomFieldName)
                                         binding.TodayWord.text = randomFieldName
 
                                         // 뜻 가져오기
-                                        val meanings = fieldMap[randomFieldName] as? List<String>
+                                        val meaningsField = fieldMap[randomFieldName] as? List<String>
 
-                                        if (meanings != null && meanings.isNotEmpty()) {
+                                        if (meaningsField != null && meaningsField.isNotEmpty()) {
+                                            // 단어를 북마크DB에 추가 또는 토글
+                                            toggleBookmarkStatus(randomFieldName)
+
                                             // 뜻을 각각의 변수에 바인딩
-                                            binding.TodayWordMean1.text =
-                                                meanings.getOrNull(0) ?: ""
-                                            binding.TodayWordMean2.text =
-                                                meanings.getOrNull(1) ?: ""
-                                            binding.TodayWordMean3.text =
-                                                meanings.getOrNull(2) ?: ""
+                                            binding.TodayWordMean1.text = meaningsField.getOrNull(0) ?: ""
+                                            binding.TodayWordMean2.text = meaningsField.getOrNull(1) ?: ""
+                                            binding.TodayWordMean3.text = meaningsField.getOrNull(2) ?: ""
 
                                             // 단어를 북마크DB에 추가 또는 토글
                                             toggleBookmarkStatus(randomFieldName)
