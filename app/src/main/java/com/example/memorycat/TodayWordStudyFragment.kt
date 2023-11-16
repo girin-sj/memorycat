@@ -53,12 +53,14 @@ class TodayWordStudyFragment : Fragment() {
 
         //이전 단어
         binding.studyBeforeButton.setOnClickListener {
+            //버튼 누를 때마다 해당 단어의 북마크 정보 가져와서 색 반영해야 함.
             if (counter <= 1) {
                 binding.studyBeforeButton.text = "이전단어 없음"
                 binding.TodayWordNumber.text = "$counter/10"
             } else {
                 counter--
-                binding.studyBeforeButton.text = "$counter/10"
+                binding.TodayWordNumber.text = "$counter/10"
+                binding.studyBeforeButton.text = "다음 단어로"
             }
         }
 
@@ -69,12 +71,10 @@ class TodayWordStudyFragment : Fragment() {
 
             // 현재 색상이 @color/graydark인 경우에만 변경
             if (currentColor == ContextCompat.getColor(binding.root.context, R.color.graydark)) {
-                // 바뀔 색상으로 변경
                 binding.todaywordBookmark.setColorFilter(
                     ContextCompat.getColor(binding.root.context, R.color.peowpink)
                 )
             } else {
-                // 다시 원래 색상으로 변경 (혹은 필요에 따라 다른 동작 수행)
                 binding.todaywordBookmark.setColorFilter(
                     ContextCompat.getColor(binding.root.context, R.color.graydark)
                 )
@@ -101,7 +101,7 @@ class TodayWordStudyFragment : Fragment() {
                             if (dictionaryDocument != null) {
                                 val fieldMap = dictionaryDocument.data
                                 if (fieldMap != null) {
-                                    // 단어와 뜻 가져오기
+                                    // 단어 가져오기
                                     val fieldNames = fieldMap.keys.toList() // Map 형식의 단어 data field의 key
                                     val availableFieldNames = fieldNames - usedFieldNames // 중복 방지
 
@@ -110,7 +110,7 @@ class TodayWordStudyFragment : Fragment() {
                                         usedFieldNames.add(randomFieldName)
                                         binding.TodayWord.text = randomFieldName
 
-                                        // 뜻 가져오기
+                                        // 뜻 가져오기 -> 이게 아직 안됨.
                                         val meaningsField = fieldMap[randomFieldName] as? List<String>
 
                                         if (meaningsField != null && meaningsField.isNotEmpty()) {
