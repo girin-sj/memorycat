@@ -1,6 +1,7 @@
 package com.example.memorycat
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,14 @@ import androidx.fragment.app.Fragment
 import com.example.memorycat.databinding.FragmentQuizMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 import kotlin.random.Random
 
-class QuizMainFragment : Fragment() {
+class QuizMainFragment : Fragment(), TextToSpeech.OnInitListener {
     private var _binding: FragmentQuizMainBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
+    private var tts: TextToSpeech? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +31,9 @@ class QuizMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fetchRandomQuizWord()
+
+        tts = TextToSpeech(context, this)
+        binding.voiceButton.setOnClickListener { startTTS() }
 
         binding.quizNextButton.setOnClickListener {
             if (counter < 10) {
@@ -87,8 +93,30 @@ class QuizMainFragment : Fragment() {
                 Log.e("QuizMainFragment", "Error getting document: $exception")
             }
     }
+    private fun startTTS() {
+        tts!!.speak(binding.quizWord.text.toString(), TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    // TextToSpeech override 함수
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts!!.setLanguage(Locale.ENGLISH)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                // 예외처리
+            } else {
+                // 예외처리
+            }
+        } else {
+            // 예외처리
+        }
+    }
 
     override fun onDestroyView() {
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+
         super.onDestroyView()
         _binding = null
     }
