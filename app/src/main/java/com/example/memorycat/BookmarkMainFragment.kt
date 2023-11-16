@@ -31,6 +31,7 @@ class BookmarkMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+
         if (uid != null) {
             fetchBookmarkedWords(uid)
         }
