@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
                 // Handle item selection here
                 when (item.itemId) {
                     R.id.action_mypage -> {
-                        var detailViewFragment = DetailViewFragment()
+                        var detailViewFragment = MypageFragment()
                         supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                         return true
                     }
