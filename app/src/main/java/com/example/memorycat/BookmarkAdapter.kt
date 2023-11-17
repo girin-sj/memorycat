@@ -3,9 +3,9 @@ package com.example.memorycat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.memorycat.databinding.ItemNoteBinding
+import com.example.memorycat.databinding.ItemBookmarkBinding
 
-class BookmarkViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root)
+class BookmarkViewHolder(val binding: ItemBookmarkBinding) : RecyclerView.ViewHolder(binding.root)
 
 class BookmarkAdapter(val bookmarkDatas: MutableList<String>)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -24,8 +24,7 @@ class BookmarkAdapter(val bookmarkDatas: MutableList<String>)
     //전체 리스트의 사이즈, 데이터 크기
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        BookmarkViewHolder(ItemNoteBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
+        BookmarkViewHolder(ItemBookmarkBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     //뷰가 만들어질때(create) 호출되는 메소드
     //ItemBookmarkBinding을 사용하여 각 아이템의 바인딩을 생성
     //onBindViewHolder에서는 해당 바인딩을 통해 데이터를 설정
@@ -33,6 +32,7 @@ class BookmarkAdapter(val bookmarkDatas: MutableList<String>)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as BookmarkViewHolder).binding
         // Set word to the corresponding view
+        //여기서 MVVM으로 북마크된 단어들을 표현하려나..?
         //binding.wordData1.text = bookmarkedWords[position]
     }
     //뷰가 바인드(Bind)될때 호출되는 메소드

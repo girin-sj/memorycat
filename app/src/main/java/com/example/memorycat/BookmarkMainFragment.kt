@@ -30,6 +30,7 @@ class BookmarkMainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
         val bookmarkDatas = mutableListOf<String>()
+        //db에서 북마크 개수 가져와서 이용
         for (i in 1..10){
             bookmarkDatas.add("Item $i")
         }
@@ -39,6 +40,8 @@ class BookmarkMainFragment : Fragment() {
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
+    //북마크 자체에도 발바닥 누르면 db에게 false 정보 주고, 리스트에서 사라지게.
+    //db연결. 위치 잘 파악하자.
         //if (uid != null) {
         //    fetchBookmarkedWords(uid)
         //}
@@ -75,7 +78,6 @@ class BookmarkMainFragment : Fragment() {
             DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         )
     }
-
      */
 
     override fun onDestroyView() {

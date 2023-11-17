@@ -37,18 +37,21 @@
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="100dp"
+    android:layout_marginLeft="50dp"
     android:orientation="horizontal">
     <ImageButton
         android:id="@+id/bookmarkVoice"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/voice"/>
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/voice"
+        android:backgroundTint="@color/white"/>
     <ImageButton
         android:id="@+id/BookmarkPeow"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/peow"
-        app:tint="@color/peowpink"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/peow" />
 </LinearLayout>
 </LinearLayout>
