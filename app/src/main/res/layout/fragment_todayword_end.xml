@@ -36,17 +36,17 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
         android:backgroundTint="@color/yellow"
-        android:text="북마크 화면으로 가기"
+        android:text="북마크 보러 가기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
     <Button
-        android:id="@+id/goTodaywordButton"
+        android:id="@+id/goQuizButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:backgroundTint="@color/graylight"
-        android:text="오늘의 영단어로 돌아가기"
+        android:text="테스트 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
 </LinearLayout>

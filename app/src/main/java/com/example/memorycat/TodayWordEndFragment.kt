@@ -28,6 +28,13 @@ class TodayWordEndFragment : Fragment() {
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
+
+        binding.goQuizButton.setOnClickListener {
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.main_content, QuizStartFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
     }
 
     override fun onDestroyView() {
