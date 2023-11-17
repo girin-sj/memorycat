@@ -1,21 +1,19 @@
 package com.example.memorycat
 
+import MyViewModel
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.example.memorycat.databinding.FragmentQuizStartBinding
 
 class QuizStartFragment : Fragment() {
     private var _binding: FragmentQuizStartBinding? = null
     private val binding get() = _binding!!
-    private var myViewModel: MyViewModel
-
-    init {
-        myViewModel = MyViewModel()
-    }
+    private val myViewModel: MyViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,9 +25,9 @@ class QuizStartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val level = myViewModel.loadLevel()
-
-        binding.levelText.text = "${level.toString().toUpperCase()} 단어 테스트를\n시작할게요"
+        myViewModel.level.observe(viewLifecycleOwner, { level ->
+            binding.levelText.text = "${level?.toUpperCase()} 단어 테스트를\n시작할게요"
+        })
 
         binding.quizStartButton.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()

@@ -60,4 +60,5 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
     implementation("com.google.firebase:firebase-storage-common:17.0.0")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
 }
