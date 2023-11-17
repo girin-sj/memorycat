@@ -1,24 +1,23 @@
 package com.example.memorycat
 
+import MemoryCatTextToSpeech
+import MyViewModel
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.memorycat.databinding.FragmentQuizMainBinding
 
 class QuizMainFragment : Fragment() {
     private var _binding: FragmentQuizMainBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
-    private var tts: MemoryCatTextToSpeech? = MemoryCatTextToSpeech()
-    private var myViewModel: MyViewModel
-
-    init {
-        myViewModel = MyViewModel()
-    }
+    private var tts: MemoryCatTextToSpeech? = null
+    private val myViewModel: MyViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,14 +29,17 @@ class QuizMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.quizWord.text = myViewModel.getWords().toString()
+        tts = MemoryCatTextToSpeech(requireContext())
+        myViewModel.words.observe(viewLifecycleOwner, Observer { newWord ->
+            binding.quizWord.text = newWord
+        })
         binding.voiceButton.setOnClickListener { startTTS() }
 
         binding.quizNextButton.setOnClickListener {
             if (counter < 10) {
                 counter++
                 binding.quizNumber.text = "$counter/10"
-                binding.quizWord.text = myViewModel.getWords().toString()
+                myViewModel.getWords()
             }
 
             if (counter == 10) {

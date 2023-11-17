@@ -1,81 +1,81 @@
-package com.example.memorycat
-
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.random.Random
 
 class MyViewModel : ViewModel() {
-    // 가져올 데이터
-    val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    val uid : String? = FirebaseAuth.getInstance().currentUser?.uid
-    val userDB = firestore.collection("userDB").document(uid!!)
-    val usedFieldNames = mutableListOf<String>()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+    private val userDB = firestore.collection("userDB").document(uid!!)
+    private val usedFieldNames = mutableListOf<String>()
+    private val _level = MutableLiveData<String>()
+    val level: LiveData<String> get() = _level
+    private val _words: MutableLiveData<String> = MutableLiveData()
+    val words: LiveData<String> get() = _words
 
     init {
         loadLevel()
     }
 
-    fun loadLevel() : String? {
-        var userLevel: String? = null
-        userDB.get().addOnSuccessListener {
-                document ->
+    private fun loadLevel() {
+        userDB.get().addOnSuccessListener { document ->
             if (document != null) {
-                userLevel = document.getString("level")
-                Log.d("QuizStartFragment", "$userLevel")
-            }
-            else {
-                Log.d("QuizStartFragment", "Document does not exist")
+                _level.value = document.getString("level")
+                Log.d("MyViewModel", "Level loaded: ${_level.value}")
+            } else {
+                Log.d("MyViewModel", "Document does not exist")
             }
         }.addOnFailureListener { exception ->
-            Log.e("QuizStartFragment", "Error getting document: $exception")
+            Log.e("MyViewModel", "Error getting document: $exception")
         }
-        return userLevel
     }
 
     fun getWords() {
-        val level = loadLevel()
-        val englishDictionaryCollection =
-            firestore.collection("englishDictionary").document(level!!)
+        val level = _level.value
+        if (level == null) {
+            Log.e("MyViewModel", "Level is null. Unable to get words.")
+            return
+        }
+
+        val englishDictionaryCollection = firestore.collection("englishDictionary").document(level)
         englishDictionaryCollection.get()
             .addOnSuccessListener { dictionaryDocument ->
                 if (dictionaryDocument != null) {
                     val fieldMap = dictionaryDocument.data
                     if (fieldMap != null) {
-                        val fieldNames = fieldMap.keys.toList() // Map 형식의 단어 data field의 key
-                        var availableFieldNames = mutableListOf<String>()
-                        usedFieldNames.forEach{
-                            var searchWord = it
-                            var res = fieldNames.find { it==searchWord }
-                            if(res!=null) availableFieldNames.add(res)
-                        }
+                        val fieldNames = fieldMap.keys.toList()
+                        val availableFieldNames = fieldNames - usedFieldNames
 
                         if (availableFieldNames.isNotEmpty()) {
-                            val randomFieldName = availableFieldNames.random() // 단어 랜덤 추출
+                            val randomFieldName = availableFieldNames.random()
                             usedFieldNames.add(randomFieldName)
+
+                            // Update the value of _words LiveData
+                            _words.value = randomFieldName
+                            Log.d("MyViewModel", "New word: ${_words.value}")
                         }
                     }
-                } else {
-                    Log.d("QuizMainFragment", "Document does not exist")
                 }
             }
     }
-
-    /*
-    private val users: MutableLiveData<List<User>> by lazy {
-        MutableLiveData<List<User>>().also {
-            loadUsers()
-        }
-    }
-
-    fun getUsers(): LiveData<List<User>> {
-        return users
-    }
-
-    private fun loadUsers() {
-        // Do an asynchronous operation to fetch users.
-    }
-   */
 }
+
+
+                    /*
+                    private val users: MutableLiveData<List<User>> by lazy {
+                        MutableLiveData<List<User>>().also {
+                            loadUsers()
+                        }
+                    }
+
+                    fun getUsers(): LiveData<List<User>> {
+                        return users
+                    }
+
+                    private fun loadUsers() {
+                        // Do an asynchronous operation to fetch users.
+                    }
+                    */
