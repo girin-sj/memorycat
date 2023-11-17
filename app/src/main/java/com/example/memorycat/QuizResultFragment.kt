@@ -16,7 +16,7 @@ class QuizResultFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuizResultBinding.inflate(inflater, container, false)
         return binding.root
     }
