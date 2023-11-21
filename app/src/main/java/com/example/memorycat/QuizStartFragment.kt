@@ -12,7 +12,7 @@ import com.example.memorycat.databinding.FragmentQuizStartBinding
 class QuizStartFragment : Fragment() {
     private var _binding: FragmentQuizStartBinding? = null
     private val binding get() = _binding!!
-    private val quizViewModel: QuizViewModel by viewModels()
+    private val quizViewModel: QuizViewModel by viewModels() //뷰모델
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

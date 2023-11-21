@@ -39,7 +39,7 @@ class QuizMainFragment : Fragment() {
         })
         quizViewModel.getWords()
 
-        binding.quizNextButton.setOnClickListener {
+        /* binding.quizNextButton.setOnClickListener {
             if (counter < 10) {
                 counter++
                 binding.quizNumber.text = "$counter/10"
@@ -70,6 +70,8 @@ class QuizMainFragment : Fragment() {
             }
             binding.quizAnswer.text.clear()
         }
+
+         */
     }
 
     private fun startTTS() {
