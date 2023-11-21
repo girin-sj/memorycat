@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.memorycat.databinding.FragmentMypageBinding
@@ -30,6 +31,21 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // About stamp
+        val imageView: ImageView = view.findViewById(R.id.img_stamp)
+        val stampArray = resources.obtainTypedArray(R.array.stamp)
+        val imageIndex = 3 // stamp image index = stamp count = date
+
+        val imageResId = stampArray.getResourceId(imageIndex, -1) // get image ID from array
+
+        if (imageResId != -1) {
+            imageView.setImageResource(imageResId) // change ImageView
+        }
+
+        // after use, TypedArray release
+        stampArray.recycle()
+
+        // About firestore
         val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
         val uid : String? = FirebaseAuth.getInstance().currentUser?.uid
         val userDB = firestore.collection("userDB").document(uid!!)
