@@ -25,7 +25,7 @@ class QuizStartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         quizViewModel.level.observe(viewLifecycleOwner, { level ->
-            binding.levelText.text = "${level?.toUpperCase()} 단어 테스트를\n시작할게요"
+            binding.levelText.text = "Lv. ${level?.toUpperCase()}"
         })
 
         binding.quizStartButton.setOnClickListener {
