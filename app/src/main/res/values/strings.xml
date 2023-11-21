@@ -2,4 +2,14 @@
     <string name="app_name">memorycat</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <array name="stamp">
+        <item>@drawable/peow</item>
+        <item>@drawable/peow2</item>
+        <item>@drawable/peow3</item>
+        <item>@drawable/peow4</item>
+        <item>@drawable/peow5</item>
+        <item>@drawable/peow6</item>
+        <item>@drawable/peow7</item>
+    </array>
 </resources>
+
