@@ -1,5 +1,6 @@
 package com.example.memorycat
 
+import QuizViewModel
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -10,8 +11,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,6 +25,8 @@ import java.util.Date
 class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
+
+    private val quizViewModel: QuizViewModel by viewModels() //뷰모델
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
         return binding.root
@@ -29,27 +34,34 @@ class MypageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val firestore: FirebaseFirestore = FirebaseFirestore.getInstance() // for firestore
 
-        val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+        // About stamp
+        val imageView: ImageView = view.findViewById(R.id.img_stamp)
+        val stampArray = resources.obtainTypedArray(R.array.stamp)
+        val imageIndex = 3 // stamp image index = stamp count = date
+
+        val imageResId = stampArray.getResourceId(imageIndex, -1) // get image ID from array
+
+        if (imageResId != -1) {
+            imageView.setImageResource(imageResId) // change ImageView
+        }
+
+        // after use, TypedArray release
+        stampArray.recycle()
+
+        // get Level information from DB and display
         val uid : String? = FirebaseAuth.getInstance().currentUser?.uid
-        val userDB = firestore.collection("userDB").document(uid!!)
-        userDB.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val level = document.getString("level")
-                    binding.userLevel.text =  "Lv. ${level?.toUpperCase()}"
-                }
-                else {
-                    Log.d("MypageFragment", "Document does not exist")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("MypageFragment", "Error getting document: $exception")
-            }
+        quizViewModel.level.observe(viewLifecycleOwner, { level ->
+            binding.userLevel.text = "Lv. ${level?.toUpperCase()}"
+        })
+
         binding.buttonImageUpload.setOnClickListener {
             openGalleryForImage()
         }
     }
+
+    // About firestore
     private val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedImageUri = result.data?.data

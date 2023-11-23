@@ -1,8 +1,7 @@
 package com.example.memorycat
 
-import MyViewModel
+import QuizViewModel
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import com.example.memorycat.databinding.FragmentQuizStartBinding
 class QuizStartFragment : Fragment() {
     private var _binding: FragmentQuizStartBinding? = null
     private val binding get() = _binding!!
-    private val myViewModel: MyViewModel by viewModels()
+    private val quizViewModel: QuizViewModel by viewModels() //뷰모델
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,8 +24,8 @@ class QuizStartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myViewModel.level.observe(viewLifecycleOwner, { level ->
-            binding.levelText.text = "${level?.toUpperCase()} 단어 테스트를\n시작할게요"
+        quizViewModel.level.observe(viewLifecycleOwner, { level ->
+            binding.levelText.text = "Lv. ${level?.toUpperCase()}"
         })
 
         binding.quizStartButton.setOnClickListener {

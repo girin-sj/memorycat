@@ -1,8 +1,9 @@
 package com.example.memorycat
 
 import MemoryCatTextToSpeech
-import MyViewModel
+import QuizViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ class QuizMainFragment : Fragment() {
     private val binding get() = _binding!!
     private var counter: Int = 1
     private var tts: MemoryCatTextToSpeech? = null
-    private val myViewModel: MyViewModel by viewModels()
+    private val quizViewModel: QuizViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,19 +30,32 @@ class QuizMainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        quizViewModel.resetCurrentQuizDB()
         tts = MemoryCatTextToSpeech(requireContext())
-        myViewModel.words.observe(viewLifecycleOwner, Observer { newWord ->
+        binding.voiceButton.setOnClickListener { startTTS() }
+        quizViewModel.words.observe(viewLifecycleOwner, Observer { newWord ->
             binding.quizWord.text = newWord
         })
-        binding.voiceButton.setOnClickListener { startTTS() }
+        quizViewModel.getWords()
 
-        binding.quizNextButton.setOnClickListener {
+        /* binding.quizNextButton.setOnClickListener {
             if (counter < 10) {
                 counter++
                 binding.quizNumber.text = "$counter/10"
-                myViewModel.getWords()
-            }
+                val userAnswer = binding.quizAnswer.text.toString()
+                if (quizViewModel.checkAnswer(userAnswer)) {
+                    // Handle correct answer (e.g., update UI, show a message)
+                    Log.d("QuizMainFragment", "Correct Answer!")
+                } else {
+                    // Handle incorrect answer (e.g., update UI, show a message)
+                    Log.d("QuizMainFragment", "Incorrect Answer!")
+                }
 
+                // Update quiz result in the database
+                quizViewModel.updateQuizResult(userAnswer)
+                quizViewModel.getWords()
+            }
             if (counter == 10) {
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
@@ -49,12 +63,15 @@ class QuizMainFragment : Fragment() {
                 binding.quizPassButton.setOnClickListener {
                     val transaction =
                         activity?.supportFragmentManager?.beginTransaction()
-                    transaction?.replace(R.id.main_content, QuizResultFragment())
+                    transaction?.replace(R.id.main_content, QuizNoteFragment())
                     transaction?.addToBackStack(null)
                     transaction?.commit()
                 }
             }
+            binding.quizAnswer.text.clear()
         }
+
+         */
     }
 
     private fun startTTS() {
@@ -65,7 +82,6 @@ class QuizMainFragment : Fragment() {
         if (tts != null) {
             tts!!.stopWord()
         }
-
         super.onDestroyView()
         _binding = null
     }

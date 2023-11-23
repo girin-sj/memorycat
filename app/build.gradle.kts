@@ -64,4 +64,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-common:17.0.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     //implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
 }

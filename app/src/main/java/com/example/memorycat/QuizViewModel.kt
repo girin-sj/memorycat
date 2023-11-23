@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
 
-class MyViewModel : ViewModel() {
+class QuizViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
     private val userDB = firestore.collection("userDB").document(uid!!)
@@ -221,19 +221,47 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    fun checkAnswer(answer: String): Boolean {
+        return _words.value == answer
+    }
 
-                    /*
-                    private val users: MutableLiveData<List<User>> by lazy {
-                        MutableLiveData<List<User>>().also {
-                            loadUsers()
+    fun updateQuizResult(answer: String) {
+        if (_words.value.isNullOrEmpty()) {
+            Log.e("MyViewModel", "_words.value is null or empty.")
+            return
+        }
+        val quizResult = if (checkAnswer(answer)) "O" else "X"
+
+        // Update the currentquizDB with the current result
+        val currentQuizData = mapOf(answer to quizResult)
+        userDB.update("currentquizDB", currentQuizData)
+
+        // Update the accurequizDB (only if it exists)
+        userDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val accurequiz = task.result?.get("accurequizDB") as? MutableMap<String, String>
+                if (accurequiz != null) {
+                    if (accurequiz.containsKey(answer)) {
+                        // 이미 푼 문제일 때 누적 퀴즈 db 처리
+                        if (quizResult == "X" && checkAnswer(answer)) {
+                            // 틀렸던 문제를 맞히면 O로 변경
+                            accurequiz[answer] = "O"
                         }
+                        // 이미 맞은 문제라면 아무것도 하지 않는다
+                    } else {
+                        // 푼 적 없는 문제라면 누적 퀴즈 db에 추가
+                        accurequiz[answer] = quizResult
                     }
-
-                    fun getUsers(): LiveData<List<User>> {
-                        return users
-                    }
-
-                    private fun loadUsers() {
-                        // Do an asynchronous operation to fetch users.
-                    }
-                    */
+                    // 누적 퀴즈 db 업데이트
+                    userDB.update("accurequizDB", accurequiz)
+                }
+            } else {
+                // 에러 로그
+                Log.e("MyViewModel", "Error getting userDB document: ${task.exception}")
+            }
+        }
+    }
+    fun resetCurrentQuizDB() {
+        userDB.update("currentquizDB", mapOf<String, String>()) // assuming it's a map
+    }
+}
