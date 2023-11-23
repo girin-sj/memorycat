@@ -8,4 +8,6 @@
     <color name="mainblack">#382E2E</color>
     <color name="peowpink">#E99C7C</color>
     <color name="backwhite">#F6F6F6</color>
+    <color name="wrongred">#7B241C </color>
+    <color name="rightgreen">#196F3D</color>
 </resources>
