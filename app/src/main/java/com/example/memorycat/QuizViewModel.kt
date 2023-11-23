@@ -15,11 +15,11 @@ class QuizViewModel : ViewModel() {
     private val _randomWord = MutableLiveData<String>()
     val randomWord: LiveData<String> get() = _randomWord
     private val _meanings = MutableLiveData<List<String>>()
+    val randomMeanings = MutableLiveData<List<String>>()
     val quizResult = MutableLiveData<List<QuizResult>>()
 
     init {
         loadLevel()
-        getRandomWord()
     }
 
     private fun loadLevel() {
@@ -27,6 +27,7 @@ class QuizViewModel : ViewModel() {
             if (document != null) {
                 _level.value = document.getString("level")
                 Log.d("MyViewModel", "Level loaded: ${_level.value}")
+                getRandomWord() // level이 로드된 후에 getRandomWord() 호출
             } else {
                 Log.d("MyViewModel", "Document does not exist")
             }
@@ -34,6 +35,7 @@ class QuizViewModel : ViewModel() {
             Log.e("MyViewModel", "Error getting document: $exception")
         }
     }
+
 
     fun getRandomWord(): MutableLiveData<String> {
         val levelDocument = firestore.collection("quizDB").document(level.value!!)
@@ -70,8 +72,8 @@ class QuizViewModel : ViewModel() {
         return _meanings
     }
 
-    fun getRandomMeanings(): MutableList<String> {
-        val randomMeanings = mutableListOf<String>()
+    fun getRandomMeanings() {
+        val randomMeaningsTemp = mutableListOf<String>()
         val levelDocument = firestore.collection("quizDB").document(level.value!!)
 
         levelDocument.get()
@@ -81,15 +83,14 @@ class QuizViewModel : ViewModel() {
                     for (i in 0 until 3) {
                         val randomWord = allWords.random()
                         val meanings = document.get(randomWord) as List<String>
-                        randomMeanings.add(meanings.random())
+                        randomMeaningsTemp.add(meanings.random())
                     }
                 }
+                randomMeanings.value = randomMeaningsTemp
             }
             .addOnFailureListener { exception ->
                 Log.e("QuizViewModel", "Error getting random meanings: $exception")
             }
-
-        return randomMeanings
     }
 
     fun updateQuizResult(answer: String) {
