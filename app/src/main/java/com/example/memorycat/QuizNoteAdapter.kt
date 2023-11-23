@@ -31,9 +31,9 @@ class QuizNoteAdapter(private var data: List<QuizResult>) : RecyclerView.Adapter
         holder.binding.answerMean.text = quizResult.answer
         holder.binding.selectMean.text = quizResult.select
         if (quizResult.isCorrect) {
-            holder.binding.answerMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.rightgreen))
+            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.rightgreen))
         } else {
-            holder.binding.answerMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.wrongred))
+            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.wrongred))
         }
     }
 }

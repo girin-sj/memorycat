@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.memorycat.databinding.FragmentQuizMainBinding
+import com.example.memorycat.databinding.FragmentQuizStartBinding
 
 class QuizMainFragment : Fragment() {
     private var _binding: FragmentQuizMainBinding? = null
@@ -20,6 +21,14 @@ class QuizMainFragment : Fragment() {
     private var counter: Int = 1
     private var tts: MemoryCatTextToSpeech? = null
     private val quizViewModel: QuizViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentQuizMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,12 +54,14 @@ class QuizMainFragment : Fragment() {
             handleAnswer(binding.quizAnswer4.text.toString())
         }
 
-        quizViewModel.getRandomWord()
+        quizViewModel.level.observe(viewLifecycleOwner, Observer { level ->
+            quizViewModel.getRandomWord()
+        })
     }
 
     private fun updateChoices(word: String) {
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, Observer { meanings ->
-            val randomMeanings = quizViewModel.getRandomMeanings()
+            val randomMeanings = meanings.toMutableList()
             // 정답 뜻 추가
             randomMeanings.add(meanings.random())
             // 리스트 섞기
@@ -78,8 +89,9 @@ class QuizMainFragment : Fragment() {
 
         quizViewModel.updateQuizResult(answer)
 
-        if (++counter < 10) {
+        if (++counter <= 10) {
             quizViewModel.getRandomWord()
+            binding.quizNumber.text = "$counter/10"
         } else {
             binding.quizPassButton.text = "결과 확인하기"
             binding.quizPassButton.backgroundTintList =

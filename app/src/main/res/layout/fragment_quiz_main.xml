@@ -61,21 +61,21 @@
             android:textColor="@color/mainblack"
             android:textSize="18sp"/>
         <Button
-            android:id="@+id/quizAnswer4"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/backwhite"
-            android:layout_marginTop="5dp"
-            android:text="답4"
-            android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
-        <Button
             android:id="@+id/quizAnswer3"
             android:layout_width="320dp"
             android:layout_height="50dp"
             android:backgroundTint="@color/backwhite"
             android:layout_marginTop="5dp"
             android:text="답3"
+            android:textColor="@color/mainblack"
+            android:textSize="18sp"/>
+        <Button
+            android:id="@+id/quizAnswer4"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/backwhite"
+            android:layout_marginTop="5dp"
+            android:text="답4"
             android:textColor="@color/mainblack"
             android:textSize="18sp"/>
 
