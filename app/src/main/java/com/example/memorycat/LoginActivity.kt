@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.memorycat.databinding.ActivityLoginBinding
 import com.example.memorycat.databinding.ActivitySignUpBinding
+import java.time.LocalDate
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +17,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val email: String = binding.emailInput.text.toString()
             val password: String = binding.passwordInput.text.toString()
+            var localDate: LocalDate = LocalDate.now()
             MyAuth.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     binding.emailInput.text.clear()

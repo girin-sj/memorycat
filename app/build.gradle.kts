@@ -63,4 +63,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-common:17.0.0")
     implementation("androidx.fragment:fragment-ktx:1.3.6")
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
 }

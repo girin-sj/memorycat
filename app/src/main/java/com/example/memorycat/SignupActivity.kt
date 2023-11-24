@@ -39,7 +39,7 @@ class SignUpActivity : AppCompatActivity() {
                                     val userDB = firestore.collection("userDB").document(uid!!)
                                     userDB.set(
                                         hashMapOf(
-                                            "birth" to "",
+                                            "date" to "",
                                             "bookmarkDB" to hashMapOf<String, Any>(),
                                             "email" to email,
                                             "goal" to "",
