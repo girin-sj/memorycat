@@ -5,17 +5,20 @@ import androidx.lifecycle.ViewModel
 import com.example.memorycat.QuizResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.getField
 
 class QuizViewModel : ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
     private val userDB = firestore.collection("userDB").document(uid!!)
+    private val accureDB = firestore.collection("accurequizDB").document(uid!!)
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _randomWord = MutableLiveData<String>()
     val randomWord: LiveData<String> get() = _randomWord
+    private val usedFieldNames = mutableListOf<String>()
     private val _meanings = MutableLiveData<List<String>>()
-    val randomMeanings = MutableLiveData<List<String>>()
+    val randomMeanings = MutableLiveData<MutableList<String>>()
     val quizResult = MutableLiveData<List<QuizResult>>()
 
     init {
@@ -26,26 +29,40 @@ class QuizViewModel : ViewModel() {
         userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _level.value = document.getString("level")
-                Log.d("MyViewModel", "Level loaded: ${_level.value}")
+                Log.d("QuizViewModel", "Level loaded: ${_level.value}")
                 getRandomWord() // level이 로드된 후에 getRandomWord() 호출
             } else {
-                Log.d("MyViewModel", "Document does not exist")
+                Log.d("QuizViewModel", "Document does not exist")
             }
         }.addOnFailureListener { exception ->
-            Log.e("MyViewModel", "Error getting document: $exception")
+            Log.e("QuizViewModel", "Error getting document: $exception")
         }
     }
 
 
     fun getRandomWord(): MutableLiveData<String> {
-        val levelDocument = firestore.collection("quizDB").document(level.value!!)
+        val levelDocumentRef = firestore.collection("quizDB").document(level.value!!)
 
-        levelDocument.get()
+        Log.d("quizViewModel", "get random word")
+        levelDocumentRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val fieldNames = document.data?.keys?.toList() ?: listOf()
-                    val randomWord = fieldNames.random()
-                    _randomWord.value = randomWord
+                    val fieldMap = document.data
+                    if (fieldMap != null) {
+                        val fieldNames = fieldMap.keys.toList()
+                        val availableFieldNames = fieldNames - usedFieldNames
+
+                        if (availableFieldNames.isNotEmpty()) {
+                            val randomFieldName = availableFieldNames.random()
+                            usedFieldNames.add(randomFieldName)
+
+                            _randomWord.value = randomFieldName
+                            Log.d("QuizViewModel", "New word: ${_randomWord.value}")
+                        }
+                    }
+                }
+                else {
+                    Log.d("QuizViewModel", "some error")
                 }
             }
             .addOnFailureListener { exception ->
@@ -55,13 +72,13 @@ class QuizViewModel : ViewModel() {
         return _randomWord
     }
 
-    fun getMeanings(word: String): LiveData<List<String>> {
+    fun getMeanings(word: String): MutableLiveData<List<String>> {
         val levelDocument = firestore.collection("quizDB").document(level.value!!)
 
         levelDocument.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val meanings = document.get(word) as List<String>
+                    val meanings = document.get(word) as MutableList<String>
                     _meanings.value = meanings
                 }
             }
@@ -93,12 +110,19 @@ class QuizViewModel : ViewModel() {
             }
     }
 
-    fun updateQuizResult(answer: String) {
-
+    fun updateQuizResult(word: String, answer: String) {
+        accureDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                accureDB.update(
+                    hashMapOf(
+                        word to answer
+                    ) as Map<String, Any>
+                )
+            }
+        }
     }
 
-    fun checkAnswer(answer: String): Boolean {
-        return _randomWord.value == answer
+    fun checkAnswer(userAnswer: String, correctAnswer: String): Boolean {
+        return correctAnswer == userAnswer
     }
-
 }

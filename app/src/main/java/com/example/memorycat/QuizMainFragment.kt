@@ -21,6 +21,11 @@ class QuizMainFragment : Fragment() {
     private var counter: Int = 1
     private var tts: MemoryCatTextToSpeech? = null
     private val quizViewModel: QuizViewModel by viewModels()
+    private var correctAnswer: String? = null
+    private val observer = Observer<String> { newWord ->
+        binding.quizWord.text = newWord
+        updateChoices(newWord)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,73 +41,90 @@ class QuizMainFragment : Fragment() {
         tts = MemoryCatTextToSpeech(requireContext())
         binding.voiceButton.setOnClickListener { startTTS() }
 
-        quizViewModel.randomWord.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.quizWord.text = newWord
-            updateChoices(newWord)
-        })
+        quizViewModel.randomWord.observe(viewLifecycleOwner, observer)
 
-        binding.quizAnswer1.setOnClickListener {
-            handleAnswer(binding.quizAnswer1.text.toString())
-        }
-        binding.quizAnswer2.setOnClickListener {
-            handleAnswer(binding.quizAnswer2.text.toString())
-        }
-        binding.quizAnswer3.setOnClickListener {
-            handleAnswer(binding.quizAnswer3.text.toString())
-        }
-        binding.quizAnswer4.setOnClickListener {
-            handleAnswer(binding.quizAnswer4.text.toString())
-        }
+        binding.quizNextButton.setOnClickListener {
+            if (++counter <= 10) {
+                binding.quizNumber.text = "$counter/10"
+                handleAnswer(binding.quizWord.text.toString())
 
-        quizViewModel.level.observe(viewLifecycleOwner, Observer { level ->
-            quizViewModel.getRandomWord()
-        })
+            } else {
+                binding.quizPassButton.text = "결과 확인하기"
+                binding.quizPassButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                binding.quizPassButton.setOnClickListener {
+                    val transaction = activity?.supportFragmentManager?.beginTransaction()
+                    transaction?.replace(R.id.main_content, QuizNoteFragment())
+                    transaction?.addToBackStack(null)
+                    transaction?.commit()
+                }
+            }
+        }
+    }
+
+    private val meaningsObserver = Observer<List<String>> { meanings ->
+        val randomMeanings = quizViewModel.randomMeanings.value
+        Log.d("QuizMainFragment", "$randomMeanings")
+        // 정답 뜻 추가
+        correctAnswer = meanings.random()
+        // 앞에서 3개의 뜻만 가져오기
+        val selectedMeanings = randomMeanings!!.take(3)
+        // 정답 뜻 추가
+        val finalMeanings = selectedMeanings + correctAnswer
+        // 리스트 섞기
+        val finalShuffledMeanings = finalMeanings.shuffled()
+        Log.d("QuizMainFragment", "$finalShuffledMeanings")
+
+        // 버튼에 뜻 할당
+        binding.quizAnswer1.text = finalShuffledMeanings[0]
+        binding.quizAnswer2.text = finalShuffledMeanings[1]
+        binding.quizAnswer3.text = finalShuffledMeanings[2]
+        binding.quizAnswer4.text = finalShuffledMeanings[3]
     }
 
     private fun updateChoices(word: String) {
-        quizViewModel.getMeanings(word).observe(viewLifecycleOwner, Observer { meanings ->
-            val randomMeanings = meanings.toMutableList()
-            // 정답 뜻 추가
-            randomMeanings.add(meanings.random())
-            // 리스트 섞기
-            randomMeanings.shuffle()
-            // 버튼에 뜻 할당
-            binding.quizAnswer1.text = randomMeanings[0]
-            binding.quizAnswer2.text = randomMeanings[1]
-            binding.quizAnswer3.text = randomMeanings[2]
-            binding.quizAnswer4.text = randomMeanings[3]
-        })
+        quizViewModel.getRandomMeanings()
+        quizViewModel.getMeanings(word).removeObserver(meaningsObserver)
+        quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
 
-    private fun handleAnswer(answer: String) {
-        if (quizViewModel.checkAnswer(answer)) {
+    private fun handleAnswer(word: String) {
+        val selectedId = binding.answerGroup.checkedRadioButtonId
+        var answerId = ""
+        when(selectedId) {
+            R.id.quizAnswer1 -> {
+                Log.d("QuizMainFragment", "answer1")
+                answerId = binding.quizAnswer1.text.toString()
+            }
+            R.id.quizAnswer2 -> {
+                Log.d("QuizMainFragment", "answer2")
+                answerId = binding.quizAnswer2.text.toString()
+            }
+            R.id.quizAnswer3 -> {
+                Log.d("QuizMainFragment", "answer3")
+                answerId = binding.quizAnswer3.text.toString()
+            }
+            R.id.quizAnswer4 -> {
+                Log.d("QuizMainFragment", "answer4")
+                answerId = binding.quizAnswer4.text.toString()
+            }
+        }
+
+        if (quizViewModel.checkAnswer(answerId, correctAnswer!!)) {
             // 정답 처리 데이터 전달
             Log.d("QuizMainFragment", "Correct Answer!")
             Toast.makeText(context, "정답입니다!", Toast.LENGTH_SHORT).show()
+
+            quizViewModel.updateQuizResult(word, "O")
         } else {
             // 오답 처리 데이터 전달
             Log.d("QuizMainFragment", "Incorrect Answer!")
-
-            // toast 메시지 표시
             Toast.makeText(context, "오답입니다!", Toast.LENGTH_SHORT).show()
+
+            quizViewModel.updateQuizResult(word, "X")
         }
 
-        quizViewModel.updateQuizResult(answer)
-
-        if (++counter <= 10) {
-            quizViewModel.getRandomWord()
-            binding.quizNumber.text = "$counter/10"
-        } else {
-            binding.quizPassButton.text = "결과 확인하기"
-            binding.quizPassButton.backgroundTintList =
-                ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-            binding.quizPassButton.setOnClickListener {
-                val transaction = activity?.supportFragmentManager?.beginTransaction()
-                transaction?.replace(R.id.main_content, QuizNoteFragment())
-                transaction?.addToBackStack(null)
-                transaction?.commit()
-            }
-        }
+        quizViewModel.getRandomWord()
     }
 
     private fun startTTS() {
