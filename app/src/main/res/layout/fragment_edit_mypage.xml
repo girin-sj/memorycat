@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:src="@drawable/account_sky_profile">
+        </ImageView>
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/account_iv_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/account_image"
+            android:layout_marginTop="-20dp">
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <EditText
+            android:id="@+id/text_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:hint="닉네임을 입력하세요"
+            android:textSize="28sp"
+            android:textStyle="bold">
+        </EditText>
+        <Button
+            android:id="@+id/button_change_name"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="닉네임 변경하기"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="@color/peowpink">
+        </Button>
+        <EditText
+            android:id="@+id/text_user_goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:hint="목표를 입력하세요"
+            android:textSize="20sp">
+        </EditText>
+        <Button
+            android:id="@+id/button_change_goal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="목표 변경하기"
+            android:backgroundTint="@color/peowpink">
+        </Button>
+    </LinearLayout>
+</LinearLayout>
