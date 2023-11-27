@@ -1,57 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_root"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="15dp"
+    android:layout_marginTop="15dp"
     android:padding="16dp"
     android:background="@drawable/rec_background">
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/word_data1"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Cat"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/mean_data1"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/bookmarkWordData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:text="Cat"/>
+        <TextView
+            android:id="@+id/boomkarkMean1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/graydark"
+            android:text="1. 명사 고양이"/>
+        <TextView
+            android:id="@+id/boomkarkMean2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/graydark"
+            android:text="2. 명사 고양이"/>
+        <TextView
+            android:id="@+id/boomkarkMean3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/graydark"
+            android:text="3. 명사 고양이"/>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:text="1. 명사 고양이\n2. 명사 고양잇과 동물"
-        android:textColor="@color/graydark"
-        android:textSize="14sp" />
-</LinearLayout>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="50dp"
-    android:orientation="horizontal">
-    <ImageButton
-        android:id="@+id/bookmarkVoice"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/voice"
-        android:backgroundTint="@color/white"/>
-    <ImageButton
-        android:id="@+id/BookmarkPeow"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/peow" />
-</LinearLayout>
+        android:layout_marginLeft="125dp"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/noteVoice"
+            android:layout_width="50dp"
+            android:layout_height="62dp"
+            android:src="@drawable/voice"/>
+
+        <ImageView
+            android:id="@+id/noteBookmark"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/peow" />
+    </LinearLayout>
 </LinearLayout>
