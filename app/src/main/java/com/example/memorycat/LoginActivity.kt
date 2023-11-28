@@ -4,11 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.memorycat.databinding.ActivityLoginBinding
-import com.example.memorycat.databinding.ActivitySignUpBinding
 import java.time.LocalDate
 
 class LoginActivity : AppCompatActivity() {
+    private val mypageViewModel: MypageViewModel by viewModels() //뷰모델
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -17,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val email: String = binding.emailInput.text.toString()
             val password: String = binding.passwordInput.text.toString()
-            var localDate: LocalDate = LocalDate.now()
+            val localDate: LocalDate = LocalDate.now()
             MyAuth.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     binding.emailInput.text.clear()
@@ -27,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
                             MyAuth.email = email
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
+                            //Login Time Stamp
                         }
                         else {
                             Toast.makeText(baseContext, "전송된 메일로 이메일 인증이 되지 않았습니다.", Toast.LENGTH_SHORT)
