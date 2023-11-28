@@ -38,7 +38,6 @@
         </de.hdodenhof.circleimageview.CircleImageView>
         <Button
             android:id="@+id/button_imageUpload"
-            android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -61,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="35dp"
+            android:layout_marginBottom="16dp"
             android:textAlignment="center"
             android:text="목표:"
             android:textSize="20sp">
@@ -90,13 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="2dp">
         </View>
-        <ProgressBar
-            android:id="@+id/account_processbar"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:max="100">
-        </ProgressBar>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

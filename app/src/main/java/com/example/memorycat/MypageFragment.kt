@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,8 +27,8 @@ class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
 
-    private val quizViewModel: QuizViewModel by viewModels() //뷰모델
-    private val mypageViewModel: MypageViewModel by viewModels() //뷰모델
+    private val quizViewModel: QuizViewModel by activityViewModels() //뷰모델
+    private val mypageViewModel: MypageViewModel by activityViewModels() //뷰모델
     var localDate: LocalDate = LocalDate.now() // 이거 여기있으면 안 되는데 어카지ㅋㅋ
     var imageIndex = 0 // stamp image index = stamp count = date
 
@@ -46,16 +46,12 @@ class MypageFragment : Fragment() {
         // About stamp
         val imageView: ImageView = view.findViewById(R.id.img_stamp)
         val stampArray = resources.obtainTypedArray(R.array.stamp)
-
+        // change Stamp(초기화)
         val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
-
-        // change Stamp
         if (imageResId != -1) {
             imageView.setImageResource(imageResId)
         }
 
-        // after use, TypedArray release
-        stampArray.recycle()
         mypageViewModel.imageProfile.observe(viewLifecycleOwner) { imageProfile ->
             val imageAdress = "images/$imageProfile"
             val imageRef = storageRef.child(imageAdress)
@@ -99,10 +95,18 @@ class MypageFragment : Fragment() {
                 return@setOnClickListener
             }
             // 출석체크 성공
-            if (imageIndex == 7)
+            if (imageIndex == 6)
                 imageIndex = -1
             imageIndex++
             localDate = localDate.plusDays(1)
+            Log.d("MypageViewModel", "Stamp imageIndex: $imageIndex")
+            mypageViewModel.updateDate(localDate.toString())
+            // 성공 시 바로 반영 change Stamp
+            Toast.makeText(context, "출석 성공!", Toast.LENGTH_SHORT).show()
+            val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
+            if (imageResId != -1) {
+                imageView.setImageResource(imageResId)
+            }
         }
 
         binding.buttonEditProfile.setOnClickListener {
@@ -152,7 +156,6 @@ class MypageFragment : Fragment() {
                 val downloadUri = task.result // download URL of Uploaded image
                 // Store downloadUri to Firestore
                 saveImageUrlToFirestore(downloadUri.toString())
-                // firebase userDB-profileImage에도 올려야댐 웨 호출이 안 되지
                 mypageViewModel.updateProfileImage(imageName)
             } else {
                 Log.e("MyPageViewModel", "Error uploading image: ${task.exception}")
