@@ -11,7 +11,6 @@ class MypageViewModel: ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
     private val userDB = firestore.collection("userDB").document(uid!!)
-    private val usedFieldNames = mutableListOf<String>()
     private val _goal = MutableLiveData<String>()
     val goal: LiveData<String> get() = _goal
     private val _name = MutableLiveData<String>()
@@ -25,6 +24,7 @@ class MypageViewModel: ViewModel() {
         getName()
         getGoal()
         getImageProfile()
+        getDate()
     }
 
     fun updateName(nameText: String) {
@@ -68,6 +68,18 @@ class MypageViewModel: ViewModel() {
             if (document != null) {
                 _imageProfile.value = document.getString("profileImage")
                 Log.d("MypageViewModel", "Image loaded: ${_imageProfile.value}")
+            } else {
+                Log.d("MypageViewModel", "Document does not exist")
+            }
+        }.addOnFailureListener { exception ->
+            Log.e("MypageViewModel", "Error getting document: $exception")
+        }
+    }
+    fun getDate() {
+        userDB.get().addOnSuccessListener { document ->
+            if (document != null) {
+                _date.value = document.getString("date")
+                Log.d("MypageViewModel", "Date loaded: ${_date.value}")
             } else {
                 Log.d("MypageViewModel", "Document does not exist")
             }
