@@ -12,12 +12,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.databinding.FragmentBookmarkMainBinding
 
-//fetchBookmarkedWords 함수는 Firestore에서 북마크된 단어 목록을 가져오는 역할
-// 가져온 데이터를 bookmarkedWords 리스트에 저장하고,
-// 이 리스트를 BookmarkAdapter에 전달하여 RecyclerView에 표시
-
-//"word"라는 필드로 예시를 들었으니, 실제 Firestore에 저장된 데이터의 구조에 따라 필드 이름을 수정하자
-
 class BookmarkMainFragment : Fragment() {
     private var _binding: FragmentBookmarkMainBinding? = null
     private val binding get() = _binding!!
@@ -37,19 +31,9 @@ class BookmarkMainFragment : Fragment() {
 
         val adapter = BookmarkAdapter(emptyList())
 
-        //db에서 북마크 개수 가져와서 이용. user안에 만들어야 하나
-        /*
-        val bookmarkDatas = mutableListOf<String>()
-        for (i in 1..10){
-            bookmarkDatas.add("Item $i")
-        }
-
-         */
-
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-
         BookmarkViewModel.bookmarkResult.observe(viewLifecycleOwner, Observer { bookmarkResult ->
             adapter.bookmarkUpdateData(bookmarkResult)
         })

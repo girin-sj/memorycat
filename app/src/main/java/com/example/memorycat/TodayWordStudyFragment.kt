@@ -1,5 +1,6 @@
 package com.example.memorycat
 
+import BookmarkViewModel
 import MemoryCatTextToSpeech
 import TodayWordViewModel
 import android.os.Bundle
@@ -34,8 +35,6 @@ class TodayWordStudyFragment : Fragment() {
     todayWordViewModel.todayWord.observe(viewLifecycleOwner, Observer { newWord ->
         binding.TodayWord.text = newWord //이게 바로 들어가네
     })
-
-
     todayWordViewModel.means1.observe(viewLifecycleOwner, Observer { newMean1 ->
         binding.TodayWordMean1.text = newMean1
     })
@@ -43,6 +42,7 @@ class TodayWordStudyFragment : Fragment() {
 
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
+    private val bookmarkViewModel: BookmarkViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,11 +72,13 @@ class TodayWordStudyFragment : Fragment() {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
+                //handleBookmark(binding.TodayWord.text.toString()) //단어 받아서
 
                 //아니 배열에 왜 단어가 없냐고
                 val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기.
                 todayWordViewModel.getMeanings(word)
                 //북마크 가져오기 추가 -> db데이터 변경, 색 변화
+
             }
             if (counter == 10) { //마지막 단어
                 binding.studyNextButton.text = "학습 끝내기"
@@ -103,6 +105,7 @@ class TodayWordStudyFragment : Fragment() {
                 counter--
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyNextButton.text = "다음 단어로"
+                //handleBookmark(binding.TodayWord.text.toString())
 
                 // 이전 단어 정보 가져오기
                 val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기
@@ -113,12 +116,35 @@ class TodayWordStudyFragment : Fragment() {
 
     }//onViewCreated()
 
+    //현제 북마크 상태 파악 -> 버튼 눌리면 db 바꾸기 & 색 바꾸기
+    /*
+    private fun handleBookmark(word: String) { //기본 0 -> 눌렸을때 o -> 다시 누르면 o
+        //checkBookmarkState
+        if (bookmarkViewModel.checkBookmarkState(answerId, correctAnswer!!)) {
+            // 정답 처리 데이터 전달
+            Log.d("QuizMainFragment", "Correct Answer!")
+            Toast.makeText(context, "북마크되었습니다", Toast.LENGTH_SHORT).show()
+
+            bookmarkViewModel.updateBookmarkResult(word, "O")
+        } else {
+            // 오답 처리 데이터 전달
+            Log.d("QuizMainFragment", "Incorrect Answer!")
+            Toast.makeText(context, "북마크 해제되었습니다", Toast.LENGTH_SHORT).show()
+
+            bookmarkViewModel.updateBookmarkResult(word, "X")
+        }
+    }
+
+     */
 
 
     private fun startTTS() {
         tts!!.speakWord(binding.TodayWord.text.toString())
     }
     override fun onDestroyView() {
+        if (tts != null) {
+            tts!!.stopWord()
+        }
         super.onDestroyView()
         _binding = null
     }

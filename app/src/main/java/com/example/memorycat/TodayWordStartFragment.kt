@@ -33,8 +33,13 @@ class TodayWordStartFragment : Fragment() {
         //오늘의 영단어 학습 시작
         binding.studyStartButton.setOnClickListener {
             val wordlist = todayWordViewModel.makeTodayWordList() //배열 생성
+
             Log.d("TodayWordViewModel", "list 확인: ${wordlist}") //이거 왜 안떠
             //첫 단어 가져오기 추가하자
+            //val word = wordlist[0]
+
+            val word = todayWordViewModel.getTodayWord(0) //단어 가져오기
+            todayWordViewModel.getMeanings(word)
 
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, TodayWordStudyFragment())

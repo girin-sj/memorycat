@@ -45,7 +45,7 @@ class TodayWordViewModel: ViewModel() {
             Log.e("TodayWordViewModel", "Error getting document: $exception")
         }
     }
-    fun loadDate() { //여기까지 잘됨.
+    fun loadDate() {
         userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _date.value = document.getString("date")
@@ -63,7 +63,7 @@ class TodayWordViewModel: ViewModel() {
     //전체 탐색 -> date가 맞는 단어들 list에 넣기
     private var dicIdx: Int = 0
 
-    fun makeTodayWordList(): MutableList<String> { //: MutableList<String>
+    fun makeTodayWordList(): MutableList<String> {
         val levelDocumentRef =
             firestore.collection("englishDictionary").document(level.value!!) //level고려 //
         val dateInt = _date.value!!.toInt()
