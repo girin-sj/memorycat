@@ -2,6 +2,7 @@ package com.example.memorycat
 
 import TodayWordViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,16 +25,17 @@ class TodayWordStartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*
-        todayWordViewModel.level.observe(viewLifecycleOwner, { level ->
-            binding.levelText.text = "Rank: ${level.uppercase(Locale.getDefault())}"
-        }) //여기부터 막힌다는 거는 뷰모델 자체가 이상한건가?
 
-         */
+        todayWordViewModel.level.observe(viewLifecycleOwner, { level ->
+            binding.levelText.text = "${level?.toUpperCase()} 학습하기"
+        }) //성공
 
         //오늘의 영단어 학습 시작
         binding.studyStartButton.setOnClickListener {
-            //TodayWordViewModel.makeTodayWordList() //viewModel에서 level이랑 연결해놓음
+            val wordlist = todayWordViewModel.makeTodayWordList() //배열 생성
+            Log.d("TodayWordViewModel", "list 확인: ${wordlist}") //이거 왜 안떠
+            //첫 단어 가져오기 추가하자
+
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, TodayWordStudyFragment())
             transaction?.addToBackStack(null)

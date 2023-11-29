@@ -18,6 +18,28 @@ class TodayWordStudyFragment : Fragment() {
     private var _binding: FragmentTodaywordStudyBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
+    private val observer = Observer<String> { newWord ->
+        binding.TodayWord.text = newWord
+    }
+    private val observer1 = Observer<String> { newMean1 ->
+        binding.TodayWordMean1.text = newMean1
+    }
+    private val observer2 = Observer<String> { newMean2 ->
+        binding.TodayWordMean2.text = newMean2
+    }
+    private val observer3 = Observer<String> { newMean3 ->
+        binding.TodayWordMean3.text = newMean3
+    }
+    /*
+    todayWordViewModel.todayWord.observe(viewLifecycleOwner, Observer { newWord ->
+        binding.TodayWord.text = newWord //이게 바로 들어가네
+    })
+
+
+    todayWordViewModel.means1.observe(viewLifecycleOwner, Observer { newMean1 ->
+        binding.TodayWordMean1.text = newMean1
+    })
+     */
 
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
@@ -32,42 +54,29 @@ class TodayWordStudyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        todayWordViewModel.getTodayWord(counter-1) //이렇게 iewModel에서 가져오기
+
+        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer) //화면에 띄우기
+        todayWordViewModel.means1.observe(viewLifecycleOwner, observer1)
+        todayWordViewModel.means2.observe(viewLifecycleOwner, observer2)
+        todayWordViewModel.means3.observe(viewLifecycleOwner, observer3)
+
 
         tts = MemoryCatTextToSpeech(requireContext())
         binding.todaywordvoiceButton.setOnClickListener { startTTS() }
-
-        todayWordViewModel.todayWord.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.TodayWord.text = newWord //이게 바로 들어가네
-        })
-
-        todayWordViewModel.means1.observe(viewLifecycleOwner, Observer { newMean1 ->
-            binding.TodayWordMean1.text = newMean1
-        })
-
-        todayWordViewModel.means2.observe(viewLifecycleOwner, Observer { newMean2 ->
-            binding.TodayWordMean2.text = newMean2
-        })
-
-        todayWordViewModel.means3.observe(viewLifecycleOwner, Observer { newMean3 ->
-            binding.TodayWordMean3.text = newMean3
-        })
-
-
-        var word : String
 
         //버튼 눌러서 다음, 이전 단어로 바뀔 때마다 북마크 정보도 해당 단어에 맞게 가야함.
 
         //다음 단어로
         binding.studyNextButton.setOnClickListener {
-            if (counter <= 9) {
+            if (counter < 10) {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
 
-                word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기
+                //아니 배열에 왜 단어가 없냐고
+                val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기.
                 todayWordViewModel.getMeanings(word)
-                //북마크 가져오기 추가
+                //북마크 가져오기 추가 -> db데이터 변경, 색 변화
             }
             if (counter == 10) { //마지막 단어
                 binding.studyNextButton.text = "학습 끝내기"
@@ -96,11 +105,12 @@ class TodayWordStudyFragment : Fragment() {
                 binding.studyNextButton.text = "다음 단어로"
 
                 // 이전 단어 정보 가져오기
-                word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기
+                val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기
                 todayWordViewModel.getMeanings(word)
                 //북마크 내용 가져오기 추가
             }
         }
+
     }//onViewCreated()
 
 
