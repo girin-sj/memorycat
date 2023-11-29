@@ -1,10 +1,13 @@
 package com.example.memorycat
 
+import BookmarkViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.databinding.FragmentBookmarkMainBinding
@@ -18,6 +21,9 @@ import com.example.memorycat.databinding.FragmentBookmarkMainBinding
 class BookmarkMainFragment : Fragment() {
     private var _binding: FragmentBookmarkMainBinding? = null
     private val binding get() = _binding!!
+    //둘다 사용
+    private val BookmarkViewModel: BookmarkViewModel by viewModels()
+    //private val TodayWordViewModel: TodayWordViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,60 +34,32 @@ class BookmarkMainFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
+
+        val adapter = BookmarkAdapter(emptyList())
+
+        //db에서 북마크 개수 가져와서 이용. user안에 만들어야 하나
+        /*
         val bookmarkDatas = mutableListOf<String>()
-        //db에서 북마크 개수 가져와서 이용
         for (i in 1..10){
             bookmarkDatas.add("Item $i")
         }
 
+         */
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = BookmarkAdapter(bookmarkDatas)
+        binding.recyclerView.adapter = adapter
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+
+        BookmarkViewModel.bookmarkResult.observe(viewLifecycleOwner, Observer { bookmarkResult ->
+            adapter.bookmarkUpdateData(bookmarkResult)
+        })
     }
 
     //북마크 자체에도 발바닥 누르면 db에게 false 정보 주고, 리스트에서 사라지게.
-    //db연결. 위치 잘 파악하자.
-        //if (uid != null) {
-        //    fetchBookmarkedWords(uid)
-        //}
-
-
-    /*
-    private fun fetchBookmarkedWords(uid: String) {
-        val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-        val userBookmarkDB = firestore.collection("userDB").document(uid)
-            .collection("bookmarkDB")
-
-        userBookmarkDB
-            .whereEqualTo("isBookmarked", true)
-            .get()
-            .addOnSuccessListener { documents ->
-                val bookmarkedWords = mutableListOf<String>()
-                for (document in documents) {
-                    val word = document.getString("word")
-                    word?.let {
-                        bookmarkedWords.add(it)
-                    }
-                }
-                setupRecyclerView(bookmarkedWords)
-            }
-            .addOnFailureListener { exception ->
-                // Handle errors
-            }
-    }
-
-    private fun setupRecyclerView(bookmarkedWords: MutableList<String>) {
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = BookmarkAdapter(bookmarkedWords)
-        binding.recyclerView.addItemDecoration(
-            DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
-        )
-    }
-     */
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
