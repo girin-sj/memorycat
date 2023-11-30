@@ -13,6 +13,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.memorycat.databinding.FragmentTodaywordStudyBinding
 
+//lateinit var getThreeMeanings: MutableList<String>
+
+
 
 //오늘의 영단어.
 //오늘 공부할 10개의 단어 전부 list에 저장되어 있는 상태고, index로 단어 하나하나 불러다 쓰면 됨. 이전 단어도 인덱스 사용! 의미도 함수 이용해서 가져오면 됨.
@@ -20,26 +23,11 @@ class TodayWordStudyFragment : Fragment() {
     private var _binding: FragmentTodaywordStudyBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
+    //-
     private val observer = Observer<String> { newWord ->
         binding.TodayWord.text = newWord
+        updateMeanings(newWord)
     }
-    private val observer1 = Observer<String> { newMean1 ->
-        binding.TodayWordMean1.text = newMean1
-    }
-    private val observer2 = Observer<String> { newMean2 ->
-        binding.TodayWordMean2.text = newMean2
-    }
-    private val observer3 = Observer<String> { newMean3 ->
-        binding.TodayWordMean3.text = newMean3
-    }
-    /*
-    todayWordViewModel.todayWord.observe(viewLifecycleOwner, Observer { newWord ->
-        binding.TodayWord.text = newWord //이게 바로 들어가네
-    })
-    todayWordViewModel.means1.observe(viewLifecycleOwner, Observer { newMean1 ->
-        binding.TodayWordMean1.text = newMean1
-    })
-     */
 
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
@@ -57,23 +45,7 @@ class TodayWordStudyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer)
-        todayWordViewModel.means1.observe(viewLifecycleOwner, observer1)
-        todayWordViewModel.means2.observe(viewLifecycleOwner, observer2)
-        todayWordViewModel.means3.observe(viewLifecycleOwner, observer3)
-
-        //여기는 아예 실행이 안됨;
-        // LiveData가 업데이트될 때까지 기다리고, 업데이트가 발생하면 코드 블록이 실행
-        // ->  NullPointerException과 같은 문제를 방지
-        todayWordViewModel.todayWordNames.observe(viewLifecycleOwner, { todayWordNames ->
-            todayWordNames?.let {
-                val firstTenWords = todayWordNames.take(10)
-                Log.d("TodayWordViewModel", "원소2-1: ${firstTenWords.getOrElse(0) { "" }}")
-                Log.d("TodayWordViewModel", "확인2-2: $firstTenWords")
-
-                // 이곳에서 원하는 작업을 수행합니다.
-            }
-        })
+        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer) //-
 
         tts = MemoryCatTextToSpeech(requireContext())
         binding.todaywordvoiceButton.setOnClickListener { startTTS() }
@@ -87,14 +59,14 @@ class TodayWordStudyFragment : Fragment() {
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
 
-                val word = getTodayWord(counter - 1)
+                val word = getFirstTenWords[counter - 1]
+                //val word = getTodayWord(counter - 1)
                 Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}") //단어 없음
 
                 // LiveData를 observe 하는 코드 블록 내에 넣어줌
                 if (word != null) {
                     todayWordViewModel.getMeanings(word)
                 }
-                Log.d("TodayWordViewModel", "뜻: ${todayWordViewModel.means1.value.toString()}")
                 // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
             }
 
@@ -120,30 +92,41 @@ class TodayWordStudyFragment : Fragment() {
                 binding.studyNextButton.text = "다음 단어로"
 
                 // getTodayWord() 사용
-                val word = getTodayWord(counter - 1)
+                val word = getFirstTenWords[counter - 1]
                 Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}")
 
                 // LiveData를 observe 하는 코드 블록 내에 넣어줌
                 if (word != null) {
                     todayWordViewModel.getMeanings(word)
                 }
-                Log.d("TodayWordViewModel", "뜻: ${todayWordViewModel.means1.value.toString()}")
 
                 // 북마크 내용 가져오기 추가
             }
         }
     }
 
-    // 배열 가져오기 -> 단어 가져오기
-    fun getTodayWord(word_idx: Int): String { //String //여기서 제대로 단어 반환이 안됨.
+    private val meaningsObserver = Observer<List<String>> { meanings ->
+        val meanings = todayWordViewModel.meanings.value
+        Log.d("TodayWordViewModel", "means list: $meanings")
+        // 정답 뜻 추가
+        // 앞에서 3개의 뜻만 가져오기
+        val threeMeanings = meanings!!.take(4)
+        // 정답 뜻 추가
+        // 리스트 섞기
+        Log.d("TodayWordViewModel", "$threeMeanings")
 
-        Log.d("TodayWordViewModel", "list: ${todayWordViewModel.todayWordNames.value}") //이거 null인데?
-        val firstTenWords = todayWordViewModel.todayWordNames.value?.take(10) //배열
-        val word = firstTenWords?.get(word_idx) ?: ""
-        Log.d("TodayWordViewModel", "getTodayWord: ${word}") //그니까 단어 없지..
-        return word
-        //return todayWordViewModel.todayWordNames.value?.getOrNull(word_idx) ?: ""
+        // 버튼에 뜻 할당
+        binding.TodayWordMean1.text = threeMeanings[1]
+        binding.TodayWordMean2.text = threeMeanings[2]
+        binding.TodayWordMean3.text = threeMeanings[3]
     }
+
+    private fun updateMeanings(word: String) {
+        todayWordViewModel.getMeanings(word)
+        todayWordViewModel.getMeanings(word).removeObserver(meaningsObserver)
+        todayWordViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
+    }
+
 
     //현제 북마크 상태 파악 -> 버튼 눌리면 db 바꾸기 & 색 바꾸기
 
@@ -158,3 +141,16 @@ class TodayWordStudyFragment : Fragment() {
         _binding = null
     }
 }
+
+/*
+// 배열 가져오기 -> 단어 가져오기
+    fun getTodayWord(word_idx: Int): String { //String //여기서 제대로 단어 반환이 안됨.
+
+        Log.d("TodayWordViewModel", "list: ${todayWordViewModel.todayWordNames.value}") //이거 null인데?
+        val firstTenWords = todayWordViewModel.todayWordNames.value?.take(10) //배열
+        val word = firstTenWords?.get(word_idx) ?: ""
+        Log.d("TodayWordViewModel", "getTodayWord: ${word}") //그니까 단어 없지..
+        return word
+        //return todayWordViewModel.todayWordNames.value?.getOrNull(word_idx) ?: ""
+    }
+ */
