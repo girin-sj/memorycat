@@ -10,7 +10,8 @@ class TodayWordViewModel: ViewModel() {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
     private val userDB = firestore.collection("userDB").document(uid!!)
-    private val todayWordNames = mutableListOf<String>() //오늘의 단어들 10개. 해당 리스트 프레그먼트에서 못 사용해?
+    //private val todayWordNames = mutableListOf<String>() //오늘의 단어들 10개. 해당 리스트 프레그먼트에서 못 사용해?
+    val todayWordNames = MutableLiveData<MutableList<String>>()
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _date = MutableLiveData<String>()
@@ -45,7 +46,7 @@ class TodayWordViewModel: ViewModel() {
             Log.e("TodayWordViewModel", "Error getting document: $exception")
         }
     }
-    fun loadDate() { //여기까지 잘됨.
+    fun loadDate() {
         userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _date.value = document.getString("date")
@@ -63,7 +64,8 @@ class TodayWordViewModel: ViewModel() {
     //전체 탐색 -> date가 맞는 단어들 list에 넣기
     private var dicIdx: Int = 0
 
-    fun makeTodayWordList(): MutableList<String> { //: MutableList<String>
+    fun makeTodayWordList() { //MutableList<String>
+        val todayWordNamesTemp = mutableListOf<String>()
         val levelDocumentRef =
             firestore.collection("englishDictionary").document(level.value!!) //level고려 //
         val dateInt = _date.value!!.toInt()
@@ -82,9 +84,9 @@ class TodayWordViewModel: ViewModel() {
                             val fieldValue = fieldMap[fieldName] as? Map<String, Any>
                             val dateGet = fieldValue?.get("date")?.toString() ?: "0"
                             if (dateGet.toInt() == dateInt) { //date 검사
-                                todayWordNames.add(fieldName)
+                                todayWordNamesTemp.add(fieldName)
                                 flag ++
-                                Log.d("TodayWordViewModel", "list num: ${flag}, list: ${todayWordNames}")
+                                Log.d("TodayWordViewModel", "list num: ${flag}, list: ${todayWordNamesTemp}")
                             }
                         }
                         //추가적 3개
@@ -95,9 +97,9 @@ class TodayWordViewModel: ViewModel() {
                                 val fieldValue = fieldMap[fieldName] as? Map<String, Any>
                                 val dateGet = fieldValue?.get("date")?.toString() ?: "0"
                                 if (dateGet.toInt() == dateInt) { //date 검사
-                                    todayWordNames.add(randomFieldName)
+                                    todayWordNamesTemp.add(randomFieldName)
                                     append++
-                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNames}")
+                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNamesTemp}")
                                 }
                             }
                         } else{ //첫째날의 경우. 오늘꺼 3개 추가
@@ -108,12 +110,14 @@ class TodayWordViewModel: ViewModel() {
                                 val fieldValue = fieldMap[fieldName] as? Map<String, Any>
                                 val dateGet = fieldValue?.get("date")?.toString() ?: "0"
                                 if (dateGet.toInt() == dateInt) { //date 검사
-                                    todayWordNames.add(fieldName) //최종 list에 넣기
+                                    todayWordNamesTemp.add(fieldName) //최종 list에 넣기
                                     append++
-                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNames}")
+                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNamesTemp}")
                                 }
                             }
-                        }//열심히 배열 다 만들었어. 근데 왜 사라져?
+                        }
+                        //todayWordNames.value = todayWordNamesTemp
+                        todayWordNames.postValue(todayWordNamesTemp)
                     }
                 } else {
                     Log.d("TodayWordViewModel", "some error")
@@ -121,10 +125,11 @@ class TodayWordViewModel: ViewModel() {
             }.addOnFailureListener { exception ->
                 Log.e("TodayWordViewModel", "Error getting random word: $exception")
             }
-        return todayWordNames
+        //return todayWordNames
     }
 
-    //TodayWordStudyFragment에서 실행
+    //TodayWordStudyFragment에서 실행. 이거 필요 없을 수도?
+    /*
     fun getTodayWord(word_idx: Int) : MutableLiveData<String>{ //이상
         Log.d("TodayWordViewModel", "list: ${todayWordNames}") //list내용 남아있는지 확인 기능 - 왜 여기 안남아있지?
         _todayWord.value = todayWordNames[word_idx]
@@ -132,7 +137,9 @@ class TodayWordViewModel: ViewModel() {
         return _todayWord
     }
 
-    fun getMeanings(word: MutableLiveData<String>) { //단어를 파라미터로 주면 dictionary에서 뜻 찾아서 알려줌.
+     */
+
+    fun getMeanings(word: String) { //MutableLiveData<String> //고치자
         val levelDocumentRef =
             firestore.collection("englishDictionary").document(level.value!!) //level고려
 
@@ -140,9 +147,9 @@ class TodayWordViewModel: ViewModel() {
         levelDocumentRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val fieldMap = document.data //
+                    val fieldMap = document.data
                     if (fieldMap != null) {
-                        val fieldName = word.toString() //fieldNames: 단어 이름
+                        val fieldName = word //fieldNames: 단어 이름
 
                         val meaningsMap = fieldMap[fieldName] as? Map<String, String>
                         if (!meaningsMap.isNullOrEmpty()) {
