@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="15dp"
+    android:layout_marginTop="15dp"
     android:padding="16dp"
     android:background="@drawable/rec_background">
     <LinearLayout
@@ -15,7 +15,7 @@
         android:layout_marginLeft="15dp"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/word_data"
+            android:id="@+id/wordData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,24 +23,34 @@
             android:textSize="30sp"
             android:text="Cat"/>
         <TextView
-            android:id="@+id/mean_data"
+            android:id="@+id/selectMean"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:textSize="14sp"
             android:textColor="@color/graydark"
-            android:text="1. 명사 고양이\n2. 명사 고양잇과 동물"/>
+            android:text="내가 선택한 답"/>
+        <TextView
+            android:id="@+id/answerMean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/graydark"
+            android:text="정답"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="125dp"
+        android:layout_gravity="center_vertical"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/noteVoice"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="62dp"
             android:src="@drawable/voice"/>
 
         <ImageView

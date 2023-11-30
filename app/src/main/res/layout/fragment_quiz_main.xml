@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="140dp"
+    android:paddingTop="130dp"
     android:gravity="center_horizontal">
     <LinearLayout
         android:layout_width="320dp"
@@ -27,7 +27,7 @@
                 android:id="@+id/quizWord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cat"
+                android:text="준비되셨나요?"
                 android:textStyle="bold"
                 android:textSize="38sp"
                 android:textColor="@color/mainblack"/>
@@ -36,58 +36,74 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:text="이 단어의 뜻은?"
             android:textSize="25sp"
             android:textColor="@color/mainblack"/>
 
-        <Button
-            android:id="@+id/quizAnswer1"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/backwhite"
-            android:layout_marginTop="5dp"
-            android:text="답1"
-            android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
-
-        <Button
-            android:id="@+id/quizAnswer2"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/backwhite"
-            android:layout_marginTop="5dp"
-            android:text="답2"
-            android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
-        <Button
-            android:id="@+id/quizAnswer4"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/backwhite"
-            android:layout_marginTop="5dp"
-            android:text="답4"
-            android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
-        <Button
-            android:id="@+id/quizAnswer3"
-            android:layout_width="320dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@color/backwhite"
-            android:layout_marginTop="5dp"
-            android:text="답3"
-            android:textColor="@color/mainblack"
-            android:textSize="18sp"/>
+        <RadioGroup
+            android:id="@+id/answerGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RadioButton
+                android:id="@+id/quizAnswer1"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/backwhite"
+                android:layout_marginTop="5dp"
+                android:text="yes"
+                android:textColor="@color/mainblack"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+            <RadioButton
+                android:id="@+id/quizAnswer2"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/backwhite"
+                android:layout_marginTop="5dp"
+                android:text="yes"
+                android:textColor="@color/mainblack"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+            <RadioButton
+                android:id="@+id/quizAnswer3"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/backwhite"
+                android:layout_marginTop="5dp"
+                android:text="yes"
+                android:textColor="@color/mainblack"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+            <RadioButton
+                android:id="@+id/quizAnswer4"
+                android:layout_width="320dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/backwhite"
+                android:layout_marginTop="5dp"
+                android:text="yes"
+                android:textColor="@color/mainblack"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+        </RadioGroup>
 
         <TextView
             android:id="@+id/quizNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
             android:text="1/10"
             android:textColor="@color/graydark" />
-
+        <Button
+            android:id="@+id/quizNextButton"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/yellow"
+            android:layout_marginTop="5dp"
+            android:text="다음 문제로"
+            android:textColor="@color/mainblack"
+            android:textSize="18sp"/>
         <Button
             android:id="@+id/quizPassButton"
             android:layout_width="320dp"
