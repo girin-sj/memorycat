@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.memorycat.databinding.FragmentQuizMainBinding
-import com.example.memorycat.databinding.FragmentQuizStartBinding
 
 class QuizMainFragment : Fragment() {
     private var _binding: FragmentQuizMainBinding? = null
@@ -24,7 +23,7 @@ class QuizMainFragment : Fragment() {
     private var correctAnswer: String? = null
     private val observer = Observer<String> { newWord ->
         binding.quizWord.text = newWord
-        updateChoices(newWord)
+        updateChoices(newWord) //참고
     }
 
     override fun onCreateView(

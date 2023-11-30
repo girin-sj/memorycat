@@ -12,6 +12,7 @@ class TodayWordViewModel: ViewModel() {
     private val userDB = firestore.collection("userDB").document(uid!!)
     //private val todayWordNames = mutableListOf<String>() //오늘의 단어들 10개. 해당 리스트 프레그먼트에서 못 사용해?
     val todayWordNames = MutableLiveData<MutableList<String>>()
+    val meanings = MutableLiveData<MutableList<String>>()
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _date = MutableLiveData<String>()
@@ -20,6 +21,10 @@ class TodayWordViewModel: ViewModel() {
     private val _todayWord = MutableLiveData<String>()
     val todayWord: LiveData<String> get() = _todayWord
 
+    //이렇게 mutablelist로 가져오기
+    private val _meanings = MutableLiveData<List<String>>()
+
+    /*
     private val _means1: MutableLiveData<String> = MutableLiveData()
     val means1: LiveData<String> get() = _means1
     private val _means2: MutableLiveData<String> = MutableLiveData()
@@ -27,6 +32,7 @@ class TodayWordViewModel: ViewModel() {
     private val _means3: MutableLiveData<String> = MutableLiveData()
     val means3: LiveData<String> get() = _means3
 
+     */
 
     init {
         loadLevel()
@@ -96,7 +102,7 @@ class TodayWordViewModel: ViewModel() {
                                 val randomFieldName = fieldNames.random()
                                 val fieldValue = fieldMap[fieldName] as? Map<String, Any>
                                 val dateGet = fieldValue?.get("date")?.toString() ?: "0"
-                                if (dateGet.toInt() == dateInt) { //date 검사
+                                if (dateGet.toInt() > dateInt) { //date 검사
                                     todayWordNamesTemp.add(randomFieldName)
                                     append++
                                     Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNamesTemp}")
@@ -128,18 +134,26 @@ class TodayWordViewModel: ViewModel() {
         //return todayWordNames
     }
 
-    //TodayWordStudyFragment에서 실행. 이거 필요 없을 수도?
-    /*
-    fun getTodayWord(word_idx: Int) : MutableLiveData<String>{ //이상
-        Log.d("TodayWordViewModel", "list: ${todayWordNames}") //list내용 남아있는지 확인 기능 - 왜 여기 안남아있지?
-        _todayWord.value = todayWordNames[word_idx]
-        Log.d("TodayWordViewModel", "word: ${_todayWord.value}") //단어
-        return _todayWord
+
+    fun getMeanings(word: String): MutableLiveData<List<String>> {
+        val levelDocument = firestore.collection("quizDB").document(level.value!!)
+
+        levelDocument.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val meanings = document.get(word) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨.
+                    _meanings.value = meanings
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("TodayWordViewModel", "Error getting meanings: $exception")
+            }
+
+        return _meanings
     }
 
-     */
-
-    fun getMeanings(word: String) { //MutableLiveData<String> //고치자
+    /*
+    fun getMeanings(word: String): MutableLiveData<List<String>> { //MutableLiveData<String> //고치자
         val levelDocumentRef =
             firestore.collection("englishDictionary").document(level.value!!) //level고려
 
@@ -166,5 +180,7 @@ class TodayWordViewModel: ViewModel() {
                 Log.e("TodayWordViewModel", "Error getting document: $exception")
             }
     }//getMeanings()
+
+     */
 
 }
