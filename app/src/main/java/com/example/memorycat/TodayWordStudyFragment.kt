@@ -4,6 +4,7 @@ import BookmarkViewModel
 import MemoryCatTextToSpeech
 import TodayWordViewModel
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,37 +56,50 @@ class TodayWordStudyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer) //화면에 띄우기
+
+        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer)
         todayWordViewModel.means1.observe(viewLifecycleOwner, observer1)
         todayWordViewModel.means2.observe(viewLifecycleOwner, observer2)
         todayWordViewModel.means3.observe(viewLifecycleOwner, observer3)
 
+        //여기는 아예 실행이 안됨;
+        // LiveData가 업데이트될 때까지 기다리고, 업데이트가 발생하면 코드 블록이 실행
+        // ->  NullPointerException과 같은 문제를 방지
+        todayWordViewModel.todayWordNames.observe(viewLifecycleOwner, { todayWordNames ->
+            todayWordNames?.let {
+                val firstTenWords = todayWordNames.take(10)
+                Log.d("TodayWordViewModel", "원소2-1: ${firstTenWords.getOrElse(0) { "" }}")
+                Log.d("TodayWordViewModel", "확인2-2: $firstTenWords")
+
+                // 이곳에서 원하는 작업을 수행합니다.
+            }
+        })
 
         tts = MemoryCatTextToSpeech(requireContext())
         binding.todaywordvoiceButton.setOnClickListener { startTTS() }
 
-        //버튼 눌러서 다음, 이전 단어로 바뀔 때마다 북마크 정보도 해당 단어에 맞게 가야함.
+        // 버튼 눌러서 다음, 이전 단어로 바뀔 때마다 북마크 정보도 해당 단어에 맞게 가야함.
 
-        //다음 단어로
+        // 다음 단어로
         binding.studyNextButton.setOnClickListener {
             if (counter < 10) {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
-                //handleBookmark(binding.TodayWord.text.toString()) //단어 받아서
 
-                //아니 배열에 왜 단어가 없냐고
-                val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기.
-                todayWordViewModel.getMeanings(word)
-                //북마크 가져오기 추가 -> db데이터 변경, 색 변화
+                val word = getTodayWord(counter - 1)
+                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}") //단어 없음
 
+                // LiveData를 observe 하는 코드 블록 내에 넣어줌
+                if (word != null) {
+                    todayWordViewModel.getMeanings(word)
+                }
+                Log.d("TodayWordViewModel", "뜻: ${todayWordViewModel.means1.value.toString()}")
+                // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
             }
-            if (counter == 10) { //마지막 단어
-                binding.studyNextButton.text = "학습 끝내기"
-                //binding.studyNextButton.backgroundTintList =
-                //    ContextCompat.getColorStateList(requireContext(), R.color.yellow) //배경색 바꾸기(필요 없긴 함)
 
-                //학습 끝내기
+            if (counter == 10) { // 마지막 단어
+                binding.studyNextButton.text = "학습 끝내기"
                 binding.studyNextButton.setOnClickListener {
                     val transaction = activity?.supportFragmentManager?.beginTransaction()
                     transaction?.replace(R.id.main_content, TodayWordEndFragment())
@@ -94,10 +108,9 @@ class TodayWordStudyFragment : Fragment() {
                 }
             }
         }
-        //var previousWord: String? = null // 이전에 표시한 단어를 저장하는 변수
-        //이전 단어로
+
+        // 이전 단어로
         binding.studyBeforeButton.setOnClickListener {
-            //버튼 누를 때마다 해당 단어의 북마크 정보 가져와서 색 반영해야 함.
             if (counter <= 1) {
                 binding.studyBeforeButton.text = "이전단어 없음"
                 binding.TodayWordNumber.text = "$counter/10"
@@ -105,38 +118,34 @@ class TodayWordStudyFragment : Fragment() {
                 counter--
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyNextButton.text = "다음 단어로"
-                //handleBookmark(binding.TodayWord.text.toString())
 
-                // 이전 단어 정보 가져오기
-                val word = todayWordViewModel.getTodayWord(counter-1) //단어 가져오기
-                todayWordViewModel.getMeanings(word)
-                //북마크 내용 가져오기 추가
+                // getTodayWord() 사용
+                val word = getTodayWord(counter - 1)
+                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}")
+
+                // LiveData를 observe 하는 코드 블록 내에 넣어줌
+                if (word != null) {
+                    todayWordViewModel.getMeanings(word)
+                }
+                Log.d("TodayWordViewModel", "뜻: ${todayWordViewModel.means1.value.toString()}")
+
+                // 북마크 내용 가져오기 추가
             }
-        }
-
-    }//onViewCreated()
-
-    //현제 북마크 상태 파악 -> 버튼 눌리면 db 바꾸기 & 색 바꾸기
-    /*
-    private fun handleBookmark(word: String) { //기본 0 -> 눌렸을때 o -> 다시 누르면 o
-        //checkBookmarkState
-        if (bookmarkViewModel.checkBookmarkState(answerId, correctAnswer!!)) {
-            // 정답 처리 데이터 전달
-            Log.d("QuizMainFragment", "Correct Answer!")
-            Toast.makeText(context, "북마크되었습니다", Toast.LENGTH_SHORT).show()
-
-            bookmarkViewModel.updateBookmarkResult(word, "O")
-        } else {
-            // 오답 처리 데이터 전달
-            Log.d("QuizMainFragment", "Incorrect Answer!")
-            Toast.makeText(context, "북마크 해제되었습니다", Toast.LENGTH_SHORT).show()
-
-            bookmarkViewModel.updateBookmarkResult(word, "X")
         }
     }
 
-     */
+    // 배열 가져오기 -> 단어 가져오기
+    fun getTodayWord(word_idx: Int): String { //String //여기서 제대로 단어 반환이 안됨.
 
+        Log.d("TodayWordViewModel", "list: ${todayWordViewModel.todayWordNames.value}") //이거 null인데?
+        val firstTenWords = todayWordViewModel.todayWordNames.value?.take(10) //배열
+        val word = firstTenWords?.get(word_idx) ?: ""
+        Log.d("TodayWordViewModel", "getTodayWord: ${word}") //그니까 단어 없지..
+        return word
+        //return todayWordViewModel.todayWordNames.value?.getOrNull(word_idx) ?: ""
+    }
+
+    //현제 북마크 상태 파악 -> 버튼 눌리면 db 바꾸기 & 색 바꾸기
 
     private fun startTTS() {
         tts!!.speakWord(binding.TodayWord.text.toString())
