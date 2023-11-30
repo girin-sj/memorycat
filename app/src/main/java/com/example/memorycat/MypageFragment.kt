@@ -1,7 +1,8 @@
 package com.example.memorycat
 
-import QuizViewModel
+import  QuizViewModel
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +16,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,9 +31,13 @@ class MypageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val quizViewModel: QuizViewModel by activityViewModels() //뷰모델
-    private val mypageViewModel: MypageViewModel by activityViewModels() //뷰모델
-    var localDate: LocalDate = LocalDate.now() // 이거 여기있으면 안 되는데 어카지ㅋㅋ
-    var imageIndex = 0 // stamp image index = stamp count = date
+    private lateinit var mypageViewModel: MypageViewModel //뷰모델
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mypageViewModel = ViewModelProvider(requireActivity()).get(MypageViewModel::class.java)
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
@@ -41,7 +48,7 @@ class MypageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val storage = FirebaseStorage.getInstance("gs://memorycat-c8f7d.appspot.com")
         val storageRef = storage.reference
-
+        var imageIndex = 0 // stamp image index = stamp count = date
 
         // About stamp
         val imageView: ImageView = view.findViewById(R.id.img_stamp)
@@ -87,22 +94,24 @@ class MypageFragment : Fragment() {
 
 
         binding.buttonAttendance.setOnClickListener {
-            val currentDate: LocalDate = localDate
-            val comparisonResult: Int = localDate.compareTo(currentDate)
+            val currentDate: LocalDate = LocalDate.now()
+            val IsSameDate: Boolean = mypageViewModel.checkDate(currentDate.toString())
+            Log.d("MypageFragment", "Stamp imageIndex: $imageIndex")
+            Log.d("MypageFragment", "current: $currentDate")
+            Log.d("MypageFragment", "IsSameDate: $IsSameDate")
             // 같은 날에 출석체크 시도
-            if (comparisonResult == 0) {
-                Toast.makeText(context, "이미 출석체크를 하셨습니다!", Toast.LENGTH_SHORT).show()
+            if (IsSameDate == true) {
+                Toast.makeText(context, "이미 출석 체크를 하셨습니다!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             // 출석체크 성공
             if (imageIndex == 6)
                 imageIndex = -1
             imageIndex++
-            localDate = localDate.plusDays(1)
-            Log.d("MypageViewModel", "Stamp imageIndex: $imageIndex")
-            mypageViewModel.updateDate(localDate.toString())
+            mypageViewModel.updateLocalDate(currentDate.toString())
+            mypageViewModel.updateDate(imageIndex.toString())
             // 성공 시 바로 반영 change Stamp
-            Toast.makeText(context, "출석 성공!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "출석 체크 성공!", Toast.LENGTH_SHORT).show()
             val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
             if (imageResId != -1) {
                 imageView.setImageResource(imageResId)

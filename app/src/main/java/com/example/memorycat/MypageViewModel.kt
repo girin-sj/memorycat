@@ -15,6 +15,8 @@ class MypageViewModel: ViewModel() {
     val goal: LiveData<String> get() = _goal
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> get() = _name
+    private val _localdate = MutableLiveData<String>()
+    val localdate: LiveData<String> get() = _localdate
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> get() = _date
     private val _imageProfile = MutableLiveData<String>()
@@ -24,7 +26,7 @@ class MypageViewModel: ViewModel() {
         getName()
         getGoal()
         getImageProfile()
-        getDate()
+        getLocalDate()
     }
 
     fun updateName(nameText: String) {
@@ -35,6 +37,9 @@ class MypageViewModel: ViewModel() {
     }
     fun updateProfileImage(imageUri: String) {
         userDB.update("profileImage", imageUri)
+    }
+    fun updateLocalDate(localdate: String) {
+        userDB.update("logindate", localdate)
     }
     fun updateDate(date: String) {
         userDB.update("date", date)
@@ -75,16 +80,21 @@ class MypageViewModel: ViewModel() {
             Log.e("MypageViewModel", "Error getting document: $exception")
         }
     }
-    fun getDate() {
+    fun getLocalDate() {
         userDB.get().addOnSuccessListener { document ->
             if (document != null) {
-                _date.value = document.getString("date")
-                Log.d("MypageViewModel", "Date loaded: ${_date.value}")
+                _localdate.value = document.getString("logindate")
+                Log.d("MypageViewModel", "Date loaded: ${_localdate.value}")
             } else {
                 Log.d("MypageViewModel", "Document does not exist")
             }
         }.addOnFailureListener { exception ->
             Log.e("MypageViewModel", "Error getting document: $exception")
         }
+    }
+    fun checkDate(currentDate: String): Boolean {
+        Log.d("MypageViewModel", "_localdate: ${_localdate.value}")
+        Log.d("MypageViewModel", "currentDate: $currentDate")
+        return this._localdate.value.toString() == currentDate
     }
 }

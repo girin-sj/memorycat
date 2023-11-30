@@ -30,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                             //Login Time Stamp
+                            var localDate: LocalDate = LocalDate.now()
+                            mypageViewModel.updateLocalDate(localDate.toString())
                         }
                         else {
                             Toast.makeText(baseContext, "전송된 메일로 이메일 인증이 되지 않았습니다.", Toast.LENGTH_SHORT)

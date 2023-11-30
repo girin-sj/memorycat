@@ -13,6 +13,7 @@
             android:id="@+id/button_edit_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="mypage edit fragment로 넘어감"
             android:src="@drawable/edit_icon"
             android:background="@android:color/transparent">
         </ImageButton>
@@ -95,10 +96,10 @@
             android:layout_gravity="right"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/text_leftwordcount"
+                android:id="@+id/text_accuretotalcount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="다음 레벨까지 남은 단어: "
+                android:text="이떄까지 맞춘 단어 개수"
                 android:textSize="18sp">
             </TextView>
     </LinearLayout>
