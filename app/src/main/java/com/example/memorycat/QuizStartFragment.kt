@@ -29,6 +29,7 @@ class QuizStartFragment : Fragment() {
         })
 
         binding.quizStartButton.setOnClickListener {
+            quizViewModel.resetNoteResult()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, QuizMainFragment())
             transaction?.addToBackStack(null)

@@ -1,17 +1,18 @@
 package com.example.memorycat
 
 import android.os.Bundle
+import QuizViewModel
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.example.memorycat.databinding.FragmentQuizResultBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class QuizResultFragment : Fragment() {
     private var _binding: FragmentQuizResultBinding? = null
     private val binding get() = _binding!!
+    private val quizViewModel: QuizViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +26,7 @@ class QuizResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.quizNextButton.setOnClickListener {
+            quizViewModel.updateLevel()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, TodayWordStartFragment())
             transaction?.addToBackStack(null)
