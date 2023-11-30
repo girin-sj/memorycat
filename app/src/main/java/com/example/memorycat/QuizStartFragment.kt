@@ -2,10 +2,10 @@ package com.example.memorycat
 
 import QuizViewModel
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.memorycat.databinding.FragmentQuizStartBinding
 
@@ -29,6 +29,7 @@ class QuizStartFragment : Fragment() {
         })
 
         binding.quizStartButton.setOnClickListener {
+            quizViewModel.resetNoteResult()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, QuizMainFragment())
             transaction?.addToBackStack(null)

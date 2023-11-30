@@ -43,6 +43,7 @@
                 android:textSize="33sp"
                 android:textColor="@color/mainblack"/>
             <ImageButton
+                android:id="@+id/todaywordvoiceButton"
                 android:layout_width="30dp"
                 android:layout_height="62dp"
                 android:layout_marginRight="10dp"
@@ -50,7 +51,7 @@
                 android:backgroundTint="@color/white"/>
 
             <ImageButton
-                android:id="@+id/todaywordBookmark"
+                android:id="@+id/todaywordBookmarkButton"
                 android:layout_width="30dp"
                 android:layout_height="62dp"
                 android:layout_marginRight="1dp"

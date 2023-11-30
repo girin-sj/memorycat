@@ -1,5 +1,6 @@
 package com.example.memorycat
 
+import MemoryCatTextToSpeech
 import QuizNoteAdapter
 import QuizViewModel
 import android.os.Bundle
@@ -16,6 +17,8 @@ import com.example.memorycat.databinding.FragmentQuizNoteBinding
 class QuizNoteFragment : Fragment() {
     private var _binding: FragmentQuizNoteBinding? = null
     private val binding get() = _binding!!
+    private var tts: MemoryCatTextToSpeech? = null
+    private lateinit var adapter: QuizNoteAdapter
     private val quizViewModel: QuizViewModel by viewModels()
 
     override fun onCreateView(
@@ -29,14 +32,10 @@ class QuizNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = QuizNoteAdapter(emptyList())
+        adapter = QuizNoteAdapter(this)
 
         binding.noterecycler.layoutManager = LinearLayoutManager(context)
         binding.noterecycler.adapter = adapter
-        binding.noterecycler.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-        quizViewModel.quizResult.observe(viewLifecycleOwner, Observer { quizResult ->
-            adapter.updateData(quizResult)
-        })
     }
 
     override fun onDestroyView() {

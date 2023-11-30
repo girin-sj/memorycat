@@ -19,6 +19,7 @@ class QuizMainFragment : Fragment() {
     private var _binding: FragmentQuizMainBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
+    private var correctCounter: Int = 1
     private var tts: MemoryCatTextToSpeech? = null
     private val quizViewModel: QuizViewModel by viewModels()
     private var correctAnswer: String? = null
@@ -44,7 +45,7 @@ class QuizMainFragment : Fragment() {
         quizViewModel.randomWord.observe(viewLifecycleOwner, observer)
 
         binding.quizNextButton.setOnClickListener {
-            if (++counter <= 10) {
+            if (++counter < 11) {
                 binding.quizNumber.text = "$counter/10"
                 handleAnswer(binding.quizWord.text.toString())
 
@@ -53,10 +54,19 @@ class QuizMainFragment : Fragment() {
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
                 binding.quizPassButton.setOnClickListener {
-                    val transaction = activity?.supportFragmentManager?.beginTransaction()
-                    transaction?.replace(R.id.main_content, QuizNoteFragment())
-                    transaction?.addToBackStack(null)
-                    transaction?.commit()
+                    handleAnswer(binding.quizWord.text.toString())
+                    if(correctCounter==10){
+                        val transaction = activity?.supportFragmentManager?.beginTransaction()
+                        transaction?.replace(R.id.main_content, QuizResultFragment())
+                        transaction?.addToBackStack(null)
+                        transaction?.commit()
+                    }
+                    else{
+                        val transaction = activity?.supportFragmentManager?.beginTransaction()
+                        transaction?.replace(R.id.main_content, QuizFailFragment())
+                        transaction?.addToBackStack(null)
+                        transaction?.commit()
+                    }
                 }
             }
         }
@@ -116,12 +126,15 @@ class QuizMainFragment : Fragment() {
             Toast.makeText(context, "정답입니다!", Toast.LENGTH_SHORT).show()
 
             quizViewModel.updateQuizResult(word, "O")
+            quizViewModel.updateNoteResult(word, answerId, correctAnswer!!, "O")
+            correctCounter++
         } else {
             // 오답 처리 데이터 전달
             Log.d("QuizMainFragment", "Incorrect Answer!")
             Toast.makeText(context, "오답입니다!", Toast.LENGTH_SHORT).show()
 
             quizViewModel.updateQuizResult(word, "X")
+            quizViewModel.updateNoteResult(word, answerId, correctAnswer!!, "X")
         }
 
         quizViewModel.getRandomWord()

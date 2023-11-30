@@ -12,6 +12,7 @@ class QuizViewModel : ViewModel() {
     private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
     private val userDB = firestore.collection("userDB").document(uid!!)
     private val accureDB = firestore.collection("accurequizDB").document(uid!!)
+    private val recentDB = firestore.collection("recentquizDB").document(uid!!)
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _randomWord = MutableLiveData<String>()
@@ -36,6 +37,21 @@ class QuizViewModel : ViewModel() {
             }
         }.addOnFailureListener { exception ->
             Log.e("QuizViewModel", "Error getting document: $exception")
+        }
+    }
+
+    fun updateLevel() {
+        if (_level.value=="bronze"){
+            userDB.update(hashMapOf("level" to "silver") as Map<String, String>)
+        }
+        else if (_level.value=="silver"){
+            userDB.update(hashMapOf("level" to "gold") as Map<String, String>)
+        }
+        else if (_level.value=="gold"){
+            userDB.update(hashMapOf("level" to "platinum") as Map<String, String>)
+        }
+        else {
+            userDB.update(hashMapOf("level" to "master") as Map<String, String>)
         }
     }
 
@@ -116,8 +132,36 @@ class QuizViewModel : ViewModel() {
                 accureDB.update(
                     hashMapOf(
                         word to answer
-                    ) as Map<String, Any>
+                    ) as Map<String, String>
                 )
+            }
+        }
+    }
+
+    fun updateNoteResult(word: String, select: String, answer: String, isCorrect: String) {
+        recentDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                recentDB.update(
+                    hashMapOf(
+                        word to hashMapOf(
+                            "select" to select,
+                            "answer" to answer,
+                            "isCorrect" to isCorrect
+                        )
+                    ) as Map<String, String>
+                )
+            }
+        }
+    }
+
+    fun loadNoteResult() {
+        recentDB.get()
+    }
+
+    fun resetNoteResult(){
+        recentDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                recentDB.set(hashMapOf<Any, Any>())
             }
         }
     }
