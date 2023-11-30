@@ -49,14 +49,11 @@ class SignUpActivity : AppCompatActivity() {
                                             "password" to password,
                                             "profileImage" to ""
                                         )
-                                    ).addOnSuccessListener {
-                                        val quizDB = userDB.collection("quizDB")
-                                        val levels =
-                                            listOf("bronze", "silver", "gold", "platinum", "master")
-                                        for (level in levels) {
-                                            quizDB.document(level).set(hashMapOf<String, Any>())
-                                        }
-                                    }
+                                    )
+                                    val accureDB = firestore.collection("accurequizDB").document(uid!!)
+                                    accureDB.set(hashMapOf<Any, Any>())
+                                    val recentDB = firestore.collection("recentquizDB").document(uid!!)
+                                    recentDB.set(hashMapOf<Any, Any>())
                                     val intent = Intent(this, LoginActivity::class.java)
                                     startActivity(intent)
                                 } else {

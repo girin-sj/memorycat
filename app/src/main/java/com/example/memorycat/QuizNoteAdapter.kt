@@ -1,19 +1,24 @@
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.memorycat.QuizResult
+import com.example.memorycat.QuizNoteFragment
 import com.example.memorycat.R
+import com.example.memorycat.QuizResult
 import com.example.memorycat.databinding.ItemNoteBinding
 
-class QuizNoteHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root)
+class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adapter<QuizNoteAdapter.ViewHolder>() {
+    class ViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root){
+        val word: TextView = binding.wordData
+        val select: TextView = binding.selectMean
+        val answer: TextView = binding.answerMean
+    }
+    private var noteList = mutableListOf<QuizResult>()
 
-class QuizNoteAdapter(private var data: List<QuizResult>) : RecyclerView.Adapter<QuizNoteAdapter.ViewHolder>() {
-    class ViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root)
-
-    fun updateData(newData: List<QuizResult>) {
-        data = newData
-        notifyDataSetChanged()
+    fun updateData(newData: MutableList<QuizResult>) {
+        noteList = newData
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,18 +27,19 @@ class QuizNoteAdapter(private var data: List<QuizResult>) : RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return noteList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val quizResult = data[position]
-        holder.binding.wordData.text = quizResult.word
-        holder.binding.answerMean.text = quizResult.answer
-        holder.binding.selectMean.text = quizResult.select
-        if (quizResult.isCorrect) {
-            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.rightgreen))
-        } else {
-            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.wrongred))
+        val quizResult = noteList[position]
+        holder.word.text = quizResult.word
+        holder.select.text = quizResult.select
+        holder.answer.text = quizResult.answer
+
+        if (quizResult.isCorrect == "O") {
+            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.binding.selectMean.context, R.color.rightgreen))
+        } else if (quizResult.isCorrect == "X") {
+            holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.binding.selectMean.context, R.color.wrongred))
         }
     }
 }
