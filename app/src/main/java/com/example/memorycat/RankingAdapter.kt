@@ -20,6 +20,7 @@ class RankingAdapter(private var data: MutableList<User>) : RecyclerView.Adapter
         val user = data[position]
         holder.binding.txtLevel.text = user.level
         holder.binding.txtName.text = user.name
-        holder.binding.txtScore.text = user.score.toString()
+        holder.binding.txtScore.text = user.score
+        holder.binding.textRankingGrade.text = user.grade
     }
 }
