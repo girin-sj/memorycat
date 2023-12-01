@@ -60,13 +60,10 @@ class TodayWordStudyFragment : Fragment() {
                 binding.studyBeforeButton.text = "이전 단어로"
 
                 val word = getFirstTenWords[counter - 1]
-                //val word = getTodayWord(counter - 1)
-                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}") //단어 없음
+                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}")
+                todayWordViewModel.getMeanings(word) //제대로 뜻 못 가져오고 있음
+                Log.d("TodayWordViewModel", "getMeanings(word)")
 
-                // LiveData를 observe 하는 코드 블록 내에 넣어줌
-                if (word != null) {
-                    todayWordViewModel.getMeanings(word)
-                }
                 // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
             }
 
@@ -108,21 +105,20 @@ class TodayWordStudyFragment : Fragment() {
     private val meaningsObserver = Observer<List<String>> { meanings ->
         val meanings = todayWordViewModel.meanings.value
         Log.d("TodayWordViewModel", "means list: $meanings")
-        // 정답 뜻 추가
         // 앞에서 3개의 뜻만 가져오기
-        val threeMeanings = meanings!!.take(4)
-        // 정답 뜻 추가
-        // 리스트 섞기
+        val threeMeanings = meanings
         Log.d("TodayWordViewModel", "$threeMeanings")
 
-        // 버튼에 뜻 할당
-        binding.TodayWordMean1.text = threeMeanings[1]
-        binding.TodayWordMean2.text = threeMeanings[2]
-        binding.TodayWordMean3.text = threeMeanings[3]
+        // 버튼에 뜻 할당 //데이터 없으면 아무것도 안들어가야함
+        binding.TodayWordMean1.text = threeMeanings?.get(1) ?: ""
+        binding.TodayWordMean2.text = threeMeanings?.get(2) ?: ""
+        binding.TodayWordMean3.text = threeMeanings?.get(3) ?: ""
+        Log.d("TodayWordViewModel", "means1: ${threeMeanings?.get(1)}")
+
     }
 
     private fun updateMeanings(word: String) {
-        todayWordViewModel.getMeanings(word)
+        //todayWordViewModel.getMeanings(word)
         todayWordViewModel.getMeanings(word).removeObserver(meaningsObserver)
         todayWordViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
@@ -141,16 +137,3 @@ class TodayWordStudyFragment : Fragment() {
         _binding = null
     }
 }
-
-/*
-// 배열 가져오기 -> 단어 가져오기
-    fun getTodayWord(word_idx: Int): String { //String //여기서 제대로 단어 반환이 안됨.
-
-        Log.d("TodayWordViewModel", "list: ${todayWordViewModel.todayWordNames.value}") //이거 null인데?
-        val firstTenWords = todayWordViewModel.todayWordNames.value?.take(10) //배열
-        val word = firstTenWords?.get(word_idx) ?: ""
-        Log.d("TodayWordViewModel", "getTodayWord: ${word}") //그니까 단어 없지..
-        return word
-        //return todayWordViewModel.todayWordNames.value?.getOrNull(word_idx) ?: ""
-    }
- */

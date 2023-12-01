@@ -12,7 +12,7 @@ class TodayWordViewModel: ViewModel() {
     private val userDB = firestore.collection("userDB").document(uid!!)
     //private val todayWordNames = mutableListOf<String>() //오늘의 단어들 10개. 해당 리스트 프레그먼트에서 못 사용해?
     val todayWordNames = MutableLiveData<MutableList<String>>()
-    val meanings = MutableLiveData<MutableList<String>>()
+    val meanings = MutableLiveData<MutableList<String>>() //date 가져올때 사용
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _date = MutableLiveData<String>()
@@ -22,7 +22,9 @@ class TodayWordViewModel: ViewModel() {
     val todayWord: LiveData<String> get() = _todayWord
 
     //이렇게 mutablelist로 가져오기
-    private val _meanings = MutableLiveData<List<String>>()
+    private val _meanings = MutableLiveData<List<String>>() //실제 단어들 가져올떄 사용
+    val meanings_1: LiveData<List<String>> get() = _meanings //확인해보려고 만든 변수
+
 
     /*
     private val _means1: MutableLiveData<String> = MutableLiveData()
@@ -73,26 +75,35 @@ class TodayWordViewModel: ViewModel() {
     fun makeTodayWordList() { //MutableList<String>
         val todayWordNamesTemp = mutableListOf<String>()
         val levelDocumentRef =
-            firestore.collection("englishDictionary").document(level.value!!) //level고려 //
+            firestore.collection("englishDictionary").document(level.value!!) 
         val dateInt = _date.value!!.toInt()
-        Log.d("TodayWordViewModel", "make TodayWord") //여기까진 실행됨 log 뜸
+        Log.d("TodayWordViewModel", "make TodayWord") //OK
         levelDocumentRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
                     val fieldMap = document.data
                     if (fieldMap != null) {
                         val fieldNames = fieldMap.keys.toList() //단어이름들
+                        Log.d("TodayWordViewModel", "fieldNames: ${fieldNames}") //다 들어가긴 하네 ok
                         var fieldName: String = "" //fieldNames: 단어 이름
                         var flag = 0
                         while (flag < 7) { //첫 7개
                             fieldName = fieldNames[dicIdx]
+                            Log.d("TodayWordViewModel", "dicIdx: ${dicIdx}, fieldName: ${fieldName}")
                             dicIdx++
+                            /*
                             val fieldValue = fieldMap[fieldName] as? Map<String, Any>
                             val dateGet = fieldValue?.get("date")?.toString() ?: "0"
-                            if (dateGet.toInt() == dateInt) { //date 검사
+                            */
+                            val words = document.get(fieldName) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨. //WORD 확인해보기 //MAP //GET으로 가져오고 타입이 ㅁ뭔지 확인하기
+                            Log.d("TodayWordViewModel", "meanings: ${words}")
+                            val dateGet = words[0]
+                            Log.d("TodayWordViewModel", "dateGet: ${dateGet}, dateInt: ${dateInt}, ${dateGet.toInt() == dateInt}")
+
+                            if (dateGet.toInt() == dateInt) { //제대로 작동함
                                 todayWordNamesTemp.add(fieldName)
                                 flag ++
-                                Log.d("TodayWordViewModel", "list num: ${flag}, list: ${todayWordNamesTemp}")
+                                Log.d("TodayWordViewModel", "list7 num: ${flag}, list: ${todayWordNamesTemp}")
                             }
                         }
                         //추가적 3개
@@ -100,12 +111,15 @@ class TodayWordViewModel: ViewModel() {
                             var append = 0
                             while(append < 3){
                                 val randomFieldName = fieldNames.random()
-                                val fieldValue = fieldMap[fieldName] as? Map<String, Any>
-                                val dateGet = fieldValue?.get("date")?.toString() ?: "0"
+                                val words = document.get(fieldName) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨. //WORD 확인해보기 //MAP //GET으로 가져오고 타입이 ㅁ뭔지 확인하기
+                                Log.d("TodayWordViewModel", "meanings: ${words}")
+                                val dateGet = words[0]
+                                Log.d("TodayWordViewModel", "dateGet: ${dateGet}")
+
                                 if (dateGet.toInt() > dateInt) { //date 검사
                                     todayWordNamesTemp.add(randomFieldName)
                                     append++
-                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNamesTemp}")
+                                    Log.d("TodayWordViewModel", "list3-1 num: ${append+7}, list: ${todayWordNamesTemp}")
                                 }
                             }
                         } else{ //첫째날의 경우. 오늘꺼 3개 추가
@@ -113,16 +127,18 @@ class TodayWordViewModel: ViewModel() {
                             while(append < 3){
                                 fieldName = fieldNames[dicIdx]
                                 dicIdx++
-                                val fieldValue = fieldMap[fieldName] as? Map<String, Any>
-                                val dateGet = fieldValue?.get("date")?.toString() ?: "0"
+                                val words = document.get(fieldName) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨. //WORD 확인해보기 //MAP //GET으로 가져오고 타입이 ㅁ뭔지 확인하기
+                                Log.d("TodayWordViewModel", "meanings: ${words}")
+                                val dateGet = words[0]
+                                Log.d("TodayWordViewModel", "dateGet: ${dateGet}")
+
                                 if (dateGet.toInt() == dateInt) { //date 검사
                                     todayWordNamesTemp.add(fieldName) //최종 list에 넣기
                                     append++
-                                    Log.d("TodayWordViewModel", "list num: ${append+7}, list: ${todayWordNamesTemp}")
+                                    Log.d("TodayWordViewModel", "list3-2 num: ${append+7}, list: ${todayWordNamesTemp}")
                                 }
                             }
                         }
-                        //todayWordNames.value = todayWordNamesTemp
                         todayWordNames.postValue(todayWordNamesTemp)
                     }
                 } else {
@@ -131,18 +147,18 @@ class TodayWordViewModel: ViewModel() {
             }.addOnFailureListener { exception ->
                 Log.e("TodayWordViewModel", "Error getting random word: $exception")
             }
-        //return todayWordNames
     }
 
 
     fun getMeanings(word: String): MutableLiveData<List<String>> {
-        val levelDocument = firestore.collection("quizDB").document(level.value!!)
+        val levelDocument = firestore.collection("englishDictionaryDB").document(level.value!!)
 
-        levelDocument.get()
+        levelDocument.get() //여기서 failure가 되어버리네
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val meanings = document.get(word) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨.
+                    val meanings = document.get(word) as MutableList<String> //여기에 date 존재하니 index 1부터 가져오면 됨. //WORD 확인해보기 //MAP //GET으로 가져오고 타입이 ㅁ뭔지 확인하기
                     _meanings.value = meanings
+                    Log.e("TodayWordViewModel", "${meanings}")
                 }
             }
             .addOnFailureListener { exception ->
@@ -151,36 +167,4 @@ class TodayWordViewModel: ViewModel() {
 
         return _meanings
     }
-
-    /*
-    fun getMeanings(word: String): MutableLiveData<List<String>> { //MutableLiveData<String> //고치자
-        val levelDocumentRef =
-            firestore.collection("englishDictionary").document(level.value!!) //level고려
-
-        Log.d("TodayWordViewModel", "get meanings")
-        levelDocumentRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val fieldMap = document.data
-                    if (fieldMap != null) {
-                        val fieldName = word //fieldNames: 단어 이름
-
-                        val meaningsMap = fieldMap[fieldName] as? Map<String, String>
-                        if (!meaningsMap.isNullOrEmpty()) {
-                            _means1.value = meaningsMap["mean1"] ?: ""
-                            _means2.value = meaningsMap["mean2"] ?: ""
-                            _means3.value = meaningsMap["mean3"] ?: ""
-                        }
-                    }
-                } else {
-                    Log.d("TodayWordViewModel", "Document does not exist")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("TodayWordViewModel", "Error getting document: $exception")
-            }
-    }//getMeanings()
-
-     */
-
 }

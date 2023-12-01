@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.example.memorycat.databinding.FragmentTodaywordStartBinding
 
 lateinit var getFirstTenWords: MutableList<String>
-lateinit var getThreeMeanings: MutableList<String>
+//lateinit var getThreeMeanings: MutableList<String>
 
 class TodayWordStartFragment : Fragment() {
     private var _binding: FragmentTodaywordStartBinding? = null
@@ -41,14 +41,20 @@ class TodayWordStartFragment : Fragment() {
                     // LiveData 내용이 업데이트되면 실행될 코드
                     val firstTenWords = todayWordNames.take(10)
                     getFirstTenWords = todayWordNames.take(10).toMutableList()
-                    val word = firstTenWords.getOrElse(0) { "" }
-                    todayWordViewModel.getMeanings(word) //null나옴
-                    Log.d(
-                        "TodayWordViewModel",
-                        "list: $getFirstTenWords"
+                    Log.d("TodayWordViewModel", "list: $getFirstTenWords"
                     )
+
+                    /*
                     Log.d("TodayWordViewModel", "원소1: ${getFirstTenWords.getOrElse(0) { "" }}")
-                    Log.d("TodayWordViewModel", "원소2: ${getFirstTenWords.getOrElse(9) { "" }}")
+                    Log.d("TodayWordViewModel", "원소9: ${getFirstTenWords.getOrElse(9) { "" }}")
+                   */
+
+                    //첫 단어
+                    val word = getFirstTenWords[0]
+                    //val word = firstTenWords.getOrElse(0) { "" }
+                    Log.d("TodayWordViewModel", "idx: ${0}, 단어: ${word}")
+                    todayWordViewModel.getMeanings(word) //왜 null인 것인가
+                    Log.d("TodayWordViewModel", "getMeanings[word]: ${todayWordViewModel.meanings_1.value}") //뜻 제대로 나와랏
 
                     val transaction = activity?.supportFragmentManager?.beginTransaction()
                     transaction?.replace(R.id.main_content, TodayWordStudyFragment())
