@@ -78,7 +78,7 @@ class MypageFragment : Fragment() {
 
 
         // get Level information from DB and display
-        quizViewModel.level.observe(viewLifecycleOwner, { level ->
+        quizViewModel.level?.observe(viewLifecycleOwner, { level ->
             binding.userLevel.text = "Lv. ${level?.toUpperCase()}"
         })
 

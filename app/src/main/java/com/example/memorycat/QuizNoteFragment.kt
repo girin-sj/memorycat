@@ -26,16 +26,21 @@ class QuizNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentQuizNoteBinding.inflate(inflater, container, false)
+
+        adapter = QuizNoteAdapter(this)
+        binding.noterecycler.layoutManager = LinearLayoutManager(context)
+        binding.noterecycler.adapter = adapter
+        binding.noterecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = QuizNoteAdapter(this)
-
-        binding.noterecycler.layoutManager = LinearLayoutManager(context)
-        binding.noterecycler.adapter = adapter
+        quizViewModel.loadNoteResult().observe(viewLifecycleOwner, Observer { noteResults ->
+            adapter.updateNote(noteResults.toMutableList())
+        })
     }
 
     override fun onDestroyView() {
