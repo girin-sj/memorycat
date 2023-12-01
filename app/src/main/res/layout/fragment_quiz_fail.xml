@@ -49,4 +49,14 @@
         android:text="단어장으로 돌아가기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
+    <Button
+        android:id="@+id/quizRankingButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/peowpink"
+        android:text="랭킹 보기"
+        android:textColor="@color/mainblack"
+        android:textSize="20sp"/>
 </LinearLayout>

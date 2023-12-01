@@ -34,6 +34,12 @@ class QuizFailFragment : Fragment() {
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
+        binding.quizRankingButton.setOnClickListener {
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.main_content, RankingFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
     }
 
     override fun onDestroyView() {

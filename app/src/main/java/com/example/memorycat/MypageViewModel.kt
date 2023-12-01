@@ -92,9 +92,37 @@ class MypageViewModel: ViewModel() {
             Log.e("MypageViewModel", "Error getting document: $exception")
         }
     }
+
+    private val accureDB = firestore.collection("accurequizDB").document(uid!!)
+
+    var correctcount = 0
+
+    fun getCount() {
+        accureDB.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val data = documentSnapshot.data // 문서의 데이터
+                    // 데이터가 HashMap 형태로 저장 -> 모든 document 하위 문서 가져옴
+                    if (data != null) {
+                        // key는 필드 이름, value는 해당 필드의 값
+                        for ((key, value) in data) {
+                            if(value == "O") {
+                                correctcount++
+                            }
+                        }
+                    }
+                } else {
+                    println("문서가 존재하지 않습니다.")
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("데이터를 가져오는 중 오류 발생: $exception")
+            }
+    }
     fun checkDate(currentDate: String): Boolean {
         Log.d("MypageViewModel", "_localdate: ${_localdate.value}")
         Log.d("MypageViewModel", "currentDate: $currentDate")
         return this._localdate.value.toString() == currentDate
     }
+
 }
