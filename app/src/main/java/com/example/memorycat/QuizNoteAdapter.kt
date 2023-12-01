@@ -1,5 +1,4 @@
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -17,8 +16,8 @@ class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adap
     }
     private var noteList = mutableListOf<QuizResult>()
 
-    fun updateData(newData: MutableList<QuizResult>) {
-        noteList = newData
+    fun updateNote(newData: List<QuizResult>) {
+        noteList = newData.toMutableList()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
