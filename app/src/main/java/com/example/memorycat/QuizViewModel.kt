@@ -2,17 +2,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.memorycat.Repository
 import com.example.memorycat.QuizResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.getField
 
 class QuizViewModel : ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
-    private val userDB = firestore.collection("userDB").document(uid!!)
-    private val accureDB = firestore.collection("accurequizDB").document(uid!!)
-    private val recentDB = firestore.collection("recentquizDB").document(uid!!)
     private val _level = MutableLiveData<String>()
     val level: LiveData<String> get() = _level
     private val _randomWord = MutableLiveData<String>()
@@ -21,13 +14,14 @@ class QuizViewModel : ViewModel() {
     private val _meanings = MutableLiveData<List<String>>()
     val randomMeanings = MutableLiveData<MutableList<String>>()
     val quizResult = MutableLiveData<List<QuizResult>>()
+    val repo: Repository = Repository()
 
     init {
         loadLevel()
     }
 
     private fun loadLevel() {
-        userDB.get().addOnSuccessListener { document ->
+        repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _level.value = document.getString("level")
                 Log.d("QuizViewModel", "Level loaded: ${_level.value}")
@@ -42,22 +36,22 @@ class QuizViewModel : ViewModel() {
 
     fun updateLevel() {
         if (_level.value=="bronze"){
-            userDB.update(hashMapOf("level" to "silver") as Map<String, String>)
+            repo.userDB.update(hashMapOf("level" to "silver") as Map<String, String>)
         }
         else if (_level.value=="silver"){
-            userDB.update(hashMapOf("level" to "gold") as Map<String, String>)
+            repo.userDB.update(hashMapOf("level" to "gold") as Map<String, String>)
         }
         else if (_level.value=="gold"){
-            userDB.update(hashMapOf("level" to "platinum") as Map<String, String>)
+            repo.userDB.update(hashMapOf("level" to "platinum") as Map<String, String>)
         }
         else {
-            userDB.update(hashMapOf("level" to "master") as Map<String, String>)
+            repo.userDB.update(hashMapOf("level" to "master") as Map<String, String>)
         }
     }
 
 
     fun getRandomWord(): MutableLiveData<String> {
-        val levelDocumentRef = firestore.collection("quizDB").document(level.value!!)
+        val levelDocumentRef = repo.firestore.collection("quizDB").document(level.value!!)
 
         Log.d("quizViewModel", "get random word")
         levelDocumentRef.get()
@@ -89,7 +83,7 @@ class QuizViewModel : ViewModel() {
     }
 
     fun getMeanings(word: String): MutableLiveData<List<String>> {
-        val levelDocument = firestore.collection("quizDB").document(level.value!!)
+        val levelDocument = repo.firestore.collection("quizDB").document(level.value!!)
 
         levelDocument.get()
             .addOnSuccessListener { document ->
@@ -107,7 +101,7 @@ class QuizViewModel : ViewModel() {
 
     fun getRandomMeanings() {
         val randomMeaningsTemp = mutableListOf<String>()
-        val levelDocument = firestore.collection("quizDB").document(level.value!!)
+        val levelDocument = repo.firestore.collection("quizDB").document(level.value!!)
 
         levelDocument.get()
             .addOnSuccessListener { document ->
@@ -127,9 +121,9 @@ class QuizViewModel : ViewModel() {
     }
 
     fun updateQuizResult(word: String, answer: String) {
-        accureDB.get().addOnCompleteListener { task ->
+        repo.accureDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                accureDB.update(
+                repo.accureDB.update(
                     hashMapOf(
                         word to answer
                     ) as Map<String, String>
@@ -139,9 +133,9 @@ class QuizViewModel : ViewModel() {
     }
 
     fun updateNoteResult(word: String, select: String, answer: String, isCorrect: String) {
-        recentDB.get().addOnCompleteListener { task ->
+        repo.recentDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                recentDB.update(
+                repo.recentDB.update(
                     hashMapOf(
                         word to hashMapOf(
                             "select" to select,
@@ -154,14 +148,30 @@ class QuizViewModel : ViewModel() {
         }
     }
 
-    fun loadNoteResult() {
-        recentDB.get()
+    fun loadNoteResult(): LiveData<List<QuizResult>> {
+        val liveData = MutableLiveData<List<QuizResult>>()
+        repo.recentDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val quizResults = mutableListOf<QuizResult>()
+                val document = task.result
+                document?.data?.forEach { entry ->
+                    val word = entry.key
+                    val value = entry.value as Map<String, String>
+                    val select = value["select"] ?: ""
+                    val answer = value["answer"] ?: ""
+                    val isCorrect = value["isCorrect"] ?: ""
+                    quizResults.add(QuizResult(word, select, answer, isCorrect))
+                }
+                liveData.postValue(quizResults)
+            }
+        }
+        return liveData
     }
 
     fun resetNoteResult(){
-        recentDB.get().addOnCompleteListener { task ->
+        repo.recentDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                recentDB.set(hashMapOf<Any, Any>())
+                repo.recentDB.set(hashMapOf<Any, Any>())
             }
         }
     }

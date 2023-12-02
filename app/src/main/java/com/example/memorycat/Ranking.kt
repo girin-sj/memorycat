@@ -7,4 +7,4 @@ enum class Ranking {
     PROFILE
 }
 
-data class User(val name: String, val level: String, val score: Int, val profile: String)
+data class User(val name: String, val level: String, val score: String, val grade: String)

@@ -12,7 +12,7 @@ import com.example.memorycat.databinding.FragmentQuizStartBinding
 class QuizStartFragment : Fragment() {
     private var _binding: FragmentQuizStartBinding? = null
     private val binding get() = _binding!!
-    private val quizViewModel: QuizViewModel by viewModels() //뷰모델
+    private val quizViewModel: QuizViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,7 +24,7 @@ class QuizStartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        quizViewModel.level.observe(viewLifecycleOwner, { level ->
+        quizViewModel.level?.observe(viewLifecycleOwner, { level ->
             binding.levelText.text = "${level?.toUpperCase()} 테스트를\n 시작할게요"
         })
 
