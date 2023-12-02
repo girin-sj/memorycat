@@ -17,7 +17,6 @@ import com.example.memorycat.databinding.FragmentQuizNoteBinding
 class QuizNoteFragment : Fragment() {
     private var _binding: FragmentQuizNoteBinding? = null
     private val binding get() = _binding!!
-    private var tts: MemoryCatTextToSpeech? = null
     private lateinit var adapter: QuizNoteAdapter
     private val quizViewModel: QuizViewModel by viewModels()
 

@@ -16,8 +16,9 @@ class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adap
     }
     private var noteList = mutableListOf<QuizResult>()
 
-    fun updateNote(newData: List<QuizResult>) {
-        noteList = newData.toMutableList()
+    fun updateNote(newData: MutableList<QuizResult>) {
+        noteList = newData
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
