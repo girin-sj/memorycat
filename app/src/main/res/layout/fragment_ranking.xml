@@ -23,5 +23,7 @@
         android:layout_marginTop="50dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/list_ranking" />
+        tools:listitem="@layout/list_ranking"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 </LinearLayout>

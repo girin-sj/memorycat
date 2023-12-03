@@ -23,15 +23,15 @@ import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
 
 class MypageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
 
-    private val quizViewModel: QuizViewModel by activityViewModels() //뷰모델
-    private lateinit var mypageViewModel: MypageViewModel //뷰모델
+    private val quizViewModel: QuizViewModel by activityViewModels()
+    private lateinit var mypageViewModel: MypageViewModel
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,21 +48,29 @@ class MypageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val storage = FirebaseStorage.getInstance("gs://memorycat-c8f7d.appspot.com")
         val storageRef = storage.reference
-        var imageIndex = 0 // stamp image index = stamp count = date
 
-        // About stamp
-        val imageView: ImageView = view.findViewById(R.id.img_stamp)
-        val stampArray = resources.obtainTypedArray(R.array.stamp)
-        // change Stamp(초기화)
-        val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
-        if (imageResId != -1) {
-            imageView.setImageResource(imageResId)
-        }
+        mypageViewModel.date.observe(viewLifecycleOwner, { date ->
+            var imageIndex = date.toInt()
+            Log.d("MypageFragment", "imageIndex: ${imageIndex}")
+            val imageView: ImageView = view.findViewById(R.id.img_stamp)
+            val stampArray = resources.obtainTypedArray(R.array.stamp)
+            if (imageIndex == 7) {
+                imageIndex = 0
+            }
+            val date = imageIndex + 1
+            Log.d("MypageFragment", "before update date: ${date}")
+            mypageViewModel.updateDate(date.toString())
+            // change Stamp(초기화)
+            val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
+            if (imageResId != -1) {
+                imageView.setImageResource(imageResId)
+            }
+        })
+
 
         mypageViewModel.imageProfile.observe(viewLifecycleOwner) { imageProfile ->
             val imageAdress = "images/$imageProfile"
             val imageRef = storageRef.child(imageAdress)
-            Log.d("MypageFragment", "check: ${imageAdress}")
             imageRef.downloadUrl
                 .addOnSuccessListener { uri ->
                     // 이미지 로드 성공 시 Glide를 사용하여 이미지 로드
@@ -92,38 +100,13 @@ class MypageFragment : Fragment() {
             binding.textUserName.text = "${name?.toUpperCase()}"
         })
 
-
-        binding.buttonAttendance.setOnClickListener {
-            val currentDate: LocalDate = LocalDate.now()
-            val IsSameDate: Boolean = mypageViewModel.checkDate(currentDate.toString())
-            Log.d("MypageFragment", "Stamp imageIndex: $imageIndex")
-            Log.d("MypageFragment", "current: $currentDate")
-            Log.d("MypageFragment", "IsSameDate: $IsSameDate")
-            // 같은 날에 출석체크 시도
-            if (IsSameDate == true) {
-                Toast.makeText(context, "이미 출석 체크를 하셨습니다!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            // 출석체크 성공
-            if (imageIndex == 6)
-                imageIndex = -1
-            imageIndex++
-            mypageViewModel.updateLocalDate(currentDate.toString())
-            mypageViewModel.updateDate(imageIndex.toString())
-            // 성공 시 바로 반영 change Stamp
-            Toast.makeText(context, "출석 체크 성공!", Toast.LENGTH_SHORT).show()
-            val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
-            if (imageResId != -1) {
-                imageView.setImageResource(imageResId)
-            }
-        }
-
         binding.buttonEditProfile.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, EditMypageFragment())
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
+
         binding.buttonImageUpload.setOnClickListener {
             openGalleryForImage()
         }
