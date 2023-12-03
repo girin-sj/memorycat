@@ -4,9 +4,8 @@
     android:id="@+id/item_root"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:layout_gravity="center_horizontal"
-    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
     android:padding="16dp"
     android:background="@drawable/rec_background">
     <LinearLayout
@@ -20,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textStyle="bold"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:text="Cat"/>
         <TextView
             android:id="@+id/selectMean"
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textColor="@color/graydark"
             android:text="내가 선택한 답"/>
         <TextView
@@ -37,26 +36,32 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textColor="@color/graydark"
             android:text="정답"/>
     </LinearLayout>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="125dp"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
-        <ImageView
+        android:layout_marginRight="15dp"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageButton
             android:id="@+id/noteVoice"
-            android:layout_width="50dp"
-            android:layout_height="62dp"
-            android:src="@drawable/voice"/>
+            android:layout_width="48dp"
+            android:layout_height="60dp"
+            android:src="@drawable/voice"
+            android:contentDescription="voice"
+            android:backgroundTint="@color/white"/>
 
         <ImageView
             android:id="@+id/noteBookmark"
             android:layout_width="30dp"
-            android:layout_height="match_parent"
+            android:layout_height="30dp"
             android:src="@drawable/peow" />
     </LinearLayout>
 </LinearLayout>

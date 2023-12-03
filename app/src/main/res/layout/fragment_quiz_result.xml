@@ -15,11 +15,12 @@
         android:textSize="12sp"
         android:textColor="@color/graydark"/>
     <TextView
+        android:id="@+id/levelText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="6dp"
-        android:text="GOLD 레벨 통과!"
+        android:text=""
         android:textStyle="bold"
         android:textSize="25sp"
         android:textColor="@color/mainblack"/>

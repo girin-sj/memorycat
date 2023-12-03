@@ -18,7 +18,7 @@ class QuizMainFragment : Fragment() {
     private var _binding: FragmentQuizMainBinding? = null
     private val binding get() = _binding!!
     private var counter: Int = 1
-    private var correctCounter: Int = 1
+    private var correctCounter: Int = 0
     private var tts: MemoryCatTextToSpeech? = null
     private val quizViewModel: QuizViewModel by viewModels()
     private var correctAnswer: String? = null
@@ -30,7 +30,7 @@ class QuizMainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuizMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,7 +44,7 @@ class QuizMainFragment : Fragment() {
         quizViewModel.randomWord.observe(viewLifecycleOwner, observer)
 
         binding.quizNextButton.setOnClickListener {
-            if (++counter < 11) {
+            if (counter++ < 10) {
                 binding.quizNumber.text = "$counter/10"
                 handleAnswer(binding.quizWord.text.toString())
 
@@ -52,7 +52,6 @@ class QuizMainFragment : Fragment() {
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-
                 binding.quizPassButton.setOnClickListener {
                     handleAnswer(binding.quizWord.text.toString())
                     if(correctCounter==10){
@@ -87,7 +86,6 @@ class QuizMainFragment : Fragment() {
 
         // 버튼에 뜻 할당
         binding.quizAnswer1.text = finalShuffledMeanings[0]
-        Log.d("QuizMainFragment", "means1: ${finalShuffledMeanings[0]}")
         binding.quizAnswer2.text = finalShuffledMeanings[1]
         binding.quizAnswer3.text = finalShuffledMeanings[2]
         binding.quizAnswer4.text = finalShuffledMeanings[3]
@@ -99,7 +97,6 @@ class QuizMainFragment : Fragment() {
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
 
-    //이건 북마크 때문에 사용해야 함
     private fun handleAnswer(word: String) {
         val selectedId = binding.answerGroup.checkedRadioButtonId
         var answerId = ""
