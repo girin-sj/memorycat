@@ -1,9 +1,10 @@
+package com.example.memorycat.ViewModel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.memorycat.Repository
 import com.example.memorycat.QuizResult
+import com.example.memorycat.Repository.Repository
 
 class QuizViewModel : ViewModel() {
     private val _level = MutableLiveData<String>()
@@ -24,13 +25,13 @@ class QuizViewModel : ViewModel() {
         repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _level.value = document.getString("level")
-                Log.d("QuizViewModel", "Level loaded: ${_level.value}")
+                Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Level loaded: ${_level.value}")
                 getRandomWord() // level이 로드된 후에 getRandomWord() 호출
             } else {
-                Log.d("QuizViewModel", "Document does not exist")
+                Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Document does not exist")
             }
         }.addOnFailureListener { exception ->
-            Log.e("QuizViewModel", "Error getting document: $exception")
+            Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting document: $exception")
         }
     }
 
@@ -67,16 +68,16 @@ class QuizViewModel : ViewModel() {
                             usedFieldNames.add(randomFieldName)
 
                             _randomWord.value = randomFieldName
-                            Log.d("QuizViewModel", "New word: ${_randomWord.value}")
+                            Log.d("com.example.memorycat.ViewModel.QuizViewModel", "New word: ${_randomWord.value}")
                         }
                     }
                 }
                 else {
-                    Log.d("QuizViewModel", "some error")
+                    Log.d("com.example.memorycat.ViewModel.QuizViewModel", "some error")
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("QuizViewModel", "Error getting random word: $exception")
+                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting random word: $exception")
             }
 
         return _randomWord
@@ -93,9 +94,8 @@ class QuizViewModel : ViewModel() {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("QuizViewModel", "Error getting meanings: $exception")
+                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting meanings: $exception")
             }
-
         return _meanings
     }
 
@@ -116,10 +116,11 @@ class QuizViewModel : ViewModel() {
                 randomMeanings.value = randomMeaningsTemp
             }
             .addOnFailureListener { exception ->
-                Log.e("QuizViewModel", "Error getting random meanings: $exception")
+                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting random meanings: $exception")
             }
     }
 
+    //bookmark에서 사용
     fun updateQuizResult(word: String, answer: String) {
         repo.accureDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {

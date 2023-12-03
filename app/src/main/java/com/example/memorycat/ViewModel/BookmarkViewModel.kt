@@ -1,4 +1,4 @@
-
+package com.example.memorycat.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.BookmarkResult

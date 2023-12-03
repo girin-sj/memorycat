@@ -1,14 +1,11 @@
 package com.example.memorycat
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.memorycat.databinding.ActivitySignUpBinding
-import com.google.android.gms.tasks.Task
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SignUpActivity : AppCompatActivity() {
@@ -40,7 +37,6 @@ class SignUpActivity : AppCompatActivity() {
                                     userDB.set(
                                         hashMapOf(
                                             "date" to "",
-                                            "bookmarkDB" to hashMapOf<String, Any>(),
                                             "email" to email,
                                             "goal" to "",
                                             "headerImage" to "",
@@ -50,6 +46,8 @@ class SignUpActivity : AppCompatActivity() {
                                             "profileImage" to ""
                                         )
                                     )
+                                    val bookmarkDB = firestore.collection("bookmarkDB").document(uid!!)
+                                    bookmarkDB.set(hashMapOf<Any, Any>())
                                     val accureDB = firestore.collection("accurequizDB").document(uid!!)
                                     accureDB.set(hashMapOf<Any, Any>())
                                     val recentDB = firestore.collection("recentquizDB").document(uid!!)

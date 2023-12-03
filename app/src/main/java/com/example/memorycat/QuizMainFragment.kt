@@ -1,7 +1,6 @@
 package com.example.memorycat
 
 import MemoryCatTextToSpeech
-import QuizViewModel
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.memorycat.ViewModel.QuizViewModel
 import com.example.memorycat.databinding.FragmentQuizMainBinding
 
 class QuizMainFragment : Fragment() {
@@ -24,7 +24,7 @@ class QuizMainFragment : Fragment() {
     private var correctAnswer: String? = null
     private val observer = Observer<String> { newWord ->
         binding.quizWord.text = newWord
-        updateChoices(newWord) //참고
+        updateChoices(newWord)
     }
 
     override fun onCreateView(
@@ -46,14 +46,15 @@ class QuizMainFragment : Fragment() {
         binding.quizNextButton.setOnClickListener {
             if (++counter < 11) {
                 binding.quizNumber.text = "$counter/10"
-                handleAnswer(binding.quizWord.text.toString())
+                handleAnswer(binding.quizWord.text.toString()) //정답 데이터 DB에 넣기
 
             } else {
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+
                 binding.quizPassButton.setOnClickListener {
-                    handleAnswer(binding.quizWord.text.toString())
+                    handleAnswer(binding.quizWord.text.toString()) //정답 데이터 DB에 넣기
                     if(correctCounter==10){
                         val transaction = activity?.supportFragmentManager?.beginTransaction()
                         transaction?.replace(R.id.main_content, QuizResultFragment())
@@ -75,6 +76,7 @@ class QuizMainFragment : Fragment() {
         val randomMeanings = quizViewModel.randomMeanings.value
         Log.d("QuizMainFragment", "$randomMeanings")
         // 정답 뜻 추가
+        Log.d("QuizMainFragment", "meanings: $meanings") //확인용1
         correctAnswer = meanings.random()
         // 앞에서 3개의 뜻만 가져오기
         val selectedMeanings = randomMeanings!!.take(3)
@@ -82,21 +84,23 @@ class QuizMainFragment : Fragment() {
         val finalMeanings = selectedMeanings + correctAnswer
         // 리스트 섞기
         val finalShuffledMeanings = finalMeanings.shuffled()
-        Log.d("QuizMainFragment", "$finalShuffledMeanings")
+        Log.d("QuizMainFragment", "$finalShuffledMeanings") //2
 
         // 버튼에 뜻 할당
         binding.quizAnswer1.text = finalShuffledMeanings[0]
+        Log.d("QuizMainFragment", "means1: ${finalShuffledMeanings[0]}")
         binding.quizAnswer2.text = finalShuffledMeanings[1]
         binding.quizAnswer3.text = finalShuffledMeanings[2]
         binding.quizAnswer4.text = finalShuffledMeanings[3]
     }
 
-    private fun updateChoices(word: String) {
-        quizViewModel.getRandomMeanings()
+    private fun updateChoices(word: String) { //여기가 문제네
+        quizViewModel.getRandomMeanings() //나는 이거 필요 없음
         quizViewModel.getMeanings(word).removeObserver(meaningsObserver)
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
 
+    //이건 북마크 때문에 사용해야 함
     private fun handleAnswer(word: String) {
         val selectedId = binding.answerGroup.checkedRadioButtonId
         var answerId = ""

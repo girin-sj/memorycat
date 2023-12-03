@@ -1,4 +1,4 @@
-package com.example.memorycat
+package com.example.memorycat.ViewModel
 
 import android.util.Log
 import androidx.lifecycle.LiveData

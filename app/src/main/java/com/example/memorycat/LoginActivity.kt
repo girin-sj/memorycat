@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
+import com.example.memorycat.ViewModel.MypageViewModel
 import com.example.memorycat.databinding.ActivityLoginBinding
 import java.time.LocalDate
 
