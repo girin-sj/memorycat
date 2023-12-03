@@ -62,7 +62,7 @@ class TodayWordStudyFragment : Fragment() {
                 binding.studyBeforeButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
             }
-            else if(counter <= 10) {
+            else if(counter < 10) {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
@@ -79,15 +79,18 @@ class TodayWordStudyFragment : Fragment() {
                     todayWordViewModel.getTodayWord(counter - 1)
                     binding.studyNextButton.backgroundTintList =
                         ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
-
-                    binding.studyNextButton.setOnClickListener {
-                        val transaction = activity?.supportFragmentManager?.beginTransaction()
-                        transaction?.replace(R.id.main_content, TodayWordEndFragment())
-                        transaction?.addToBackStack(null)
-                        transaction?.commit()
-                    }
-
                 }
+            } else if (counter == 10) { // counter가 10일 때 추가 동작
+                binding.studyNextButton.text = "학습 끝내기"
+                todayWordViewModel.getTodayWord(counter - 1)
+                binding.studyNextButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
+
+                val transaction = activity?.supportFragmentManager?.beginTransaction()
+                transaction?.replace(R.id.main_content, TodayWordEndFragment())
+                transaction?.addToBackStack(null)
+                transaction?.commit()
+
             }
         }
 
