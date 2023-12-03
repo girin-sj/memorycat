@@ -50,6 +50,8 @@ class SignUpActivity : AppCompatActivity() {
                                     bookmarkDB.set(hashMapOf<Any, Any>())
                                     val accureDB = firestore.collection("accurequizDB").document(uid!!)
                                     accureDB.set(hashMapOf<Any, Any>())
+                                    val recentbDB = firestore.collection("recentbookmarkDB").document(uid!!)
+                                    recentbDB.set(hashMapOf<Any, Any>())
                                     val recentDB = firestore.collection("recentquizDB").document(uid!!)
                                     recentDB.set(hashMapOf<Any, Any>())
                                     val intent = Intent(this, LoginActivity::class.java)

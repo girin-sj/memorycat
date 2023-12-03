@@ -1,6 +1,6 @@
 package com.example.memorycat
 
-import com.example.memorycat.ViewModel.BookmarkViewModel
+import BookmarkAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,32 +10,35 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.memorycat.ViewModel.TodayWordViewModel
 import com.example.memorycat.databinding.FragmentBookmarkMainBinding
 
 class BookmarkMainFragment : Fragment() {
     private var _binding: FragmentBookmarkMainBinding? = null
     private val binding get() = _binding!!
-    //둘다 사용
-    private val BookmarkViewModel: BookmarkViewModel by viewModels()
-    //private val com.example.memorycat.ViewModel.TodayWordViewModel: com.example.memorycat.ViewModel.TodayWordViewModel by viewModels()
+    private lateinit var adapter: BookmarkAdapter
+    //private val bookmarkViewModel: BookmarkViewModel by viewModels()
+    private val todayWordViewModel: TodayWordViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBookmarkMainBinding.inflate(inflater, container, false)
+
+        adapter = BookmarkAdapter(this)
+        binding.bookmarkrecycler.layoutManager = LinearLayoutManager(context)
+        binding.bookmarkrecycler.adapter = adapter
+        binding.bookmarkrecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = BookmarkAdapter(emptyList())
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-        BookmarkViewModel.bookmarkResult.observe(viewLifecycleOwner, Observer { bookmarkResult ->
-            adapter.bookmarkUpdateData(bookmarkResult)
+        todayWordViewModel.loadBookmarkResult().observe(viewLifecycleOwner, Observer { bookmarkResults ->
+            adapter.updateBookmark(bookmarkResults.toMutableList())
         })
     }
 
@@ -46,4 +49,3 @@ class BookmarkMainFragment : Fragment() {
         _binding = null
     }
 }
-

@@ -137,7 +137,6 @@ class QuizViewModel : ViewModel() {
             }
     }
 
-    //bookmark에서 사용
     fun updateQuizResult(word: String, answer: String) {
         repo.accureDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -199,6 +198,7 @@ class QuizViewModel : ViewModel() {
         return liveData
     }
 
+    /*
     fun resetNoteResult(){
         repo.recentDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -206,6 +206,8 @@ class QuizViewModel : ViewModel() {
             }
         }
     }
+
+     */
 
     fun checkAnswer(userAnswer: String, correctAnswer: String): Boolean {
         return correctAnswer == userAnswer

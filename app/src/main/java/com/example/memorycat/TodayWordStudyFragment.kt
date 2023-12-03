@@ -2,30 +2,61 @@ package com.example.memorycat
 
 import MemoryCatTextToSpeech
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.memorycat.ViewModel.BookmarkViewModel
+import com.example.memorycat.Repository.Repository_yjw
 import com.example.memorycat.ViewModel.TodayWordViewModel
 import com.example.memorycat.databinding.FragmentTodaywordStudyBinding
 
 class TodayWordStudyFragment : Fragment() {
     private var _binding: FragmentTodaywordStudyBinding? = null
     private val binding get() = _binding!!
+    var word: String = ""
     private var counter: Int = 0
+    private var selectCounter: Int = 1
+    private var tts: MemoryCatTextToSpeech? = null
+    private val todayWordViewModel: TodayWordViewModel by viewModels()
+    //private val bookmarkViewModel: BookmarkViewModel by viewModels()
+    val repo: Repository_yjw = Repository_yjw()
+
+    //단어와 뜻 옵저버
     private val observer = Observer<String> { newWord -> //화면 내용 변경 될 때마다 observer 호출됨.
         if (newWord != binding.TodayWord.text) {
             binding.TodayWord.text = newWord
             updateMeanings(newWord)
         }
     }
-    private var tts: MemoryCatTextToSpeech? = null
-    private val todayWordViewModel: TodayWordViewModel by viewModels()
-    private val bookmarkViewModel: BookmarkViewModel by viewModels()
+    // 북마크 버튼 클릭 리스너
+    private val bookmarkClickListener = View.OnClickListener {
+        Log.d("TodayWordStudyFragment", "bookmarkClickListener")
+        val word = binding.TodayWord.text.toString()
+        val mean1 = binding.TodayWordMean1.text.toString()
+        val mean2 = binding.TodayWordMean2.text.toString()
+        val mean3 = binding.TodayWordMean3.text.toString()
+
+        // db update
+        todayWordViewModel.checkSelect(word) { isSelect ->
+            if (isSelect) {
+                Toast.makeText(context, "북마크 제거!", Toast.LENGTH_SHORT).show()
+                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "X")
+                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: X}")
+            } else {
+                Toast.makeText(context, "북마크 추가!", Toast.LENGTH_SHORT).show()
+                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "O")
+                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: O}")
+            }
+            // 색상 변경
+            changeBookmarkColor(isSelect)
+            Log.d("TodayWordStudyFragment", "end changeBookmarkColor")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +66,7 @@ class TodayWordStudyFragment : Fragment() {
         return binding.root
     }
 
+    private var isBookmarkClickable = true // 추가된 부분
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,78 +79,132 @@ class TodayWordStudyFragment : Fragment() {
 
         // 배열 만들기, 다음 단어로
         binding.studyNextButton.setOnClickListener {
-            if(counter == 0){
-                counter++
-                binding.TodayWordNumber.text = "$counter/10"
-                binding.studyNextButton.text = "다음 단어로"
+            if (isBookmarkClickable) { // 수정된 부분
+                isBookmarkClickable = false // 수정된 부분
+                if(counter == 0){
+                    counter++
+                    binding.TodayWordNumber.text = "$counter/10"
+                    binding.studyNextButton.text = "다음 단어로"
 
-                todayWordViewModel.makeTodayWordList() //리스트 만들기
-                todayWordViewModel.todayWordNames.observe(viewLifecycleOwner) { todayWordNames ->
-                    todayWordNames?.let {
-                        todayWordViewModel.getTodayWord(counter - 1)
+                    todayWordViewModel.makeTodayWordList() //리스트 만들기
+                    todayWordViewModel.todayWordNames.observe(viewLifecycleOwner) { todayWordNames ->
+                        todayWordNames?.let {
+                            word = todayWordViewModel.getTodayWord(counter - 1).toString()
+                        }
                     }
+                    getBookmarkColor(word) //색 반영
+                    binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
+
+                    binding.studyBeforeButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.yellow)
                 }
+                else if(counter < 10) {
+                    counter++
+                    binding.TodayWordNumber.text = "$counter/10"
+                    binding.studyBeforeButton.text = "이전 단어로"
+                    word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                binding.studyBeforeButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-            }
-            else if(counter < 10) {
-                counter++
-                binding.TodayWordNumber.text = "$counter/10"
-                binding.studyBeforeButton.text = "이전 단어로"
-                todayWordViewModel.getTodayWord(counter - 1)
+                    getBookmarkColor(word)
+                    binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
-                binding.studyNextButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-                binding.studyBeforeButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-                // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
+                    binding.studyNextButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                    binding.studyBeforeButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                    // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
 
-                if (counter == 10) { // 종료
+                    if (counter == 10) {
+                        binding.studyNextButton.text = "학습 끝내기"
+                        word = todayWordViewModel.getTodayWord(counter - 1).toString()
+
+                        getBookmarkColor(word)
+                        binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
+
+                        binding.studyNextButton.backgroundTintList =
+                            ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
+                    }
+                } else if (counter == 10) { // counter가 10일 때 추가 동작
                     binding.studyNextButton.text = "학습 끝내기"
-                    todayWordViewModel.getTodayWord(counter - 1)
+                    word = todayWordViewModel.getTodayWord(counter - 1).toString()
+
+                    getBookmarkColor(word)
+                    binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
+
                     binding.studyNextButton.backgroundTintList =
                         ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
-                }
-            } else if (counter == 10) { // counter가 10일 때 추가 동작
-                binding.studyNextButton.text = "학습 끝내기"
-                todayWordViewModel.getTodayWord(counter - 1)
-                binding.studyNextButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
 
-                val transaction = activity?.supportFragmentManager?.beginTransaction()
-                transaction?.replace(R.id.main_content, TodayWordEndFragment())
-                transaction?.addToBackStack(null)
-                transaction?.commit()
+                    val transaction = activity?.supportFragmentManager?.beginTransaction()
+                    transaction?.replace(R.id.main_content, TodayWordEndFragment())
+                    transaction?.addToBackStack(null)
+                    transaction?.commit()
+                }
 
             }
         }
-
         // 이전 단어로
         binding.studyBeforeButton.setOnClickListener {
-            if (counter <= 1) {
-                binding.studyBeforeButton.text = "이전단어 없음"
-                binding.TodayWordNumber.text = "$counter/10"
+            if (isBookmarkClickable) { // 수정된 부분
+                isBookmarkClickable = false // 수정된 부분
+                if (counter <= 1) {
+                    binding.studyBeforeButton.text = "이전단어 없음"
+                    binding.TodayWordNumber.text = "$counter/10"
 
-                binding.studyBeforeButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.graylight)
+                    binding.studyBeforeButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.graylight)
 
-            } else {
-                counter--
-                binding.TodayWordNumber.text = "$counter/10"
-                binding.studyNextButton.text = "다음 단어로"
-                todayWordViewModel.getTodayWord(counter - 1)
+                } else {
+                    counter--
+                    binding.TodayWordNumber.text = "$counter/10"
+                    binding.studyNextButton.text = "다음 단어로"
+                    word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                binding.studyNextButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-                binding.studyBeforeButton.backgroundTintList =
-                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
-                // 북마크 내용 가져오기 추가 -> db데이터 변경, 색 변화
+                    getBookmarkColor(word)
+                    binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
+
+                    binding.studyNextButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                    binding.studyBeforeButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                    // 북마크 내용 가져오기 추가 -> db데이터 변경, 색 변화
+                }
             }
         }
     }
 
-    //뷰 모델에서 getMeanings()하고 여기로 옴
+    fun getBookmarkColor(word: String) {
+        todayWordViewModel.checkSelect(word) { isSelect ->
+            // 콜백으로 결과를 받아 색상 변경
+            if (isSelect) {
+                Log.d("TodayWordStudyFragment", "getBookmarkColor: pink")
+                binding.todaywordBookmarkButton.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.peowpink)
+                )
+            } else {
+                Log.d("TodayWordStudyFragment", "getBookmarkColor: gray")
+                binding.todaywordBookmarkButton.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.graydark)
+                )
+            }
+        }
+    }
+
+    fun changeBookmarkColor(isSelect: Boolean) {
+        binding.todaywordBookmarkButton.setOnClickListener {
+            // 현재 색상이 @color/graydark인 경우
+            if (!isSelect) {
+                binding.todaywordBookmarkButton.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.peowpink)
+                )
+                Log.d("TodayWordStudyFragment", "changeBookmarkColor: gray to pink")
+            } else { // 현재 색상이 @color/peowpink인 경우
+                binding.todaywordBookmarkButton.setColorFilter(
+                    ContextCompat.getColor(binding.root.context, R.color.graydark)
+                )
+                Log.d("TodayWordStudyFragment", "changeBookmarkColor: pink to gray")
+            }
+        }
+    }
+
     private val meaningsObserver = Observer<List<String>> { meanings -> //getMeanings(word)에서 반환한 뜻들이 여기로 들어옴
         //앞에서 3개의 뜻만 가져오기
         binding.TodayWordMean1.text = meanings[1]
@@ -130,7 +216,6 @@ class TodayWordStudyFragment : Fragment() {
         todayWordViewModel.getMeanings(word).removeObserver(meaningsObserver)
         todayWordViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
-
 
     //현제 북마크 상태 파악 -> 버튼 눌리면 db 바꾸기 & 색 바꾸기
 
@@ -145,3 +230,32 @@ class TodayWordStudyFragment : Fragment() {
         _binding = null
     }
 }
+
+/*
+    private fun handleBookmark(word: String) {
+        Log.d("TodayWordStudyFragment", " handleBookmark")
+        val mean1 = binding.TodayWordMean1.text.toString()
+        val mean2 = binding.TodayWordMean2.text.toString()
+        val mean3 = binding.TodayWordMean3.text.toString()
+
+        // checkSelect 호출과 결과 처리
+        todayWordViewModel.checkSelect(word) { isSelect ->
+            if (isSelect) {
+                Toast.makeText(context, "북마크 제거!", Toast.LENGTH_SHORT).show()
+                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "X")
+                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: X}")
+                selectCounter--
+                Log.d("TodayWordStudyFragment", "selectCounter: $selectCounter")
+            } else {
+                Toast.makeText(context, "북마크 추가!", Toast.LENGTH_SHORT).show()
+                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "O")
+                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: O}")
+                selectCounter++
+                Log.d("TodayWordStudyFragment", "selectCounter: $selectCounter")
+            }
+
+            // 북마크 정보 가져오기
+            changeBookmarkColor(word, isSelect)
+        }
+    }
+     */
