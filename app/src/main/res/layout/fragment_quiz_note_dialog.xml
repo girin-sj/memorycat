@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <LinearLayout
+        android:id="@+id/item_root"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:padding="16dp"
+        android:background="@drawable/rec_background">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/wordData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    android:text="Cat"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TodayWordMean1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text=""
+                android:textColor="@color/mainblack"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/TodayWordMean2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text=""
+                android:textColor="@color/mainblack"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/TodayWordMean3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="20dp"
+                android:text=""
+                android:textColor="@color/mainblack"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/selectMean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="@color/graydark"
+                android:text="내가 선택한 답"/>
+            <TextView
+                android:id="@+id/answerMean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="@color/graydark"
+                android:text="정답"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

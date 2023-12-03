@@ -25,6 +25,10 @@ class QuizResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        quizViewModel.level?.observe(viewLifecycleOwner, { level ->
+            binding.levelText.text = "${level?.toUpperCase()} 레벨 통과!"
+        })
+
         binding.quizNextButton.setOnClickListener {
             quizViewModel.updateLevel()
             val transaction = activity?.supportFragmentManager?.beginTransaction()

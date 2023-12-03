@@ -1,4 +1,5 @@
 package com.example.memorycat.ViewModel
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,8 +15,7 @@ class QuizViewModel : ViewModel() {
     private val usedFieldNames = mutableListOf<String>()
     private val _meanings = MutableLiveData<List<String>>()
     val randomMeanings = MutableLiveData<MutableList<String>>()
-    val quizResult = MutableLiveData<List<QuizResult>>()
-    val repo: Repository = Repository()
+    private val repo: Repository = Repository()
 
     init {
         loadLevel()
@@ -36,17 +36,11 @@ class QuizViewModel : ViewModel() {
     }
 
     fun updateLevel() {
-        if (_level.value=="bronze"){
-            repo.userDB.update(hashMapOf("level" to "silver") as Map<String, String>)
-        }
-        else if (_level.value=="silver"){
-            repo.userDB.update(hashMapOf("level" to "gold") as Map<String, String>)
-        }
-        else if (_level.value=="gold"){
-            repo.userDB.update(hashMapOf("level" to "platinum") as Map<String, String>)
-        }
-        else {
-            repo.userDB.update(hashMapOf("level" to "master") as Map<String, String>)
+        when (_level.value) {
+            "bronze" -> repo.userDB.update(mapOf("level" to "silver"))
+            "silver" -> repo.userDB.update(mapOf("level" to "gold"))
+            "gold" -> repo.userDB.update(mapOf("level" to "platinum"))
+            else -> repo.userDB.update(mapOf("level" to "master"))
         }
     }
 
@@ -61,7 +55,7 @@ class QuizViewModel : ViewModel() {
                     val fieldMap = document.data
                     if (fieldMap != null) {
                         val fieldNames = fieldMap.keys.toList()
-                        val availableFieldNames = fieldNames - usedFieldNames
+                        val availableFieldNames = fieldNames - usedFieldNames.toSet()
 
                         if (availableFieldNames.isNotEmpty()) {
                             val randomFieldName = availableFieldNames.random()
@@ -99,6 +93,29 @@ class QuizViewModel : ViewModel() {
         return _meanings
     }
 
+    fun getNoteMeanings(word: String): MutableLiveData<List<String>> {
+        val meanings = mutableListOf<String>()
+        val dictionaryCollection = repo.firestore.collection("englishDictionary")
+
+        // Query all documents in the collection
+        dictionaryCollection.get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.contains(word)) {
+                        val documentMeanings = document.get(word) as? MutableList<String>
+                        documentMeanings?.let {
+                            meanings.addAll(it)
+                        }
+                    }
+                }
+                _meanings.value = meanings
+            }
+            .addOnFailureListener { exception ->
+                Log.e("QuizViewModel", "Error getting meanings: $exception")
+            }
+        return _meanings
+    }
+
     fun getRandomMeanings() {
         val randomMeaningsTemp = mutableListOf<String>()
         val levelDocument = repo.firestore.collection("quizDB").document(level.value!!)
@@ -124,11 +141,24 @@ class QuizViewModel : ViewModel() {
     fun updateQuizResult(word: String, answer: String) {
         repo.accureDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                repo.accureDB.update(
-                    hashMapOf(
-                        word to answer
-                    ) as Map<String, String>
-                )
+                val document = task.result
+                if (document != null && document.contains(word)) {
+                    val existingAnswer = document.getString(word)
+                    if (existingAnswer == "X" && answer == "O") {
+                        repo.accureDB.update(
+                            hashMapOf(
+                                word to answer
+                            ) as Map<String, String>
+                        )
+                    }
+                }
+                else {
+                    repo.accureDB.update(
+                        hashMapOf(
+                            word to answer
+                        ) as Map<String, String>
+                    )
+                }
             }
         }
     }

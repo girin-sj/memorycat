@@ -1,18 +1,26 @@
+package com.example.memorycat
+
+import MemoryCatTextToSpeech
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.memorycat.QuizNoteFragment
-import com.example.memorycat.R
-import com.example.memorycat.QuizResult
 import com.example.memorycat.databinding.ItemNoteBinding
 
-class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adapter<QuizNoteAdapter.ViewHolder>() {
+class QuizNoteAdapter(context: QuizNoteFragment) : RecyclerView.Adapter<QuizNoteAdapter.ViewHolder>() {
+    private var tts: MemoryCatTextToSpeech? = null
+    private val parentContext = context
+
+    init {
+        tts = MemoryCatTextToSpeech(context.requireContext())
+    }
     class ViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root){
         val word: TextView = binding.wordData
         val select: TextView = binding.selectMean
         val answer: TextView = binding.answerMean
+        val voice: ImageButton = binding.noteVoice
     }
     private var noteList = mutableListOf<QuizResult>()
 
@@ -32,6 +40,7 @@ class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val quizResult = noteList[position]
+
         holder.word.text = quizResult.word
         holder.select.text = quizResult.select
         holder.answer.text = quizResult.answer
@@ -40,6 +49,15 @@ class QuizNoteAdapter(private val context: QuizNoteFragment) : RecyclerView.Adap
             holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.binding.selectMean.context, R.color.rightgreen))
         } else if (quizResult.isCorrect == "X") {
             holder.binding.selectMean.setTextColor(ContextCompat.getColor(holder.binding.selectMean.context, R.color.wrongred))
+        }
+
+        holder.itemView.setOnClickListener {
+            val dialog = QuizNoteDialogFragment(quizResult)
+            dialog.show(parentContext.parentFragmentManager, "QuizNoteDialog")
+        }
+
+        holder.voice.setOnClickListener {
+            tts?.speakWord(holder.word.text.toString())
         }
     }
 }

@@ -22,12 +22,13 @@
                 android:layout_height="62dp"
                 android:layout_marginRight="10dp"
                 android:src="@drawable/voice"
+                android:backgroundTint="@color/white"
                 android:contentDescription="voice" />
             <TextView
                 android:id="@+id/quizWord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="준비되셨나요?"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="38sp"
                 android:textColor="@color/mainblack"/>
@@ -51,7 +52,7 @@
                 android:layout_height="50dp"
                 android:backgroundTint="@color/backwhite"
                 android:layout_marginTop="5dp"
-                android:text="yes"
+                android:text=""
                 android:textColor="@color/mainblack"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
@@ -61,7 +62,7 @@
                 android:layout_height="50dp"
                 android:backgroundTint="@color/backwhite"
                 android:layout_marginTop="5dp"
-                android:text="yes"
+                android:text=""
                 android:textColor="@color/mainblack"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
@@ -71,7 +72,7 @@
                 android:layout_height="50dp"
                 android:backgroundTint="@color/backwhite"
                 android:layout_marginTop="5dp"
-                android:text="yes"
+                android:text=""
                 android:textColor="@color/mainblack"
                 android:textSize="18sp"
                 android:textAlignment="center"/>
@@ -81,7 +82,7 @@
                 android:layout_height="50dp"
                 android:backgroundTint="@color/backwhite"
                 android:layout_marginTop="5dp"
-                android:text="yes"
+                android:text=""
                 android:textColor="@color/mainblack"
                 android:textSize="18sp"
                 android:textAlignment="center"/>

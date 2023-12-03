@@ -35,6 +35,22 @@ class QuizStartFragment : Fragment() {
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
+
+        binding.goTodaywordButton.setOnClickListener {
+            quizViewModel.resetNoteResult()
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.main_content, TodayWordStartFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
+
+        binding.quizNoteButton.setOnClickListener {
+            quizViewModel.resetNoteResult()
+            val transaction = activity?.supportFragmentManager?.beginTransaction()
+            transaction?.replace(R.id.main_content, QuizNoteFragment())
+            transaction?.addToBackStack(null)
+            transaction?.commit()
+        }
     }
 
     override fun onDestroyView() {

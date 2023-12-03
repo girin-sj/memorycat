@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="120dp">
+    android:paddingTop="100dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="6dp"
-        android:text="test"
+        android:text=""
         android:textStyle="bold"
         android:textSize="25sp"
         android:textColor="@color/mainblack"/>
@@ -41,12 +41,23 @@
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
     <Button
+        android:id="@+id/goTodaywordButton"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:backgroundTint="@color/graylight"
         android:text="단어 다시 외우기"
+        android:textColor="@color/mainblack"
+        android:textSize="20sp"/>
+    <Button
+        android:id="@+id/quizNoteButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/graylight"
+        android:text="이전 오답노트 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>
 </LinearLayout>
