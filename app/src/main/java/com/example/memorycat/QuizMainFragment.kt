@@ -46,7 +46,7 @@ class QuizMainFragment : Fragment() {
         binding.quizNextButton.setOnClickListener {
             if (++counter < 11) {
                 binding.quizNumber.text = "$counter/10"
-                handleAnswer(binding.quizWord.text.toString()) //정답 데이터 DB에 넣기
+                handleAnswer(binding.quizWord.text.toString())
 
             } else {
                 binding.quizPassButton.text = "결과 확인하기"
@@ -54,7 +54,7 @@ class QuizMainFragment : Fragment() {
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
 
                 binding.quizPassButton.setOnClickListener {
-                    handleAnswer(binding.quizWord.text.toString()) //정답 데이터 DB에 넣기
+                    handleAnswer(binding.quizWord.text.toString())
                     if(correctCounter==10){
                         val transaction = activity?.supportFragmentManager?.beginTransaction()
                         transaction?.replace(R.id.main_content, QuizResultFragment())
@@ -76,7 +76,6 @@ class QuizMainFragment : Fragment() {
         val randomMeanings = quizViewModel.randomMeanings.value
         Log.d("QuizMainFragment", "$randomMeanings")
         // 정답 뜻 추가
-        Log.d("QuizMainFragment", "meanings: $meanings") //확인용1
         correctAnswer = meanings.random()
         // 앞에서 3개의 뜻만 가져오기
         val selectedMeanings = randomMeanings!!.take(3)
@@ -84,7 +83,7 @@ class QuizMainFragment : Fragment() {
         val finalMeanings = selectedMeanings + correctAnswer
         // 리스트 섞기
         val finalShuffledMeanings = finalMeanings.shuffled()
-        Log.d("QuizMainFragment", "$finalShuffledMeanings") //2
+        Log.d("QuizMainFragment", "$finalShuffledMeanings")
 
         // 버튼에 뜻 할당
         binding.quizAnswer1.text = finalShuffledMeanings[0]
@@ -94,8 +93,8 @@ class QuizMainFragment : Fragment() {
         binding.quizAnswer4.text = finalShuffledMeanings[3]
     }
 
-    private fun updateChoices(word: String) { //여기가 문제네
-        quizViewModel.getRandomMeanings() //나는 이거 필요 없음
+    private fun updateChoices(word: String) {
+        quizViewModel.getRandomMeanings()
         quizViewModel.getMeanings(word).removeObserver(meaningsObserver)
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
