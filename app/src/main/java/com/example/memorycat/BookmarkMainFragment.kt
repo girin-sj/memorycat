@@ -1,6 +1,6 @@
 package com.example.memorycat
 
-import BookmarkViewModel
+import com.example.memorycat.ViewModel.BookmarkViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +17,7 @@ class BookmarkMainFragment : Fragment() {
     private val binding get() = _binding!!
     //둘다 사용
     private val BookmarkViewModel: BookmarkViewModel by viewModels()
-    //private val TodayWordViewModel: TodayWordViewModel by viewModels()
+    //private val com.example.memorycat.ViewModel.TodayWordViewModel: com.example.memorycat.ViewModel.TodayWordViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

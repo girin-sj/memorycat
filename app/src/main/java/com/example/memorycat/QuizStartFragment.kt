@@ -1,12 +1,12 @@
 package com.example.memorycat
 
-import QuizViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.memorycat.ViewModel.QuizViewModel
 import com.example.memorycat.databinding.FragmentQuizStartBinding
 
 class QuizStartFragment : Fragment() {

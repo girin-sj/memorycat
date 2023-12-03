@@ -1,7 +1,6 @@
 package com.example.memorycat
 
 import MemoryCatTextToSpeech
-import QuizViewModel
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.memorycat.ViewModel.QuizViewModel
 import com.example.memorycat.databinding.FragmentQuizMainBinding
 
 class QuizMainFragment : Fragment() {
@@ -24,7 +24,7 @@ class QuizMainFragment : Fragment() {
     private var correctAnswer: String? = null
     private val observer = Observer<String> { newWord ->
         binding.quizWord.text = newWord
-        updateChoices(newWord) //참고
+        updateChoices(newWord)
     }
 
     override fun onCreateView(
@@ -52,6 +52,7 @@ class QuizMainFragment : Fragment() {
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+
                 binding.quizPassButton.setOnClickListener {
                     handleAnswer(binding.quizWord.text.toString())
                     if(correctCounter==10){
@@ -86,6 +87,7 @@ class QuizMainFragment : Fragment() {
 
         // 버튼에 뜻 할당
         binding.quizAnswer1.text = finalShuffledMeanings[0]
+        Log.d("QuizMainFragment", "means1: ${finalShuffledMeanings[0]}")
         binding.quizAnswer2.text = finalShuffledMeanings[1]
         binding.quizAnswer3.text = finalShuffledMeanings[2]
         binding.quizAnswer4.text = finalShuffledMeanings[3]
@@ -97,6 +99,7 @@ class QuizMainFragment : Fragment() {
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
 
+    //이건 북마크 때문에 사용해야 함
     private fun handleAnswer(word: String) {
         val selectedId = binding.answerGroup.checkedRadioButtonId
         var answerId = ""

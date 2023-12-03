@@ -25,7 +25,7 @@
             android:id="@+id/TodayWordNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="1/10"
+            android:text="시작해봅시다!"
             android:layout_marginBottom="10dp"
             android:textSize="15sp"
             android:textColor="@color/mainblack"/>
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="I CAN Do It!!"
+                android:text="1. 형태 뜻"
                 android:textColor="@color/mainblack"
                 android:textSize="20sp" />
 
@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text="You CAN Do It!!"
+                android:text="2. 형태 뜻"
                 android:textColor="@color/mainblack"
                 android:textSize="20sp" />
 
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:layout_marginBottom="20dp"
-                android:text="We CAN Do It!!"
+                android:text="3. 형태 뜻"
                 android:textColor="@color/mainblack"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -101,7 +101,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="50dp"
             android:backgroundTint="@color/yellow"
-            android:text="다음 단어로"
+            android:text="시작!!"
             android:textColor="@color/mainblack"
             android:textSize="18sp" />
 
@@ -109,10 +109,11 @@
             android:id="@+id/studyBeforeButton"
             android:layout_width="320dp"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:backgroundTint="@color/graylight"
             android:text="이전 단어로"
             android:textColor="@color/mainblack"
             android:textSize="18sp" />
+
     </LinearLayout>
 </LinearLayout>

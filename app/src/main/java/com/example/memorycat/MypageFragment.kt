@@ -1,6 +1,6 @@
 package com.example.memorycat
 
-import  QuizViewModel
+import  com.example.memorycat.ViewModel.QuizViewModel
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -16,9 +16,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.memorycat.ViewModel.MypageViewModel
 import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

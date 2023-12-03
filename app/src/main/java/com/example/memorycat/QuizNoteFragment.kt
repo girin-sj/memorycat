@@ -1,8 +1,7 @@
 package com.example.memorycat
 
-import MemoryCatTextToSpeech
 import QuizNoteAdapter
-import QuizViewModel
+import com.example.memorycat.ViewModel.QuizViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

@@ -1,34 +1,28 @@
 package com.example.memorycat
 
-import BookmarkViewModel
 import MemoryCatTextToSpeech
-import TodayWordViewModel
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.memorycat.ViewModel.BookmarkViewModel
+import com.example.memorycat.ViewModel.TodayWordViewModel
 import com.example.memorycat.databinding.FragmentTodaywordStudyBinding
 
-//lateinit var getThreeMeanings: MutableList<String>
-
-
-
-//오늘의 영단어.
-//오늘 공부할 10개의 단어 전부 list에 저장되어 있는 상태고, index로 단어 하나하나 불러다 쓰면 됨. 이전 단어도 인덱스 사용! 의미도 함수 이용해서 가져오면 됨.
 class TodayWordStudyFragment : Fragment() {
     private var _binding: FragmentTodaywordStudyBinding? = null
     private val binding get() = _binding!!
-    private var counter: Int = 1
-    //-
-    private val observer = Observer<String> { newWord ->
-        binding.TodayWord.text = newWord
-        updateMeanings(newWord)
+    private var counter: Int = 0
+    private val observer = Observer<String> { newWord -> //화면 내용 변경 될 때마다 observer 호출됨.
+        if (newWord != binding.TodayWord.text) {
+            binding.TodayWord.text = newWord
+            updateMeanings(newWord)
+        }
     }
-
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
     private val bookmarkViewModel: BookmarkViewModel by viewModels()
@@ -44,40 +38,59 @@ class TodayWordStudyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer) //-
+        todayWordViewModel.todayWord.observe(viewLifecycleOwner, observer)
 
         tts = MemoryCatTextToSpeech(requireContext())
         binding.todaywordvoiceButton.setOnClickListener { startTTS() }
 
         // 버튼 눌러서 다음, 이전 단어로 바뀔 때마다 북마크 정보도 해당 단어에 맞게 가야함.
 
-        // 다음 단어로
+        // 배열 만들기, 다음 단어로
         binding.studyNextButton.setOnClickListener {
-            if (counter < 10) {
+            if(counter == 0){
+                counter++
+                binding.TodayWordNumber.text = "$counter/10"
+                binding.studyNextButton.text = "다음 단어로"
+
+                todayWordViewModel.makeTodayWordList() //리스트 만들기
+                todayWordViewModel.todayWordNames.observe(viewLifecycleOwner) { todayWordNames ->
+                    todayWordNames?.let {
+                        todayWordViewModel.getTodayWord(counter - 1)
+                    }
+                }
+
+                binding.studyBeforeButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+            }
+            else if(counter < 10) {
                 counter++
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyBeforeButton.text = "이전 단어로"
+                todayWordViewModel.getTodayWord(counter - 1)
 
-                val word = getFirstTenWords[counter - 1]
-                //val word = getTodayWord(counter - 1)
-                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}") //단어 없음
-
-                // LiveData를 observe 하는 코드 블록 내에 넣어줌
-                if (word != null) {
-                    todayWordViewModel.getMeanings(word)
-                }
+                binding.studyNextButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                binding.studyBeforeButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
                 // 북마크 가져오기 추가 -> db데이터 변경, 색 변화
-            }
 
-            if (counter == 10) { // 마지막 단어
-                binding.studyNextButton.text = "학습 끝내기"
-                binding.studyNextButton.setOnClickListener {
-                    val transaction = activity?.supportFragmentManager?.beginTransaction()
-                    transaction?.replace(R.id.main_content, TodayWordEndFragment())
-                    transaction?.addToBackStack(null)
-                    transaction?.commit()
+                if (counter == 10) { // 종료
+                    binding.studyNextButton.text = "학습 끝내기"
+                    todayWordViewModel.getTodayWord(counter - 1)
+                    binding.studyNextButton.backgroundTintList =
+                        ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
                 }
+            } else if (counter == 10) { // counter가 10일 때 추가 동작
+                binding.studyNextButton.text = "학습 끝내기"
+                todayWordViewModel.getTodayWord(counter - 1)
+                binding.studyNextButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.peowpink)
+
+                val transaction = activity?.supportFragmentManager?.beginTransaction()
+                transaction?.replace(R.id.main_content, TodayWordEndFragment())
+                transaction?.addToBackStack(null)
+                transaction?.commit()
+
             }
         }
 
@@ -86,43 +99,34 @@ class TodayWordStudyFragment : Fragment() {
             if (counter <= 1) {
                 binding.studyBeforeButton.text = "이전단어 없음"
                 binding.TodayWordNumber.text = "$counter/10"
+
+                binding.studyBeforeButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.graylight)
+
             } else {
                 counter--
                 binding.TodayWordNumber.text = "$counter/10"
                 binding.studyNextButton.text = "다음 단어로"
+                todayWordViewModel.getTodayWord(counter - 1)
 
-                // getTodayWord() 사용
-                val word = getFirstTenWords[counter - 1]
-                Log.d("TodayWordViewModel", "idx: ${counter - 1}, 단어: ${word}")
-
-                // LiveData를 observe 하는 코드 블록 내에 넣어줌
-                if (word != null) {
-                    todayWordViewModel.getMeanings(word)
-                }
-
-                // 북마크 내용 가져오기 추가
+                binding.studyNextButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                binding.studyBeforeButton.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                // 북마크 내용 가져오기 추가 -> db데이터 변경, 색 변화
             }
         }
     }
 
-    private val meaningsObserver = Observer<List<String>> { meanings ->
-        val meanings = todayWordViewModel.meanings.value
-        Log.d("TodayWordViewModel", "means list: $meanings")
-        // 정답 뜻 추가
-        // 앞에서 3개의 뜻만 가져오기
-        val threeMeanings = meanings!!.take(4)
-        // 정답 뜻 추가
-        // 리스트 섞기
-        Log.d("TodayWordViewModel", "$threeMeanings")
-
-        // 버튼에 뜻 할당
-        binding.TodayWordMean1.text = threeMeanings[1]
-        binding.TodayWordMean2.text = threeMeanings[2]
-        binding.TodayWordMean3.text = threeMeanings[3]
+    //뷰 모델에서 getMeanings()하고 여기로 옴
+    private val meaningsObserver = Observer<List<String>> { meanings -> //getMeanings(word)에서 반환한 뜻들이 여기로 들어옴
+        //앞에서 3개의 뜻만 가져오기
+        binding.TodayWordMean1.text = meanings[1]
+        binding.TodayWordMean2.text = meanings[2]
+        binding.TodayWordMean3.text = meanings[3]
     }
 
     private fun updateMeanings(word: String) {
-        todayWordViewModel.getMeanings(word)
         todayWordViewModel.getMeanings(word).removeObserver(meaningsObserver)
         todayWordViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
@@ -141,16 +145,3 @@ class TodayWordStudyFragment : Fragment() {
         _binding = null
     }
 }
-
-/*
-// 배열 가져오기 -> 단어 가져오기
-    fun getTodayWord(word_idx: Int): String { //String //여기서 제대로 단어 반환이 안됨.
-
-        Log.d("TodayWordViewModel", "list: ${todayWordViewModel.todayWordNames.value}") //이거 null인데?
-        val firstTenWords = todayWordViewModel.todayWordNames.value?.take(10) //배열
-        val word = firstTenWords?.get(word_idx) ?: ""
-        Log.d("TodayWordViewModel", "getTodayWord: ${word}") //그니까 단어 없지..
-        return word
-        //return todayWordViewModel.todayWordNames.value?.getOrNull(word_idx) ?: ""
-    }
- */

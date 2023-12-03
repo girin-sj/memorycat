@@ -1,7 +1,7 @@
 package com.example.memorycat
 
 import android.os.Bundle
-import QuizViewModel
+import com.example.memorycat.ViewModel.QuizViewModel
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View

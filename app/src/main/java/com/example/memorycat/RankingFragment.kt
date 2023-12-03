@@ -1,28 +1,17 @@
 package com.example.memorycat
 
-import QuizViewModel
+import com.example.memorycat.ViewModel.QuizViewModel
 import RankingAdapter
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
+import com.example.memorycat.ViewModel.MypageViewModel
+import com.example.memorycat.ViewModel.RankingViewModel
 import com.example.memorycat.databinding.FragmentRankingBinding
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import java.text.SimpleDateFormat
-import java.util.Date
 
 class RankingFragment : Fragment() {
     private var _binding: FragmentRankingBinding? = null
