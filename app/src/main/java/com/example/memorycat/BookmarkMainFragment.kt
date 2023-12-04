@@ -34,15 +34,11 @@ class BookmarkMainFragment : Fragment() {
                 Toast.makeText(context, "${word}", Toast.LENGTH_SHORT).show()
             }
         )
-
-
         binding.bookmarkrecycler.layoutManager = LinearLayoutManager(context)
         binding.bookmarkrecycler.adapter = adapter
         binding.bookmarkrecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,7 +46,6 @@ class BookmarkMainFragment : Fragment() {
             adapter.updateBookmark(bookmarkResults.toMutableList())
         }
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

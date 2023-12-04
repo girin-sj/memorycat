@@ -34,7 +34,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:backgroundTint="@color/yellow"
         android:text="북마크 보러 가기"
         android:textColor="@color/mainblack"
@@ -45,7 +45,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        android:backgroundTint="@color/graylight"
+        android:backgroundTint="@color/yellow"
         android:text="테스트 보기"
         android:textColor="@color/mainblack"
         android:textSize="20sp"/>

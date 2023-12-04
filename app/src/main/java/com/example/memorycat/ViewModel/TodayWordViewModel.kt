@@ -173,9 +173,9 @@ class TodayWordViewModel: ViewModel() {
         mean3: String,
         isSelect: String
     ) {
-        repo.recentbDB.get().addOnCompleteListener { task ->
+        repo.bookmarkDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                repo.recentbDB.update(
+                repo.bookmarkDB.update(
                     word, mapOf(
                         "mean1" to mean1,
                         "mean2" to mean2,
@@ -191,7 +191,7 @@ class TodayWordViewModel: ViewModel() {
         }
     }
     fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) { //북마크 화면에 뜨우기위해 "O"인 단어 리스트에 넣기
-        repo.recentbDB.get()
+        repo.bookmarkDB.get()
             .addOnSuccessListener { document ->
                 val bookmarkResults = mutableListOf<BookmarkResult>()
                 val fieldMap = document?.data
@@ -216,12 +216,12 @@ class TodayWordViewModel: ViewModel() {
             }
     }
     fun removeBookmark(word: String) { //북마크 화면에서 삭제하기 = update
-        repo.recentbDB.update(mapOf(word to FieldValue.delete()))
+        repo.bookmarkDB.update(mapOf(word to FieldValue.delete()))
     }
 
     fun checkSelect(word: String, callback: (Boolean) -> Unit) {
         //DB에 해당 단어 있는지 -> X(이거나 없으면) false, O이면 true
-        repo.recentbDB.get()
+        repo.bookmarkDB.get()
             .addOnSuccessListener { document ->
                 val fieldMap = document?.data
                 val isSelect: Boolean

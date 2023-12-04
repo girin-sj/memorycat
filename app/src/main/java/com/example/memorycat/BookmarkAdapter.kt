@@ -1,4 +1,3 @@
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -27,7 +26,6 @@ class BookmarkAdapter(
     }
 
     private var bookmarkList = mutableListOf<BookmarkResult>()
-
     fun updateBookmark(newData: MutableList<BookmarkResult>) {
         bookmarkList = newData
         notifyDataSetChanged()
@@ -49,14 +47,13 @@ class BookmarkAdapter(
         holder.mean2.text = bookmarkResult.mean2
         holder.mean3.text = bookmarkResult.mean3
 
+        //버튼
         holder.voice.setOnClickListener {
             tts?.speakWord(holder.word.text.toString())
         }
-
         holder.peow.setOnClickListener {
             bookmarkClickListener(bookmarkResult.word)
         }
-
         holder.itemView.setOnClickListener {
             itemClickListener(bookmarkResult.word)
         }
