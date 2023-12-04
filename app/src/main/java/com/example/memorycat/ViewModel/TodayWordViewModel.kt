@@ -189,30 +189,30 @@ class TodayWordViewModel: ViewModel() {
             }
         }
     }
-
-    fun loadBookmarkResult(): LiveData<List<BookmarkResult>> { //북마크 화면에 띄우기
-        val liveData = MutableLiveData<List<BookmarkResult>>()
-        repo.recentbDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
+    fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) {
+        repo.recentbDB.get()
+            .addOnSuccessListener { document ->
                 val bookmarkResults = mutableListOf<BookmarkResult>()
-                val document = task.result
-                document?.data?.forEach { entry ->
+                val fieldMap = document?.data
+
+                fieldMap?.forEach { entry ->
                     val word = entry.key
                     val value = entry.value as Map<String, String>
                     val mean1 = value["mean1"] ?: ""
                     val mean2 = value["mean2"] ?: ""
                     val mean3 = value["mean3"] ?: ""
                     val isSelect = value["isSelect"] ?: ""
-                    bookmarkResults.add(BookmarkResult(word, mean1, mean2, mean3, isSelect))
-                    Log.d(
-                        "TodayWordViewModel",
-                        "loadBookmarkResult: word: ${word}, mean1: ${mean1}, mean2: ${mean2}, mean3: ${mean3}, isSelect: ${isSelect} X}"
-                    )
+
+                    if (isSelect == "O") {
+                        bookmarkResults.add(BookmarkResult(word, mean1, mean2, mean3, isSelect))
+                    }
                 }
-                liveData.postValue(bookmarkResults)
+                callback(bookmarkResults)
             }
-        }
-        return liveData
+            .addOnFailureListener { exception ->
+                Log.e("TodayWordViewModel", "Error loading selected bookmarks: $exception")
+                callback(emptyList())
+            }
     }
 
     fun checkSelect(word: String, callback: (Boolean) -> Unit) {
@@ -240,8 +240,3 @@ class TodayWordViewModel: ViewModel() {
             }
     } //callback을 통해 비동기적으로 결과를 전달 -> 호출하는 부분에서도 콜백 함수를 사용하여 결과를 처리
 }
-
-/*
-               if (isSelect_str == "O") isSelect = true
-               else isSelect = false
-                */

@@ -235,32 +235,3 @@ class TodayWordStudyFragment : Fragment() {
         _binding = null
     }
 }
-
-/*
-    private fun handleBookmark(word: String) {
-        Log.d("TodayWordStudyFragment", " handleBookmark")
-        val mean1 = binding.TodayWordMean1.text.toString()
-        val mean2 = binding.TodayWordMean2.text.toString()
-        val mean3 = binding.TodayWordMean3.text.toString()
-
-        // checkSelect 호출과 결과 처리
-        todayWordViewModel.checkSelect(word) { isSelect ->
-            if (isSelect) {
-                Toast.makeText(context, "북마크 제거!", Toast.LENGTH_SHORT).show()
-                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "X")
-                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: X}")
-                selectCounter--
-                Log.d("TodayWordStudyFragment", "selectCounter: $selectCounter")
-            } else {
-                Toast.makeText(context, "북마크 추가!", Toast.LENGTH_SHORT).show()
-                todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "O")
-                Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: O}")
-                selectCounter++
-                Log.d("TodayWordStudyFragment", "selectCounter: $selectCounter")
-            }
-
-            // 북마크 정보 가져오기
-            changeBookmarkColor(word, isSelect)
-        }
-    }
-     */

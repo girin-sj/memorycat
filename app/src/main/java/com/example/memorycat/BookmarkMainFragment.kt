@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.memorycat.ViewModel.TodayWordViewModel
@@ -37,9 +36,9 @@ class BookmarkMainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        todayWordViewModel.loadBookmarkResult().observe(viewLifecycleOwner, Observer { bookmarkResults ->
+        todayWordViewModel.loadSelectedBookmarks { bookmarkResults ->
             adapter.updateBookmark(bookmarkResults.toMutableList())
-        })
+        }
     }
 
     //북마크 자체에도 발바닥 누르면 db에게 false 정보 주고, 리스트에서 사라지게.
