@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.BookmarkResult
 import com.example.memorycat.Repository.Repository_yjw
+import com.google.firebase.firestore.FieldValue
 
 class TodayWordViewModel: ViewModel() {
     val todayWordNames = MutableLiveData<MutableList<String>>()
@@ -165,7 +166,7 @@ class TodayWordViewModel: ViewModel() {
         return _meanings
     }
 
-    fun updateBookmarkResult( //북마크 db 업데이트 시 사용
+    fun updateBookmarkResult( //북마크 db 업데이트 시 사용. O, X모두
         word: String,
         mean1: String,
         mean2: String,
@@ -189,7 +190,7 @@ class TodayWordViewModel: ViewModel() {
             }
         }
     }
-    fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) {
+    fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) { //북마크 화면에 뜨우기위해 "O"인 단어 리스트에 넣기
         repo.recentbDB.get()
             .addOnSuccessListener { document ->
                 val bookmarkResults = mutableListOf<BookmarkResult>()
@@ -213,6 +214,9 @@ class TodayWordViewModel: ViewModel() {
                 Log.e("TodayWordViewModel", "Error loading selected bookmarks: $exception")
                 callback(emptyList())
             }
+    }
+    fun removeBookmark(word: String) { //북마크 화면에서 삭제하기 = update
+        repo.recentbDB.update(mapOf(word to FieldValue.delete()))
     }
 
     fun checkSelect(word: String, callback: (Boolean) -> Unit) {

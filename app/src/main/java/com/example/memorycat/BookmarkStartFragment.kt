@@ -1,5 +1,6 @@
 package com.example.memorycat
 
+import BookmarkMainFragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

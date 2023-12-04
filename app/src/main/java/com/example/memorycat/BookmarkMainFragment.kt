@@ -1,6 +1,3 @@
-package com.example.memorycat
-
-import BookmarkAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +13,6 @@ class BookmarkMainFragment : Fragment() {
     private var _binding: FragmentBookmarkMainBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: BookmarkAdapter
-    //private val bookmarkViewModel: BookmarkViewModel by viewModels()
     private val todayWordViewModel: TodayWordViewModel by viewModels()
 
     override fun onCreateView(
@@ -25,7 +21,16 @@ class BookmarkMainFragment : Fragment() {
     ): View {
         _binding = FragmentBookmarkMainBinding.inflate(inflater, container, false)
 
-        adapter = BookmarkAdapter(this)
+        adapter = BookmarkAdapter(
+            itemClickListener = { word ->
+                todayWordViewModel.removeBookmark(word)
+                todayWordViewModel.loadSelectedBookmarks { bookmarkResults ->
+                    adapter.updateBookmark(bookmarkResults.toMutableList())
+                }
+            },
+            bookmarkClickListener = { /* Handle bookmark click if needed */ }
+        )
+
         binding.bookmarkrecycler.layoutManager = LinearLayoutManager(context)
         binding.bookmarkrecycler.adapter = adapter
         binding.bookmarkrecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -40,8 +45,6 @@ class BookmarkMainFragment : Fragment() {
             adapter.updateBookmark(bookmarkResults.toMutableList())
         }
     }
-
-    //북마크 자체에도 발바닥 누르면 db에게 false 정보 주고, 리스트에서 사라지게.
 
     override fun onDestroyView() {
         super.onDestroyView()
