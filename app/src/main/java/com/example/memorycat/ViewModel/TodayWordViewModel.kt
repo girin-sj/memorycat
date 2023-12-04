@@ -212,9 +212,19 @@ class TodayWordViewModel: ViewModel() {
         repo.recentbDB.get()
             .addOnSuccessListener { document ->
                 val fieldMap = document?.data
-                val fieldValue = fieldMap?.get("$word.isSelect") as? String
-                val isSelect = fieldValue == "O"
-                Log.d("TodayWordViewModel", "checkSelect: $isSelect")
+                val isSelect : Boolean
+                val fieldValue = fieldMap?.get(word) as? Map<String, String>
+                val isSelect_str = fieldValue?.get("isSelect").toString()
+
+                //val fieldValue = fieldMap?.get("$word.isSelect") as? String
+                /*
+                val fieldValue = fieldMap?.get(word) as? Map<String, String>
+                isSelect = fieldValue?.get("isSelect").toString()
+                 */
+                if (isSelect_str == "O") isSelect = true
+                else isSelect = false
+
+                Log.d("TodayWordViewModel", "checkSelect: $isSelect, fieldValue: ${fieldValue}") //왜 null일까
 
                 // 콜백으로 결과 전달
                 callback(isSelect)

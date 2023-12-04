@@ -33,9 +33,11 @@ class TodayWordStudyFragment : Fragment() {
             updateMeanings(newWord)
         }
     }
+    private var isBookmarkClickable = true //추가
     // 북마크 버튼 클릭 리스너
     private val bookmarkClickListener = View.OnClickListener {
         Log.d("TodayWordStudyFragment", "bookmarkClickListener")
+        isBookmarkClickable = false // 클릭 중복 방지
         val word = binding.TodayWord.text.toString()
         val mean1 = binding.TodayWordMean1.text.toString()
         val mean2 = binding.TodayWordMean2.text.toString()
@@ -43,7 +45,8 @@ class TodayWordStudyFragment : Fragment() {
 
         // db update
         todayWordViewModel.checkSelect(word) { isSelect ->
-            if (isSelect) {
+            Log.d("TodayWordStudyFragment", "isSelect: $isSelect")
+            if (isSelect) { //변경된 내용이 checkSelect여기에 적용이 안되나..?
                 Toast.makeText(context, "북마크 제거!", Toast.LENGTH_SHORT).show()
                 todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "X")
                 Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: X}")
@@ -54,7 +57,8 @@ class TodayWordStudyFragment : Fragment() {
             }
             // 색상 변경
             changeBookmarkColor(isSelect)
-            Log.d("TodayWordStudyFragment", "end changeBookmarkColor")
+            Log.d("TodayWordStudyFragment", "end changeBookmarkColor") //왜 처음에는 log만 나오고 색은 안바뀌는가
+            isBookmarkClickable = true // 클릭 가능하도록 변경
         }
     }
 
@@ -66,7 +70,6 @@ class TodayWordStudyFragment : Fragment() {
         return binding.root
     }
 
-    private var isBookmarkClickable = true // 추가된 부분
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -79,8 +82,8 @@ class TodayWordStudyFragment : Fragment() {
 
         // 배열 만들기, 다음 단어로
         binding.studyNextButton.setOnClickListener {
-            if (isBookmarkClickable) { // 수정된 부분
-                isBookmarkClickable = false // 수정된 부분
+            if (isBookmarkClickable) {
+                isBookmarkClickable = false // 클릭 중복 방지
                 if(counter == 0){
                     counter++
                     binding.TodayWordNumber.text = "$counter/10"
@@ -138,13 +141,13 @@ class TodayWordStudyFragment : Fragment() {
                     transaction?.addToBackStack(null)
                     transaction?.commit()
                 }
-
+                isBookmarkClickable = true
             }
         }
         // 이전 단어로
         binding.studyBeforeButton.setOnClickListener {
-            if (isBookmarkClickable) { // 수정된 부분
-                isBookmarkClickable = false // 수정된 부분
+            if (isBookmarkClickable) {
+                isBookmarkClickable = false // 클릭 중복 방지
                 if (counter <= 1) {
                     binding.studyBeforeButton.text = "이전단어 없음"
                     binding.TodayWordNumber.text = "$counter/10"
@@ -167,6 +170,7 @@ class TodayWordStudyFragment : Fragment() {
                         ContextCompat.getColorStateList(requireContext(), R.color.yellow)
                     // 북마크 내용 가져오기 추가 -> db데이터 변경, 색 변화
                 }
+                isBookmarkClickable = true
             }
         }
     }
@@ -189,19 +193,17 @@ class TodayWordStudyFragment : Fragment() {
     }
 
     fun changeBookmarkColor(isSelect: Boolean) {
-        binding.todaywordBookmarkButton.setOnClickListener {
-            // 현재 색상이 @color/graydark인 경우
-            if (!isSelect) {
-                binding.todaywordBookmarkButton.setColorFilter(
-                    ContextCompat.getColor(binding.root.context, R.color.peowpink)
-                )
-                Log.d("TodayWordStudyFragment", "changeBookmarkColor: gray to pink")
-            } else { // 현재 색상이 @color/peowpink인 경우
-                binding.todaywordBookmarkButton.setColorFilter(
-                    ContextCompat.getColor(binding.root.context, R.color.graydark)
-                )
-                Log.d("TodayWordStudyFragment", "changeBookmarkColor: pink to gray")
-            }
+        // 현재 색상이 @color/graydark인 경우
+        if (isSelect) {
+            binding.todaywordBookmarkButton.setColorFilter(
+                ContextCompat.getColor(binding.root.context, R.color.graydark)
+            )
+            Log.d("TodayWordStudyFragment", "changeBookmarkColor: pink to gray")
+        } else { // 현재 색상이 @color/peowpink인 경우
+            binding.todaywordBookmarkButton.setColorFilter(
+                ContextCompat.getColor(binding.root.context, R.color.peowpink)
+            )
+            Log.d("TodayWordStudyFragment", "changeBookmarkColor: gray to pink")
         }
     }
 
