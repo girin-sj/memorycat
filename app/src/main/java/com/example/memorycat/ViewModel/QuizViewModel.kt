@@ -198,7 +198,7 @@ class QuizViewModel : ViewModel() {
         return liveData
     }
 
-    /*
+
     fun resetNoteResult(){
         repo.recentDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -206,8 +206,6 @@ class QuizViewModel : ViewModel() {
             }
         }
     }
-
-     */
 
     fun checkAnswer(userAnswer: String, correctAnswer: String): Boolean {
         return correctAnswer == userAnswer

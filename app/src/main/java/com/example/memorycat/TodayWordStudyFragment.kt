@@ -20,7 +20,7 @@ class TodayWordStudyFragment : Fragment() {
     private val binding get() = _binding!!
     var word: String = ""
     private var counter: Int = 0
-    private var selectCounter: Int = 1
+    private var selectCounter: Int = 1 //필요없을지도
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
     //private val bookmarkViewModel: BookmarkViewModel by viewModels()
@@ -31,6 +31,7 @@ class TodayWordStudyFragment : Fragment() {
         if (newWord != binding.TodayWord.text) {
             binding.TodayWord.text = newWord
             updateMeanings(newWord)
+            getBookmarkColor(newWord)
         }
     }
     private var isBookmarkClickable = true //추가
@@ -95,7 +96,7 @@ class TodayWordStudyFragment : Fragment() {
                             word = todayWordViewModel.getTodayWord(counter - 1).toString()
                         }
                     }
-                    getBookmarkColor(word) //색 반영
+                    //getBookmarkColor(word) //색 반영
                     binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
                     binding.studyBeforeButton.backgroundTintList =
@@ -107,7 +108,7 @@ class TodayWordStudyFragment : Fragment() {
                     binding.studyBeforeButton.text = "이전 단어로"
                     word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                    getBookmarkColor(word)
+                    //getBookmarkColor(word) //색 반영
                     binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
                     binding.studyNextButton.backgroundTintList =
@@ -120,7 +121,7 @@ class TodayWordStudyFragment : Fragment() {
                         binding.studyNextButton.text = "학습 끝내기"
                         word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                        getBookmarkColor(word)
+                        //getBookmarkColor(word) //색 반영
                         binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
                         binding.studyNextButton.backgroundTintList =
@@ -130,7 +131,7 @@ class TodayWordStudyFragment : Fragment() {
                     binding.studyNextButton.text = "학습 끝내기"
                     word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                    getBookmarkColor(word)
+                    //getBookmarkColor(word) //색 반영
                     binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
                     binding.studyNextButton.backgroundTintList =
@@ -161,7 +162,7 @@ class TodayWordStudyFragment : Fragment() {
                     binding.studyNextButton.text = "다음 단어로"
                     word = todayWordViewModel.getTodayWord(counter - 1).toString()
 
-                    getBookmarkColor(word)
+                    //getBookmarkColor(word) //색 반영
                     binding.todaywordBookmarkButton.setOnClickListener(bookmarkClickListener)
 
                     binding.studyNextButton.backgroundTintList =
@@ -176,7 +177,9 @@ class TodayWordStudyFragment : Fragment() {
     }
 
     fun getBookmarkColor(word: String) {
-        todayWordViewModel.checkSelect(word) { isSelect ->
+        todayWordViewModel.checkSelect(word) { isSelect -> //null 받아오나
+            Log.d("TodayWordStudyFragment", "getBookmarkColor_isSelect: ${isSelect}")
+
             // 콜백으로 결과를 받아 색상 변경
             if (isSelect) {
                 Log.d("TodayWordStudyFragment", "getBookmarkColor: pink")

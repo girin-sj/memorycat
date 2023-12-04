@@ -53,7 +53,8 @@ class TodayWordViewModel: ViewModel() {
     }
 
     fun makeTodayWordList() {
-        val levelDocumentRef = repo.firestore.collection("englishDictionary").document(level.value!!)
+        val levelDocumentRef =
+            repo.firestore.collection("englishDictionary").document(level.value!!)
         val dateInt = _date.value!!.toInt()
         Log.d("TodayWordViewModel", "makeTodayWordList()")
         levelDocumentRef.get()
@@ -164,8 +165,7 @@ class TodayWordViewModel: ViewModel() {
         return _meanings
     }
 
-    //북마크
-    fun updateBookmarkResult( //우선 뜻까지 받자
+    fun updateBookmarkResult( //북마크 db 업데이트 시 사용
         word: String,
         mean1: String,
         mean2: String,
@@ -174,18 +174,23 @@ class TodayWordViewModel: ViewModel() {
     ) {
         repo.recentbDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                repo.recentbDB.update(word, mapOf(
-                    "mean1" to mean1,
-                    "mean2" to mean2,
-                    "mean3" to mean3,
-                    "isSelect" to isSelect
-                ))
-                Log.d("TodayWordViewModel", "updateBookmarkResult- ${word}, ${mean1}, ${mean2}, ${mean3}, ${isSelect}")
+                repo.recentbDB.update(
+                    word, mapOf(
+                        "mean1" to mean1,
+                        "mean2" to mean2,
+                        "mean3" to mean3,
+                        "isSelect" to isSelect
+                    )
+                )
+                Log.d(
+                    "TodayWordViewModel",
+                    "updateBookmarkResult- ${word}, ${mean1}, ${mean2}, ${mean3}, ${isSelect}"
+                )
             }
         }
     }
 
-    fun loadBookmarkResult(): LiveData<List<BookmarkResult>> {
+    fun loadBookmarkResult(): LiveData<List<BookmarkResult>> { //북마크 화면에 띄우기
         val liveData = MutableLiveData<List<BookmarkResult>>()
         repo.recentbDB.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -199,33 +204,31 @@ class TodayWordViewModel: ViewModel() {
                     val mean3 = value["mean3"] ?: ""
                     val isSelect = value["isSelect"] ?: ""
                     bookmarkResults.add(BookmarkResult(word, mean1, mean2, mean3, isSelect))
-                    Log.d("TodayWordViewModel", "loadBookmarkResult: word: ${word}, mean1: ${mean1}, mean2: ${mean2}, mean3: ${mean3}, isSelect: ${isSelect} X}")
-
+                    Log.d(
+                        "TodayWordViewModel",
+                        "loadBookmarkResult: word: ${word}, mean1: ${mean1}, mean2: ${mean2}, mean3: ${mean3}, isSelect: ${isSelect} X}"
+                    )
                 }
                 liveData.postValue(bookmarkResults)
             }
         }
         return liveData
     }
+
     fun checkSelect(word: String, callback: (Boolean) -> Unit) {
         //DB에 해당 단어 있는지 -> X(이거나 없으면) false, O이면 true
         repo.recentbDB.get()
             .addOnSuccessListener { document ->
                 val fieldMap = document?.data
-                val isSelect : Boolean
+                val isSelect: Boolean
                 val fieldValue = fieldMap?.get(word) as? Map<String, String>
                 val isSelect_str = fieldValue?.get("isSelect").toString()
+                isSelect = isSelect_str == "O"
 
-                //val fieldValue = fieldMap?.get("$word.isSelect") as? String
-                /*
-                val fieldValue = fieldMap?.get(word) as? Map<String, String>
-                isSelect = fieldValue?.get("isSelect").toString()
-                 */
-                if (isSelect_str == "O") isSelect = true
-                else isSelect = false
-
-                Log.d("TodayWordViewModel", "checkSelect: $isSelect, fieldValue: ${fieldValue}") //왜 null일까
-
+                Log.d(
+                    "TodayWordViewModel",
+                    "checkSelect: $isSelect, fieldValue: ${fieldValue}"
+                ) //change때는 잘 된다. 처음 get할때 안된다.
                 // 콜백으로 결과 전달
                 callback(isSelect)
             }
@@ -236,27 +239,9 @@ class TodayWordViewModel: ViewModel() {
                 callback(false)
             }
     } //callback을 통해 비동기적으로 결과를 전달 -> 호출하는 부분에서도 콜백 함수를 사용하여 결과를 처리
-    /*
-    fun checkSelect(word: String): Boolean {
-        val document = repo.recentbDB.get().await() // get() 메서드로 데이터 가져오기
-        val isSelect = document.getString("$word.isSelect")
-        Log.d("TodayWordViewModel", "checkSelect: $isSelect")
-        return isSelect == "O"
-    }
-
-    fun checkSelect(word: String): Boolean { //북마크 안되어있는데 왜 되어있다고 판단하는거야
-        var isSelect: String = ""
-        //DB에 해당 단어 있는지 -> X(이거나 없으)면 false, O이면 true -> 일단 bookmarkDB에 전부 X로 넣어놓음 ->
-        repo.recentbDB.get().addOnSuccessListener { document ->
-            if (document != null) {
-                val fieldMap = document.data
-
-                val fieldValue = fieldMap?.get(word) as? Map<String, String>
-                isSelect = fieldValue?.get("isSelect").toString()
-                Log.d("TodayWordViewModel", "isSelect 판단: ${isSelect}")
-
-            }
-        }
-
-     */
 }
+
+/*
+               if (isSelect_str == "O") isSelect = true
+               else isSelect = false
+                */

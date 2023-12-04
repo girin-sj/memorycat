@@ -29,7 +29,7 @@ class QuizStartFragment : Fragment() {
         })
 
         binding.quizStartButton.setOnClickListener {
-            //quizViewModel.resetNoteResult()
+            quizViewModel.resetNoteResult()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, QuizMainFragment())
             transaction?.addToBackStack(null)
@@ -37,7 +37,7 @@ class QuizStartFragment : Fragment() {
         }
 
         binding.goTodaywordButton.setOnClickListener {
-            //quizViewModel.resetNoteResult()
+            quizViewModel.resetNoteResult()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, TodayWordStartFragment())
             transaction?.addToBackStack(null)
@@ -45,7 +45,7 @@ class QuizStartFragment : Fragment() {
         }
 
         binding.quizNoteButton.setOnClickListener {
-            //quizViewModel.resetNoteResult()
+            quizViewModel.resetNoteResult()
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, QuizNoteFragment())
             transaction?.addToBackStack(null)
