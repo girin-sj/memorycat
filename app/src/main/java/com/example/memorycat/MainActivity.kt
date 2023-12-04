@@ -3,10 +3,8 @@ package com.example.memorycat
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import navigation.DetailViewFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -32,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                         return true
                     }
                     R.id.action_memory -> {
-                        var detailViewFragment = TodayWordStartFragment()
+                        var detailViewFragment = TodayWordStudyFragment()
                         supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                         return true
                     }
