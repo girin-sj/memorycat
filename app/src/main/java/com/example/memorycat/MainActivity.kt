@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                         return true
                     }
                     R.id.action_memory -> {
-                        var detailViewFragment = TodayWordStudyFragment()
+                        var detailViewFragment = TodayWordStartFragment()
                         supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
                         return true
                     }

@@ -2,6 +2,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,14 +23,18 @@ class BookmarkMainFragment : Fragment() {
         _binding = FragmentBookmarkMainBinding.inflate(inflater, container, false)
 
         adapter = BookmarkAdapter(
-            itemClickListener = { word ->
+            fragment = this,
+            bookmarkClickListener = { word ->
                 todayWordViewModel.removeBookmark(word)
                 todayWordViewModel.loadSelectedBookmarks { bookmarkResults ->
                     adapter.updateBookmark(bookmarkResults.toMutableList())
                 }
             },
-            bookmarkClickListener = { /* Handle bookmark click if needed */ }
+            itemClickListener = { word ->
+                Toast.makeText(context, "${word}", Toast.LENGTH_SHORT).show()
+            }
         )
+
 
         binding.bookmarkrecycler.layoutManager = LinearLayoutManager(context)
         binding.bookmarkrecycler.adapter = adapter

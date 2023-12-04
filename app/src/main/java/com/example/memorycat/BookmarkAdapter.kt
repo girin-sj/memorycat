@@ -1,3 +1,4 @@
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -7,10 +8,24 @@ import com.example.memorycat.BookmarkResult
 import com.example.memorycat.databinding.ItemBookmarkBinding
 
 class BookmarkAdapter(
-    private val itemClickListener: (String) -> Unit,
-    private val bookmarkClickListener: (String) -> Unit
+    private val fragment: BookmarkMainFragment,
+    private val bookmarkClickListener: (String) -> Unit,
+    private val itemClickListener: (String) -> Unit
 ) : RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
     private var tts: MemoryCatTextToSpeech? = null
+    init {
+        tts = MemoryCatTextToSpeech(fragment.requireContext())
+    }
+
+    class ViewHolder(val binding: ItemBookmarkBinding) : RecyclerView.ViewHolder(binding.root) {
+        val peow: ImageButton = binding.bookmarkPeow
+        val voice: ImageButton = binding.bookmarkVoice
+        val word: TextView = binding.bookmarkWordData
+        val mean1: TextView = binding.boomkarkMean1
+        val mean2: TextView = binding.boomkarkMean2
+        val mean3: TextView = binding.boomkarkMean3
+    }
+
     private var bookmarkList = mutableListOf<BookmarkResult>()
 
     fun updateBookmark(newData: MutableList<BookmarkResult>) {
@@ -45,14 +60,5 @@ class BookmarkAdapter(
         holder.itemView.setOnClickListener {
             itemClickListener(bookmarkResult.word)
         }
-    }
-
-    class ViewHolder(val binding: ItemBookmarkBinding) : RecyclerView.ViewHolder(binding.root) {
-        val peow: ImageButton = binding.bookmarkPeow
-        val voice: ImageButton = binding.bookmarkVoice
-        val word: TextView = binding.bookmarkWordData
-        val mean1: TextView = binding.boomkarkMean1
-        val mean2: TextView = binding.boomkarkMean2
-        val mean3: TextView = binding.boomkarkMean3
     }
 }

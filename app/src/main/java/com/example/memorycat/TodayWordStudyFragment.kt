@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.memorycat.Repository.Repository_yjw
 import com.example.memorycat.ViewModel.TodayWordViewModel
 import com.example.memorycat.databinding.FragmentTodaywordStudyBinding
 
@@ -20,11 +19,9 @@ class TodayWordStudyFragment : Fragment() {
     private val binding get() = _binding!!
     var word: String = ""
     private var counter: Int = 0
-    private var selectCounter: Int = 1 //필요없을지도
     private var tts: MemoryCatTextToSpeech? = null
     private val todayWordViewModel: TodayWordViewModel by viewModels()
-    //private val bookmarkViewModel: BookmarkViewModel by viewModels()
-    val repo: Repository_yjw = Repository_yjw()
+    //val repo: Repository_yjw = Repository_yjw()
 
     //단어와 뜻 옵저버
     private val observer = Observer<String> { newWord -> //화면 내용 변경 될 때마다 observer 호출됨.
