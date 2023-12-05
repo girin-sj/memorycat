@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.BookmarkResult
-import com.example.memorycat.Repository.TodaywordRepository //이거 없으면 에러나는데
+import com.example.memorycat.Repository.TodaywordRepository
 
 class TodayWordViewModel: ViewModel() {
 
