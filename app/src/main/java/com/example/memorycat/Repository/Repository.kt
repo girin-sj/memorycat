@@ -9,6 +9,7 @@ class Repository {
     private val _userDB = _firestore.collection("userDB").document(uid!!)
     private val _accureDB = _firestore.collection("accurequizDB").document(uid!!)
     private val _recentDB = _firestore.collection("recentquizDB").document(uid!!)
+
     val firestore get() = _firestore
     val userDB get() = _userDB
     val accureDB get() = _accureDB

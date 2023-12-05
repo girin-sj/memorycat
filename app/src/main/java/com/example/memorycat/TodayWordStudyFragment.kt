@@ -43,7 +43,7 @@ class TodayWordStudyFragment : Fragment() {
         // db update
         todayWordViewModel.checkSelect(word) { isSelect ->
             Log.d("TodayWordStudyFragment", "isSelect: $isSelect")
-            if (isSelect) { //변경된 내용이 checkSelect여기에 적용이 안되나..?
+            if (isSelect) {
                 Toast.makeText(context, "북마크 제거!", Toast.LENGTH_SHORT).show()
                 todayWordViewModel.updateBookmarkResult(word, mean1, mean2, mean3, "X")
                 Log.d("TodayWordStudyFragment", "updateBookmarkResult: $word: X}")
