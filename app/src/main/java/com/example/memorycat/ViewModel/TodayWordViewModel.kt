@@ -4,18 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.memorycat.BookmarkResult
+import com.example.memorycat.Repository.TodaywordRepository
+import com.google.firebase.firestore.FieldValue
 
 class TodayWordViewModel: ViewModel() {
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val uid: String? = FirebaseAuth.getInstance().currentUser?.uid
-    private val userDB = firestore.collection("userDB").document(uid!!)
-
-    //리스트 만들고
     val todayWordNames = MutableLiveData<MutableList<String>>()
-    val todayWordNamesTemp = mutableListOf<String>()
+    private val todayWordNamesTemp = mutableListOf<String>()
     private val _todayWord = MutableLiveData<String>()
     val todayWord: LiveData<String> get() = _todayWord
     private val _meanings = MutableLiveData<List<String>>()
@@ -24,6 +19,8 @@ class TodayWordViewModel: ViewModel() {
     val level: LiveData<String> get() = _level
     private val _date = MutableLiveData<String>()
     private var dicIdx: Int = 0
+    val repo: TodaywordRepository = TodaywordRepository()
+
 
     init {
         loadLevel()
@@ -31,7 +28,7 @@ class TodayWordViewModel: ViewModel() {
     }
 
     private fun loadLevel() {
-        userDB.get().addOnSuccessListener { document ->
+        repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _level.value = document.getString("level")
                 Log.d("TodayWordViewModel", "Level loaded: ${_level.value}")
@@ -44,7 +41,7 @@ class TodayWordViewModel: ViewModel() {
     }
 
     fun loadDate() {
-        userDB.get().addOnSuccessListener { document ->
+        repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
                 _date.value = document.getString("date")
                 Log.d("TodayWordViewModel", "Date loaded: ${_date.value}")
@@ -58,7 +55,7 @@ class TodayWordViewModel: ViewModel() {
 
     fun makeTodayWordList() {
         val levelDocumentRef =
-            firestore.collection("englishDictionary").document(level.value!!)
+            repo.firestore.collection("englishDictionary").document(level.value!!)
         val dateInt = _date.value!!.toInt()
         Log.d("TodayWordViewModel", "makeTodayWordList()")
         levelDocumentRef.get()
@@ -102,7 +99,8 @@ class TodayWordViewModel: ViewModel() {
 
                                 if (dateGet.toInt() < dateInt) { //오늘보다 이전 날에 공부했던 단어들
                                     Log.d(
-                                        "TodayWordViewModel","${dateGet.toInt()} < ${dateInt}")
+                                        "TodayWordViewModel", "${dateGet.toInt()} < ${dateInt}"
+                                    )
                                     todayWordNamesTemp.add(fieldName)
                                     append++
                                     Log.d(
@@ -147,21 +145,102 @@ class TodayWordViewModel: ViewModel() {
     }
 
     fun getMeanings(word: String): MutableLiveData<List<String>> {
-        val levelDocumentRef =
-            firestore.collection("englishDictionary").document(level.value!!)
-        levelDocumentRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val fieldMap = document.data
-                    if (fieldMap != null) {
-                        _todayWord.value = word
-                        val meanings = document.get(word) as MutableList<String>
-                        _meanings.value = meanings
+        val meanings = mutableListOf<String>()
+        val dictionaryCollection = repo.firestore.collection("englishDictionary")
+
+        dictionaryCollection.get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.contains(word)) {
+                        val documentMeanings = document.get(word) as? MutableList<String>
+                        documentMeanings?.let {
+                            meanings.addAll(it)
+                        }
                     }
                 }
-            }.addOnFailureListener { exception ->
-                Log.e("TodayWordViewModel", "Error getting random word: $exception")
+                _meanings.value = meanings
+            }
+            .addOnFailureListener { exception ->
+                Log.e("TodayWordViewModel", "Error getting meanings: $exception")
             }
         return _meanings
     }
+
+    fun updateBookmarkResult( //북마크 db 업데이트 시 사용. O, X모두
+        word: String,
+        mean1: String,
+        mean2: String,
+        mean3: String,
+        isSelect: String
+    ) {
+        repo.bookmarkDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                repo.bookmarkDB.update(
+                    word, mapOf(
+                        "mean1" to mean1,
+                        "mean2" to mean2,
+                        "mean3" to mean3,
+                        "isSelect" to isSelect
+                    )
+                )
+                Log.d(
+                    "TodayWordViewModel",
+                    "updateBookmarkResult- ${word}, ${mean1}, ${mean2}, ${mean3}, ${isSelect}"
+                )
+            }
+        }
+    }
+    fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) { //북마크 화면에 뜨우기위해 "O"인 단어 리스트에 넣기
+        repo.bookmarkDB.get()
+            .addOnSuccessListener { document ->
+                val bookmarkResults = mutableListOf<BookmarkResult>()
+                val fieldMap = document?.data
+
+                fieldMap?.forEach { entry ->
+                    val word = entry.key
+                    val value = entry.value as Map<String, String>
+                    val mean1 = value["mean1"] ?: ""
+                    val mean2 = value["mean2"] ?: ""
+                    val mean3 = value["mean3"] ?: ""
+                    val isSelect = value["isSelect"] ?: ""
+
+                    if (isSelect == "O") {
+                        bookmarkResults.add(BookmarkResult(word, mean1, mean2, mean3, isSelect))
+                    }
+                }
+                callback(bookmarkResults)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("TodayWordViewModel", "Error loading selected bookmarks: $exception")
+                callback(emptyList())
+            }
+    }
+    fun removeBookmark(word: String) { //북마크 화면에서 삭제하기 = update
+        repo.bookmarkDB.update(mapOf(word to FieldValue.delete()))
+    }
+
+    fun checkSelect(word: String, callback: (Boolean) -> Unit) {
+        //DB에 해당 단어 있는지 -> X(이거나 없으면) false, O이면 true
+        repo.bookmarkDB.get()
+            .addOnSuccessListener { document ->
+                val fieldMap = document?.data
+                val isSelect: Boolean
+                val fieldValue = fieldMap?.get(word) as? Map<String, String>
+                val isSelect_str = fieldValue?.get("isSelect").toString()
+                isSelect = isSelect_str == "O"
+
+                Log.d(
+                    "TodayWordViewModel",
+                    "checkSelect: $isSelect, fieldValue: ${fieldValue}"
+                ) //change때는 잘 된다. 처음 get할때 안된다.
+                // 콜백으로 결과 전달
+                callback(isSelect)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("TodayWordViewModel", "Error checking select: $exception")
+
+                // 에러 발생 시 기본값으로 false 전달
+                callback(false)
+            }
+    } //callback을 통해 비동기적으로 결과를 전달 -> 호출하는 부분에서도 콜백 함수를 사용하여 결과를 처리
 }

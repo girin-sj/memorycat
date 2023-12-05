@@ -21,7 +21,6 @@ class TodayWordEndFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //북마크 화면으로 가기
         binding.goBookmarkButton.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
             transaction?.replace(R.id.main_content, BookmarkStartFragment())
@@ -42,5 +41,3 @@ class TodayWordEndFragment : Fragment() {
         _binding = null
     }
 }
-        //북마크 화면으로 이동
-        //오늘의 영단어 화면으로 이동

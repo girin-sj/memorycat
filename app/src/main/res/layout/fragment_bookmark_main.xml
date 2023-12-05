@@ -17,7 +17,7 @@
         android:textColor="@color/mainblack"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/bookmarkrecycler"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         android:layout_width="wrap_content"
