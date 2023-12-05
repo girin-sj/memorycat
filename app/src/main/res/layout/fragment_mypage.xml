@@ -90,6 +90,12 @@
             android:layout_width="match_parent"
             android:layout_height="2dp">
         </View>
+        <TextView
+            android:id="@+id/text_levelAdvice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:layout_marginBottom="20dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

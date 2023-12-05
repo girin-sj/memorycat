@@ -3,6 +3,7 @@ package com.example.memorycat
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.memorycat.ViewModel.MypageViewModel
@@ -11,7 +12,7 @@ import java.time.LocalDate
 
 class LoginActivity : AppCompatActivity() {
     private val mypageViewModel: MypageViewModel by viewModels() //뷰모델
-    var localDate: LocalDate = LocalDate.now()
+    val localDate: LocalDate = LocalDate.now()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -26,21 +27,23 @@ class LoginActivity : AppCompatActivity() {
                     binding.emailInput.text.clear()
                     binding.passwordInput.text.clear()
                     if (task.isSuccessful) {
-                        if (MyAuth.checkAuth()){
+                        if (MyAuth.checkAuth()) {
                             MyAuth.email = email
                             val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                             // 다른 날짜에 로그인
-                            if(mypageViewModel.checkDate(localDate) == false)
+                            if (mypageViewModel.checkDate(localDate) == false) {
                                 Toast.makeText(this, "출석 체크 성공!", Toast.LENGTH_SHORT).show()
-                                mypageViewModel.updateLocalDate(localDate.toString())
-                        }
-                        else {
-                            Toast.makeText(baseContext, "전송된 메일로 이메일 인증이 되지 않았습니다.", Toast.LENGTH_SHORT)
+                            }
+                        } else {
+                            Toast.makeText(
+                                baseContext,
+                                "전송된 메일로 이메일 인증이 되지 않았습니다.",
+                                Toast.LENGTH_SHORT
+                            )
                                 .show()
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(baseContext, "로그인 실패", Toast.LENGTH_SHORT).show()
                     }
 

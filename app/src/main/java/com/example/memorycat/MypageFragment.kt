@@ -23,6 +23,7 @@ import com.example.memorycat.databinding.FragmentMypageBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Date
 
 class MypageFragment : Fragment() {
@@ -31,7 +32,7 @@ class MypageFragment : Fragment() {
 
     private val quizViewModel: QuizViewModel by activityViewModels()
     private lateinit var mypageViewModel: MypageViewModel
-
+    val localDate: LocalDate = LocalDate.now()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -39,7 +40,11 @@ class MypageFragment : Fragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,24 +54,33 @@ class MypageFragment : Fragment() {
         val storage = FirebaseStorage.getInstance("gs://memorycat-c8f7d.appspot.com")
         val storageRef = storage.reference
 
-        mypageViewModel.date.observe(viewLifecycleOwner, { date ->
-            var imageIndex = date.toInt()
-            Log.d("MypageFragment", "imageIndex: ${imageIndex}")
+        mypageViewModel.date.observe(viewLifecycleOwner) { date ->
+            var imageIndex = date.toInt() - 1
             val imageView: ImageView = view.findViewById(R.id.img_stamp)
             val stampArray = resources.obtainTypedArray(R.array.stamp)
-            if (imageIndex == 7) {
+            if (imageIndex >= 7) {
                 imageIndex = 0
             }
-            val date = imageIndex + 1
-            Log.d("MypageFragment", "before update date: ${date}")
-            mypageViewModel.updateDate(date.toString())
-            // change Stamp(초기화)
-            val imageResId = stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
+            if(mypageViewModel.checkDate(localDate) == false) {
+                var newdate = date.toInt() + 1
+                if (newdate == 8) {
+                    Log.d("mypageFragment", "newdate: $newdate imageIndex: $imageIndex")
+                    newdate = 1
+                    Log.d("mypageFragment", "newdate: $newdate imageIndex: $imageIndex")
+                }
+
+                mypageViewModel.updateDate(newdate.toString())
+                mypageViewModel.updateLocalDate(localDate.toString())
+            }
+
+            // change Stamp
+            val imageResId =
+                stampArray.getResourceId(imageIndex, -1) // get stamp image ID from array
             if (imageResId != -1) {
                 imageView.setImageResource(imageResId)
             }
-        })
 
+        }
 
         mypageViewModel.imageProfile.observe(viewLifecycleOwner) { imageProfile ->
             val imageAdress = "images/$imageProfile"
@@ -86,19 +100,26 @@ class MypageFragment : Fragment() {
 
 
         // get Level information from DB and display
-        quizViewModel.level?.observe(viewLifecycleOwner, { level ->
+        quizViewModel.level?.observe(viewLifecycleOwner) { level ->
             binding.userLevel.text = "Lv. ${level?.toUpperCase()}"
-        })
+            when (level) {
+                "bronze" -> binding.textLevelAdvice.text = "시작이 반이다!"
+                "silver" -> binding.textLevelAdvice.text = "금메달을 향하여!"
+                "gold" ->  binding.textLevelAdvice.text = "금메달 다음엔 뭘까요ㅎㅎ"
+                "platium" ->  binding.textLevelAdvice.text = "한 단계만 더 해보자!"
+                "master" ->  binding.textLevelAdvice.text = "영단어 박사님!!!"
+            }
+        }
 
         // get Goal information from DB and display
-        mypageViewModel.goal.observe(viewLifecycleOwner, { goal ->
+        mypageViewModel.goal.observe(viewLifecycleOwner) { goal ->
             binding.textUserGoal.text = "목표: ${goal?.toUpperCase()}"
-        })
+        }
 
         // get Name information from DB and display
-        mypageViewModel.name.observe(viewLifecycleOwner, { name ->
+        mypageViewModel.name.observe(viewLifecycleOwner) { name ->
             binding.textUserName.text = "${name?.toUpperCase()}"
-        })
+        }
 
         binding.buttonEditProfile.setOnClickListener {
             val transaction = activity?.supportFragmentManager?.beginTransaction()
@@ -111,6 +132,7 @@ class MypageFragment : Fragment() {
             openGalleryForImage()
         }
     }
+
     // About firestore
     val getContent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -132,7 +154,7 @@ class MypageFragment : Fragment() {
         val storageRef = FirebaseStorage.getInstance().reference
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageName = "IMAGE_" + timeStamp + "_.png"
-        val imagesRef = storageRef.child("images/${imageName}")
+        val imagesRef = storageRef.child("images/$imageName")
 
         val uploadTask = imagesRef.putFile(imageUri)
 
@@ -169,6 +191,7 @@ class MypageFragment : Fragment() {
                 Log.e("Firestore", "Error adding image URL", e)
             }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
