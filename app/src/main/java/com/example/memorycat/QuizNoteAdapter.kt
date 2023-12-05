@@ -16,6 +16,7 @@ class QuizNoteAdapter(context: QuizNoteFragment) : RecyclerView.Adapter<QuizNote
     init {
         tts = MemoryCatTextToSpeech(context.requireContext())
     }
+    // ViewHolder 생성자에서 각 항목이 정의되고 초기화
     class ViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root){
         val word: TextView = binding.wordData
         val select: TextView = binding.selectMean
@@ -26,7 +27,7 @@ class QuizNoteAdapter(context: QuizNoteFragment) : RecyclerView.Adapter<QuizNote
 
     fun updateNote(newData: MutableList<QuizResult>) {
         noteList = newData
-        notifyDataSetChanged()
+        notifyDataSetChanged() // db에 변화가 있는지 감지해서 알림
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,6 +39,7 @@ class QuizNoteAdapter(context: QuizNoteFragment) : RecyclerView.Adapter<QuizNote
         return noteList.size
     }
 
+    //뷰에 데이터를 바인딩
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val quizResult = noteList[position]
 

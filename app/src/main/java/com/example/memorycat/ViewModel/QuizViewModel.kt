@@ -22,10 +22,6 @@ class QuizViewModel : ViewModel() {
         quizRepository.getCurrentRandomWord()
     }
 
-    fun getPreviousRandomWord() {
-        quizRepository.getPreviousRandomWord()
-    }
-
     fun getMeanings(word: String): MutableLiveData<List<String>> {
         return quizRepository.getMeanings(word)
     }
@@ -34,8 +30,8 @@ class QuizViewModel : ViewModel() {
         return quizRepository.getNoteMeanings(word)
     }
 
-    fun getRandomMeanings() {
-        quizRepository.getRandomMeanings()
+    fun getRandomMeanings(word: String) {
+        quizRepository.getRandomMeanings(word)
     }
 
     fun updateQuizResult(word: String, answer: String) {
