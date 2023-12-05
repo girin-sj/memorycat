@@ -48,13 +48,10 @@ class QuizViewModel : ViewModel() {
 
     fun resetNoteResult() {
         quizRepository.resetNoteResult()
-    }
 
-    fun checkAnswer(userAnswer: String, correctAnswer: String): Boolean {
-        return quizRepository.checkAnswer(userAnswer, correctAnswer)
-    }
-
-    fun updateLevel() {
-        quizRepository.updateLevel()
-    }
-}
+    fun resetNoteResult(){
+        repo.recentDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                repo.recentDB.set(hashMapOf<Any, Any>())
+            }
+        }
