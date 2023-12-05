@@ -30,7 +30,7 @@ class QuizMainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuizMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,12 +44,11 @@ class QuizMainFragment : Fragment() {
         quizViewModel.randomWord.observe(viewLifecycleOwner, observer)
 
         binding.quizNextButton.setOnClickListener {
-            if (++counter < 10) {
+            if (counter++ < 10) {
                 binding.quizNumber.text = "$counter/10"
                 handleAnswer(binding.quizWord.text.toString())
 
-            } else if (counter == 10) {
-                binding.quizNumber.text = "$counter/10"
+            } else {
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
