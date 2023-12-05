@@ -1,213 +1,65 @@
 package com.example.memorycat.ViewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.QuizResult
-import com.example.memorycat.Repository.Repository
 
 class QuizViewModel : ViewModel() {
-    private val _level = MutableLiveData<String>()
-    val level: LiveData<String> get() = _level
-    private val _randomWord = MutableLiveData<String>()
-    val randomWord: LiveData<String> get() = _randomWord
-    private val usedFieldNames = mutableListOf<String>()
-    private val _meanings = MutableLiveData<List<String>>()
-    val randomMeanings = MutableLiveData<MutableList<String>>()
-    private val repo: Repository = Repository()
 
-    init {
-        loadLevel()
+    private val quizRepository = QuizRepository()
+
+    val level: LiveData<String>
+        get() = quizRepository.level
+
+    val randomWord: LiveData<String>
+        get() = quizRepository.randomWord
+
+    val randomMeanings: MutableLiveData<MutableList<String>>
+        get() = quizRepository.randomMeanings
+
+    fun getCurrentRandomWord() {
+        quizRepository.getCurrentRandomWord()
     }
 
-    private fun loadLevel() {
-        repo.userDB.get().addOnSuccessListener { document ->
-            if (document != null) {
-                _level.value = document.getString("level")
-                Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Level loaded: ${_level.value}")
-                getRandomWord() // level이 로드된 후에 getRandomWord() 호출
-            } else {
-                Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Document does not exist")
-            }
-        }.addOnFailureListener { exception ->
-            Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting document: $exception")
-        }
-    }
-
-    fun updateLevel() {
-        when (_level.value) {
-            "bronze" -> repo.userDB.update(mapOf("level" to "silver"))
-            "silver" -> repo.userDB.update(mapOf("level" to "gold"))
-            "gold" -> repo.userDB.update(mapOf("level" to "platinum"))
-            else -> repo.userDB.update(mapOf("level" to "master"))
-        }
-    }
-
-
-    fun getRandomWord(): MutableLiveData<String> {
-        val levelDocumentRef = repo.firestore.collection("quizDB").document(level.value!!)
-
-        Log.d("quizViewModel", "get random word")
-        levelDocumentRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val fieldMap = document.data
-                    if (fieldMap != null) {
-                        val fieldNames = fieldMap.keys.toList()
-                        val availableFieldNames = fieldNames - usedFieldNames.toSet()
-
-                        if (availableFieldNames.isNotEmpty()) {
-                            val randomFieldName = availableFieldNames.random()
-                            usedFieldNames.add(randomFieldName)
-
-                            _randomWord.value = randomFieldName
-                            Log.d("com.example.memorycat.ViewModel.QuizViewModel", "New word: ${_randomWord.value}")
-                        }
-                    }
-                }
-                else {
-                    Log.d("com.example.memorycat.ViewModel.QuizViewModel", "some error")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting random word: $exception")
-            }
-
-        return _randomWord
+    fun getPreviousRandomWord() {
+        quizRepository.getPreviousRandomWord()
     }
 
     fun getMeanings(word: String): MutableLiveData<List<String>> {
-        val levelDocument = repo.firestore.collection("quizDB").document(level.value!!)
-
-        levelDocument.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val meanings = document.get(word) as MutableList<String>
-                    _meanings.value = meanings
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting meanings: $exception")
-            }
-        return _meanings
+        return quizRepository.getMeanings(word)
     }
 
     fun getNoteMeanings(word: String): MutableLiveData<List<String>> {
-        val meanings = mutableListOf<String>()
-        val dictionaryCollection = repo.firestore.collection("englishDictionary")
-
-        // Query all documents in the collection
-        dictionaryCollection.get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    if (document.contains(word)) {
-                        val documentMeanings = document.get(word) as? MutableList<String>
-                        documentMeanings?.let {
-                            meanings.addAll(it)
-                        }
-                    }
-                }
-                _meanings.value = meanings
-            }
-            .addOnFailureListener { exception ->
-                Log.e("QuizViewModel", "Error getting meanings: $exception")
-            }
-        return _meanings
+        return quizRepository.getNoteMeanings(word)
     }
 
     fun getRandomMeanings() {
-        val randomMeaningsTemp = mutableListOf<String>()
-        val levelDocument = repo.firestore.collection("quizDB").document(level.value!!)
-
-        levelDocument.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val allWords = document.data?.keys?.toList() ?: listOf()
-                    for (i in 0 until 3) {
-                        val randomWord = allWords.random()
-                        val meanings = document.get(randomWord) as List<String>
-                        randomMeaningsTemp.add(meanings.random())
-                    }
-                }
-                randomMeanings.value = randomMeaningsTemp
-            }
-            .addOnFailureListener { exception ->
-                Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting random meanings: $exception")
-            }
+        quizRepository.getRandomMeanings()
     }
 
     fun updateQuizResult(word: String, answer: String) {
-        repo.accureDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (document != null && document.contains(word)) {
-                    val existingAnswer = document.getString(word)
-                    if (existingAnswer == "X" && answer == "O") {
-                        repo.accureDB.update(
-                            hashMapOf(
-                                word to answer
-                            ) as Map<String, String>
-                        )
-                    }
-                }
-                else {
-                    repo.accureDB.update(
-                        hashMapOf(
-                            word to answer
-                        ) as Map<String, String>
-                    )
-                }
-            }
-        }
+        quizRepository.updateQuizResult(word, answer)
     }
 
     fun updateNoteResult(word: String, select: String, answer: String, isCorrect: String) {
-        repo.recentDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                repo.recentDB.update(
-                    hashMapOf(
-                        word to hashMapOf(
-                            "select" to select,
-                            "answer" to answer,
-                            "isCorrect" to isCorrect
-                        )
-                    ) as Map<String, String>
-                )
-            }
-        }
+        quizRepository.updateNoteResult(word, select, answer, isCorrect)
     }
 
     fun loadNoteResult(): LiveData<List<QuizResult>> {
-        val liveData = MutableLiveData<List<QuizResult>>()
-        repo.recentDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val quizResults = mutableListOf<QuizResult>()
-                val document = task.result
-                document?.data?.forEach { entry ->
-                    val word = entry.key
-                    val value = entry.value as Map<String, String>
-                    val select = value["select"] ?: ""
-                    val answer = value["answer"] ?: ""
-                    val isCorrect = value["isCorrect"] ?: ""
-                    quizResults.add(QuizResult(word, select, answer, isCorrect))
-                }
-                liveData.postValue(quizResults)
-            }
-        }
-        return liveData
+        return quizRepository.loadNoteResult()
     }
 
-
-    fun resetNoteResult(){
-        repo.recentDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                repo.recentDB.set(hashMapOf<Any, Any>())
-            }
-        }
+    fun resetNoteResult() {
+        quizRepository.resetNoteResult()
     }
 
     fun checkAnswer(userAnswer: String, correctAnswer: String): Boolean {
-        return correctAnswer == userAnswer
+        return quizRepository.checkAnswer(userAnswer, correctAnswer)
     }
+
+    fun updateLevel() {
+        quizRepository.updateLevel()
+    }
+
 }

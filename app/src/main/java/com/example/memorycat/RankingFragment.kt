@@ -31,13 +31,6 @@ class RankingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // recyclerView add Item
-//        val users = mutableListOf<User>()
-//        for (i in 1..10) {
-//            val user = User("${mypageViewModel.name.value}", "Lv. ${quizViewModel.level.value}", "Score ${rankingViewModel.correctCount.value}/10", "${i}등")
-//            users.add(user)
-//        }
-
         rankingViewModel.getUidDocument().observe(viewLifecycleOwner, Observer { userResults ->
             adapter.updateUser(userResults.toMutableList())
         })

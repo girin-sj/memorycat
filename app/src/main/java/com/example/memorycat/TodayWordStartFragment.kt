@@ -37,13 +37,6 @@ class TodayWordStartFragment : Fragment() {
             transaction?.addToBackStack(null)
             transaction?.commit()
         }
-        // 오답노트
-        binding.studyReStartButton.setOnClickListener {
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.main_content, QuizNoteFragment())
-            transaction?.addToBackStack(null)
-            transaction?.commit()
-        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
