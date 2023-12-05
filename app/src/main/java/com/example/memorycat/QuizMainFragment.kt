@@ -22,6 +22,7 @@ class QuizMainFragment : Fragment() {
     private var tts: MemoryCatTextToSpeech? = null
     private val quizViewModel: QuizViewModel by viewModels()
     private var correctAnswer: String? = null
+    //observer로 단어가 바뀌는지 관찰하고 UI의 단어, 선택지를 변경
     private val observer = Observer<String> { newWord ->
         binding.quizWord.text = newWord
         updateChoices(newWord)
@@ -30,7 +31,7 @@ class QuizMainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentQuizMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,11 +45,12 @@ class QuizMainFragment : Fragment() {
         quizViewModel.randomWord.observe(viewLifecycleOwner, observer)
 
         binding.quizNextButton.setOnClickListener {
-            if (counter++ < 10) {
+            if (++counter < 10) {
                 binding.quizNumber.text = "$counter/10"
                 handleAnswer(binding.quizWord.text.toString())
 
-            } else {
+            } else if (counter == 10) {
+                binding.quizNumber.text = "$counter/10"
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
                     ContextCompat.getColorStateList(requireContext(), R.color.yellow)
@@ -92,12 +94,14 @@ class QuizMainFragment : Fragment() {
     }
 
     private fun updateChoices(word: String) {
-        quizViewModel.getRandomMeanings()
+        quizViewModel.getRandomMeanings(word)
+        // List가 누적되는 걸 막기 위해 초기화 후 재호출
         quizViewModel.getMeanings(word).removeObserver(meaningsObserver)
         quizViewModel.getMeanings(word).observe(viewLifecycleOwner, meaningsObserver)
     }
 
     private fun handleAnswer(word: String) {
+        // 라디오 버튼의 id로 선택지 설정
         val selectedId = binding.answerGroup.checkedRadioButtonId
         var answerId = ""
         when(selectedId) {
@@ -135,13 +139,11 @@ class QuizMainFragment : Fragment() {
             quizViewModel.updateQuizResult(word, "X")
             quizViewModel.updateNoteResult(word, answerId, correctAnswer!!, "X")
         }
-        if (counter < 8) {
-            quizViewModel.getCurrentRandomWord()
-        } else {
-            quizViewModel.getPreviousRandomWord()
-        }
+        // 새로운 단어
+        quizViewModel.getCurrentRandomWord()
     }
 
+    //text to speech
     private fun startTTS() {
         tts!!.speakWord(binding.quizWord.text.toString())
     }
