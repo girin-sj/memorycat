@@ -31,7 +31,7 @@ class QuizRepository : ViewModel() {
             if (document != null) {
                 _level.value = document.getString("level")
                 Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Level loaded: ${_level.value}")
-                getRandomWord() // level이 로드된 후에 getRandomWord() 호출
+                getCurrentRandomWord() // level이 로드된 후에 getRandomWord() 호출
             } else {
                 Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Document does not exist")
             }
@@ -49,17 +49,10 @@ class QuizRepository : ViewModel() {
         }
     }
 
-    fun getRandomWord(): MutableLiveData<String> {
+    fun getCurrentRandomWord(): MutableLiveData<String> {
         val currentLevel = level.value ?: return _randomWord
 
         val currentLevelDocumentRef = repo.firestore.collection("quizDB").document(currentLevel)
-        val previousLevelDocumentRef = when (currentLevel) {
-            "silver" -> repo.firestore.collection("quizDB").document("bronze")
-            "gold" -> repo.firestore.collection("quizDB").document("silver")
-            "platinum" -> repo.firestore.collection("quizDB").document("gold")
-            "master" -> repo.firestore.collection("quizDB").document("platinum")
-            else -> null
-        }
 
         Log.d("quizViewModel", "get random word")
 
@@ -87,7 +80,22 @@ class QuizRepository : ViewModel() {
                 Log.e("com.example.memorycat.ViewModel.QuizViewModel", "Error getting random word: $exception")
             }
 
-        // Fetch additional words from the previous level
+        return _randomWord
+    }
+
+    fun getPreviousRandomWord(): MutableLiveData<String> {
+        val currentLevel = level.value ?: return _randomWord
+
+        val previousLevelDocumentRef = when (currentLevel) {
+            "silver" -> repo.firestore.collection("quizDB").document("bronze")
+            "gold" -> repo.firestore.collection("quizDB").document("silver")
+            "platinum" -> repo.firestore.collection("quizDB").document("gold")
+            "master" -> repo.firestore.collection("quizDB").document("platinum")
+            else -> null
+        }
+
+        Log.d("quizViewModel", "get random word")
+
         previousLevelDocumentRef?.get()
             ?.addOnSuccessListener { document ->
                 if (document != null) {
@@ -100,7 +108,7 @@ class QuizRepository : ViewModel() {
                             val randomFieldName = availableFieldNames.random()
                             usedFieldNames.add(randomFieldName)
 
-                            // You can do something with the additional word from the previous level if needed
+                            _randomWord.value = randomFieldName
                             Log.d("com.example.memorycat.ViewModel.QuizViewModel", "Previous level word: $randomFieldName")
                         }
                     }

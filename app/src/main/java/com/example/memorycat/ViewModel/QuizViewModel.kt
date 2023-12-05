@@ -18,8 +18,12 @@ class QuizViewModel : ViewModel() {
     val randomMeanings: MutableLiveData<MutableList<String>>
         get() = quizRepository.randomMeanings
 
-    fun getRandomWord() {
-        quizRepository.getRandomWord()
+    fun getCurrentRandomWord() {
+        quizRepository.getCurrentRandomWord()
+    }
+
+    fun getPreviousRandomWord() {
+        quizRepository.getPreviousRandomWord()
     }
 
     fun getMeanings(word: String): MutableLiveData<List<String>> {

@@ -136,8 +136,11 @@ class QuizMainFragment : Fragment() {
             quizViewModel.updateQuizResult(word, "X")
             quizViewModel.updateNoteResult(word, answerId, correctAnswer!!, "X")
         }
-
-        quizViewModel.getRandomWord()
+        if (counter < 8) {
+            quizViewModel.getCurrentRandomWord()
+        } else {
+            quizViewModel.getPreviousRandomWord()
+        }
     }
 
     private fun startTTS() {
