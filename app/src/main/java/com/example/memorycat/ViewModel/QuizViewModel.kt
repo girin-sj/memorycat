@@ -61,4 +61,5 @@ class QuizViewModel : ViewModel() {
     fun updateLevel() {
         quizRepository.updateLevel()
     }
+
 }
