@@ -118,6 +118,7 @@ class MypageViewModel: ViewModel() {
                     val data = documentSnapshot.data // 문서의 데이터
                     // 데이터가 HashMap 형태로 저장 -> 모든 document 하위 문서 가져옴
                     if (data != null) {
+                        correctcount = 0
                         // key는 필드 이름, value는 해당 필드의 값
                         for ((value) in data) {
                             if(value == "O") {

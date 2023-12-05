@@ -23,12 +23,12 @@ class RankingViewModel : ViewModel() {
     }
 
     fun getUidDocument(): LiveData<List<User>> {
-        var grade = 0
         val liveData = MutableLiveData<List<User>>()
         repo.firestore.collection("userDB").get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val tempList = mutableListOf<Pair<String, String>>() // Temporary list to hold user data
-                val usersForRecycler = mutableListOf<User>() // Create a local list to hold users
+                val tempList =
+                    mutableListOf<Pair<String, String>>()
+                val usersForRecycler = mutableListOf<User>()
 
                 for (document in task.result) {
                     getCorrectCount(document.id) { count ->
@@ -36,34 +36,44 @@ class RankingViewModel : ViewModel() {
 
                         if (tempList.size == task.result.size()) {
                             userlist = tempList.toMap().toMutableMap()
-                            userlist = userlist.toList().sortedByDescending { it.second }.toMap().toMutableMap()
+                        }
 
-                            for ((key) in userlist) {
-                                repo.firestore.collection("userDB").document(key).get().addOnSuccessListener { document ->
-                                    if (document != null) {
-                                        _name.value = document.getString("nickname")
-                                        correctCount.value = document.getString("correctCount")
-                                        _level.value = document.getString("level")
-                                        val user = User(
-                                            "${_name.value}",
-                                            "Lv. ${_level.value}",
-                                            "Score ${correctCount.value}/10",
-                                            "${++grade}등"
-                                        )
-                                        Log.d("RankingViewModel", "grade: $grade")
-                                        usersForRecycler.add(user) // Add user to local list
-                                    }
+                        // 데이터를 가져온 후에 정렬하고 정렬된 목록을 LiveData에 추가
+                        if (tempList.size == task.result.size()) {
+                            val sortedUserlist =
+                                userlist.toList().sortedByDescending { it.second }.toMap()
+                                    .toMutableMap()
 
-                                    if (usersForRecycler.size == userlist.size) {
-                                        liveData.postValue(usersForRecycler) // Publish the updated list once all users are added
+                            sortedUserlist.keys.forEachIndexed { index, key ->
+                                repo.firestore.collection("userDB").document(key).get()
+                                    .addOnSuccessListener { document ->
+                                        if (document != null) {
+                                            _name.value = document.getString("nickname")
+                                            correctCount.value = document.getString("correctCount")
+                                            _level.value = document.getString("level")
+                                            Log.d(
+                                                "RankingViewModel",
+                                                "name: ${_name.value} correctCount: ${correctCount.value}"
+                                            )
+                                            val user = User(
+                                                "${_name.value}",
+                                                "Lv. ${_level.value}",
+                                                "누적 ${correctCount.value}개",
+                                                "${index + 1}등"
+                                            )
+                                            usersForRecycler.add(user)
+
+
+                                            if (usersForRecycler.size == sortedUserlist.size) {
+                                                Log.d("RankingViewModel", "usersForRecycler: ${usersForRecycler}")
+                                                liveData.postValue(usersForRecycler)
+                                            }
+                                        }
                                     }
-                                }
                             }
                         }
                     }
                 }
-            } else {
-                Log.d("RankingViewModel", "Error getting documents: ", task.exception)
             }
         }
         return liveData
