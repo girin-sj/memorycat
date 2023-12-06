@@ -15,7 +15,7 @@ class BookmarkAdapter(
     init {
         tts = MemoryCatTextToSpeech(fragment.requireContext())
     }
-
+    // ViewHolder 생성자에서 각 항목이 정의되고 초기화
     class ViewHolder(val binding: ItemBookmarkBinding) : RecyclerView.ViewHolder(binding.root) {
         val peow: ImageButton = binding.bookmarkPeow
         val voice: ImageButton = binding.bookmarkVoice
@@ -28,18 +28,16 @@ class BookmarkAdapter(
     private var bookmarkList = mutableListOf<BookmarkResult>()
     fun updateBookmark(newData: MutableList<BookmarkResult>) {
         bookmarkList = newData
-        notifyDataSetChanged()
+        notifyDataSetChanged() // db에 변화가 있는지 감지해서 알림
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemBookmarkBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
-
     override fun getItemCount(): Int {
         return bookmarkList.size
     }
-
+    //뷰에 데이터를 바인딩
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val bookmarkResult = bookmarkList[position]
         holder.word.text = bookmarkResult.word
@@ -47,7 +45,6 @@ class BookmarkAdapter(
         holder.mean2.text = bookmarkResult.mean2
         holder.mean3.text = bookmarkResult.mean3
 
-        //버튼
         holder.voice.setOnClickListener {
             tts?.speakWord(holder.word.text.toString())
         }
