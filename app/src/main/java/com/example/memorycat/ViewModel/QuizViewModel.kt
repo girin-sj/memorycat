@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.QuizResult
+import com.example.memorycat.Repository.QuizRepository
 
 class QuizViewModel : ViewModel() {
 

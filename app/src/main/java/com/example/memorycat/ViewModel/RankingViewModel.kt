@@ -1,12 +1,11 @@
 package com.example.memorycat
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.memorycat.Repository.RankingRepository
 import com.example.memorycat.Repository.Repository
-import com.example.memorycat.ViewModel.QuizRepository
+import com.example.memorycat.Repository.QuizRepository
 
 
 class RankingViewModel : ViewModel() {
