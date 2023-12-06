@@ -45,5 +45,9 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+        // after login
+        var detailViewFragment = TodayWordStartFragment()
+        supportFragmentManager.beginTransaction().replace(R.id.main_content, detailViewFragment).commit()
+        return
     }
 }
