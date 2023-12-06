@@ -1,4 +1,5 @@
 package com.example.memorycat.Repository
+//데이터를 가져오고 저장하는 역할
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -21,13 +22,13 @@ class TodaywordRepository : ViewModel() {
     private var dicIdx: Int = 0
     private val repo: Repository = Repository()
 
-
-
     init {
+        // 모든 작업 이전에 level과 date를 load 필요
         loadLevel()
         loadDate()
     }
 
+    // 사용자 레벨 load
     private fun loadLevel() {
         repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
@@ -41,6 +42,7 @@ class TodaywordRepository : ViewModel() {
         }
     }
 
+    //오늘의 영단어에서 사용될 오늘의 date load
     fun loadDate() {
         repo.userDB.get().addOnSuccessListener { document ->
             if (document != null) {
@@ -54,6 +56,7 @@ class TodaywordRepository : ViewModel() {
         }
     }
 
+    //db에서 조건에 맞는 단어들로 오늘의 영단어 배열 만들기
     fun makeTodayWordList() {
         val levelDocumentRef =
             repo.firestore.collection("englishDictionary").document(level.value!!)
@@ -73,7 +76,7 @@ class TodaywordRepository : ViewModel() {
                             dicIdx++
 
                             val meanings =
-                                document.get(fieldName) as MutableList<String>
+                                document.get(fieldName) as MutableList<String> //해당 단어의 데이터 가져오기
                             Log.d("TodayWordViewModel", "meanings: ${meanings}")
                             val dateGet = meanings[0] //array형식. index 0에 date 있음
 
@@ -90,9 +93,9 @@ class TodaywordRepository : ViewModel() {
                         if (_date.value!!.toInt() > 1) { //2~6째날
                             dicIdx = 0
                             var append = 0
-                            while (append < 3) { //무한 loop
+                            while (append < 3) {
                                 fieldName = fieldNames[dicIdx]
-                                dicIdx = (0..44).random()
+                                dicIdx = (0..44).random() //45개의 단어 중 랜덤으로
 
                                 val meanings =
                                     document.get(fieldName) as MutableList<String>
@@ -119,7 +122,7 @@ class TodaywordRepository : ViewModel() {
                                     document.get(fieldName) as MutableList<String>
                                 val dateGet = meanings[0]
 
-                                if (dateGet.toInt() == dateInt) {
+                                if (dateGet.toInt() == dateInt) { //date가 1인 단어들
                                     todayWordNamesTemp.add(fieldName)
                                     append++
                                     Log.d(
@@ -129,7 +132,9 @@ class TodaywordRepository : ViewModel() {
                                 }
                             }
                         }
-                        todayWordNames.postValue(todayWordNamesTemp)
+                        todayWordNames.postValue(todayWordNamesTemp) // LiveData 업데이트
+                        //LiveData: 앱의 수명 주기 인식, 활성 상태일 때만 데이터 변경 사항 알림
+                        // -> 메모리 누수 및 예기치 못한 동작 방지 & 앱 컴포넌트 간의 데이터 흐름을 쉽게 관리
                         Log.d("TodayWordViewModel", "making list end")
                     }
                 } else {
@@ -139,12 +144,12 @@ class TodaywordRepository : ViewModel() {
                 Log.e("TodayWordViewModel", "Error getting random word: $exception")
             }
     }
-
+    //위에서 만든 list 활용하여 (인덱스로) 오늘의 단어 get
     fun getTodayWord(idx: Int): MutableLiveData<String> {
         _todayWord.value = todayWordNamesTemp[idx]
         return _todayWord
     }
-
+    //화면에 표시되는 단어의 뜻 get
     fun getMeanings(word: String): MutableLiveData<List<String>> {
         val meanings = mutableListOf<String>()
         val dictionaryCollection = repo.firestore.collection("englishDictionary")
@@ -166,8 +171,8 @@ class TodaywordRepository : ViewModel() {
             }
         return _meanings
     }
-
-    fun updateBookmarkResult( //북마크 db 업데이트 시 사용. O, X모두
+    //북마크 db 업데이트
+    fun updateBookmarkResult(
         word: String,
         mean1: String,
         mean2: String,
@@ -191,12 +196,13 @@ class TodaywordRepository : ViewModel() {
             }
         }
     }
+    //북마크에 정보 load
     fun loadSelectedBookmarks(callback: (List<BookmarkResult>) -> Unit) { //북마크 화면에 뜨우기위해 "O"인 단어 리스트에 넣기
         repo.bookmarkDB.get()
             .addOnSuccessListener { document ->
                 val bookmarkResults = mutableListOf<BookmarkResult>()
                 val fieldMap = document?.data
-
+                //문서의 모든 data 반복해서 처리
                 fieldMap?.forEach { entry ->
                     val word = entry.key
                     val value = entry.value as Map<String, String>
@@ -204,12 +210,11 @@ class TodaywordRepository : ViewModel() {
                     val mean2 = value["mean2"] ?: ""
                     val mean3 = value["mean3"] ?: ""
                     val isSelect = value["isSelect"] ?: ""
-
-                    if (isSelect == "O") {
+                    if (isSelect == "O") { //북마크가 되어있는 단어들만 BookmarkResult 객체의 리스트로 변환
                         bookmarkResults.add(BookmarkResult(word, mean1, mean2, mean3, isSelect))
                     }
                 }
-                callback(bookmarkResults)
+                callback(bookmarkResults) //콜백 함수 -> 전달
             }
             .addOnFailureListener { exception ->
                 Log.e("TodayWordViewModel", "Error loading selected bookmarks: $exception")

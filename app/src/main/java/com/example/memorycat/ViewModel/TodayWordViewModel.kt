@@ -1,4 +1,8 @@
 package com.example.memorycat.ViewModel
+/*
+ViewModel은 Repository를 통해 데이터를 가져와서 사용자 인터페이스의 상태와 논리를 관리
+UI 컴포넌트(예: Fragment)에 대한 데이터를 저장하고, Repository를 통해 필요한 데이터를 가져와서 UI에 표시
+ */
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
