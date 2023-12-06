@@ -1,4 +1,4 @@
-package com.example.memorycat.ViewModel
+package com.example.memorycat.Repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.memorycat.QuizResult
-import com.example.memorycat.Repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

@@ -57,11 +57,5 @@
             android:src="@drawable/voice"
             android:contentDescription="voice"
             android:backgroundTint="@color/white"/>
-
-        <ImageView
-            android:id="@+id/noteBookmark"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/peow" />
     </LinearLayout>
 </LinearLayout>

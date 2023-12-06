@@ -49,7 +49,7 @@ class QuizMainFragment : Fragment() {
                 binding.quizNumber.text = "$counter/10"
                 handleAnswer(binding.quizWord.text.toString())
 
-            } else if (counter == 10) {
+            } else {
                 binding.quizNumber.text = "$counter/10"
                 binding.quizPassButton.text = "결과 확인하기"
                 binding.quizPassButton.backgroundTintList =
